@@ -1,9 +1,12 @@
 const express = require("express");
-require("dotenv");
+const dotenv = require("dotenv");
 const cors = require("cors");
 const db = require("./config/db");
+dotenv.config();
 
 const User = require("./models/UserModel");
+
+const port = process.env.SERVER_PORT;
 
 const app = express();
 
@@ -25,6 +28,6 @@ db.sync()
     console.error("Error synchronizing the database:", error);
   });
 
-app.listen(5000, () => {
+app.listen(port, () => {
   console.log("Server is running on port 5000");
 });
