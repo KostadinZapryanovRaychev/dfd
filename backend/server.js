@@ -3,6 +3,8 @@ require("dotenv");
 const cors = require("cors");
 const db = require("./config/db");
 
+const User = require("./models/UserModel");
+
 const app = express();
 
 app.use(express.json());
@@ -14,6 +16,13 @@ db.authenticate()
   })
   .catch((error) => {
     console.error("Unable to connect to the database:", error);
+  });
+db.sync()
+  .then(() => {
+    console.log("Database synchronized");
+  })
+  .catch((error) => {
+    console.error("Error synchronizing the database:", error);
   });
 
 app.listen(5000, () => {
