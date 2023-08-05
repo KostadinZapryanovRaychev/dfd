@@ -4,6 +4,7 @@ const cors = require("cors");
 const db = require("./config/db");
 const { authenticateToken } = require("./middlewares/authenticate");
 dotenv.config();
+const userRoutes = require("./routes/userRoutes");
 
 const User = require("./models/UserModel");
 
@@ -30,6 +31,8 @@ db.sync()
   .catch((error) => {
     console.error("Error synchronizing the database:", error);
   });
+
+app.use("/api", userRoutes);
 
 app.get("/api/protected", (req, res) => {
   // You can access the authenticated user's data in req.user
