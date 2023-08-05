@@ -8,7 +8,7 @@ const ProtectedComponent = () => {
     const token = localStorage.getItem("token");
     if (token) {
       axios
-        .get("/api/protected", {
+        .get("localhost:5000/api/protected", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => setUserData(response.data))

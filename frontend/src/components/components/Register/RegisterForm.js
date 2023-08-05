@@ -24,10 +24,10 @@ const RegisterForm = () => {
     e.preventDefault();
     try {
       // Send the user registration data to the backend API
-      const response = await axios.post("/api/register", formData);
+      const response = await axios.post("http://localhost:5000/api/register", formData);
 
       // Registration successful, navigate to a new page or handle it as you need
-      navigate("/login");
+      navigate("/");
     } catch (error) {
       console.error("Error during user registration:", error);
       // Handle any registration error here
