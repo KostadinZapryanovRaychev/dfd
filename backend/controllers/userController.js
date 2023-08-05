@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/UserModel");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 // Function to register a new user
 exports.registerUser = async (req, res) => {
@@ -24,8 +25,8 @@ exports.registerUser = async (req, res) => {
       password: hashedPassword,
     });
 
-    // Generate JWT token
-    const token = jwt.sign({ id: newUser.id, email: newUser.email }, "your-secret-key", {
+    const secretKey = process.env.SECRET_KEY;
+    const token = jwt.sign({ id: newUser.id, email: newUser.email }, secretKey, {
       expiresIn: "1h", // Set the token expiration time as per your requirement
     });
 
