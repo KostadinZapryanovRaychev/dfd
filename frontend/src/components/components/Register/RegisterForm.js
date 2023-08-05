@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const RegisterForm = () => {
@@ -10,7 +10,7 @@ const RegisterForm = () => {
     password: "",
   });
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,8 +26,8 @@ const RegisterForm = () => {
       // Send the user registration data to the backend API
       const response = await axios.post("/api/register", formData);
 
-      // Registration successful, redirect to a new page or handle it as you need
-      history.push("/login");
+      // Registration successful, navigate to a new page or handle it as you need
+      navigate("/login");
     } catch (error) {
       console.error("Error during user registration:", error);
       // Handle any registration error here
