@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import UserTable from "../UserTable/UserTable";
+import { useNavigate } from "react-router-dom";
 
 const ProtectedComponent = () => {
   const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -21,7 +29,8 @@ const ProtectedComponent = () => {
       {userData ? (
         <div>
           <h2>Protected Data</h2>
-          <p>User: {userData.user.email}</p>
+          <UserTable />
+          <button onClick={handleLogout}>Logout</button>
         </div>
       ) : (
         <p>Please log in to access protected data.</p>

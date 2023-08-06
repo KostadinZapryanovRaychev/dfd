@@ -6,12 +6,6 @@ import { Link, Route, Router, Routes, useNavigate } from "react-router-dom";
 import LoginForm from "./components/components/LoginForm/LoginForm";
 
 function App() {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/");
-  };
   return (
     <div>
       <nav>
@@ -24,9 +18,6 @@ function App() {
           </li>
           <li>
             <Link to="/login">Login</Link>
-          </li>
-          <li>
-            <button onClick={handleLogout}>Logout</button>
           </li>
         </ul>
       </nav>
