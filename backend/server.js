@@ -32,11 +32,12 @@ db.sync()
 
 app.use("/api", userRoutes);
 
+app.use(authenticateToken);
+
 app.get("/api/protected", (req, res) => {
   // You can access the authenticated user's data in req.user
   res.json({ message: "This is a protected route", user: req.user });
 });
-app.use(authenticateToken);
 
 app.listen(port, () => {
   console.log("Server is running on port 5000");
