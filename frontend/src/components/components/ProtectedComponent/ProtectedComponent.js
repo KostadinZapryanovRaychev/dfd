@@ -23,7 +23,7 @@ const ProtectedComponent = () => {
         .catch((error) => console.error("Error fetching protected data:", error));
     }
   }, []);
-
+  console.log(userData);
   return (
     <div>
       {userData ? (

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { getFetch } from "../../../lib/fetch";
+import { getAllUsers } from "../../../services/userServices";
 
 const UserTable = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    // Fetch all users from the backend API using the facade function
-    getFetch("/users")
+    getAllUsers()
       .then((data) => {
         setUsers(data.users);
       })

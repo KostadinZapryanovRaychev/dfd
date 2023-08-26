@@ -21,10 +21,10 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await loginUser(formData); // Use the loginUser function from userServices
+      await loginUser(formData);
       navigate("/");
     } catch (error) {
-      console.error(error.message); // Handle any error that occurs during login
+      console.error(error.message);
     }
   };
 

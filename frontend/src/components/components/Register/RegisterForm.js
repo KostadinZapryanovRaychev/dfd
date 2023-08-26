@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { registerUser } from "../../../services/userServices";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -23,14 +23,10 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Send the user registration data to the backend API
-      const response = await axios.post("http://localhost:5000/api/register", formData);
-
-      // Registration successful, navigate to a new page or handle it as you need
+      await registerUser(formData);
       navigate("/");
     } catch (error) {
       console.error("Error during user registration:", error);
-      // Handle any registration error here
     }
   };
 
