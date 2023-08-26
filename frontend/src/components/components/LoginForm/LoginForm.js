@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { loginUser } from "../../../services/userServices";
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -21,12 +21,10 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/login", formData);
-      const token = response.data.token;
-      localStorage.setItem("token", token);
+      await loginUser(formData); // Use the loginUser function from userServices
       navigate("/");
     } catch (error) {
-      console.error("Error during user login:", error);
+      console.error(error.message); // Handle any error that occurs during login
     }
   };
 
