@@ -11,6 +11,11 @@ const User = require("./models/UserModel");
 
 const port = process.env.SERVER_PORT;
 
+const storedItems = new Map([
+  [1, { priceCents: 1000, name: "Lea" }],
+  [2, { priceCents: 2000, name: "Miro" }],
+]);
+
 const app = express();
 
 app.use(express.json());
