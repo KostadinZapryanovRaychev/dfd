@@ -1,9 +1,10 @@
 const express = require("express");
 const dotenv = require("dotenv");
+dotenv.config();
 const cors = require("cors");
 const db = require("./config/db");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { authenticateToken } = require("./middlewares/authenticate");
-dotenv.config();
 const userRoutes = require("./routes/userRoutes");
 
 const User = require("./models/UserModel");
