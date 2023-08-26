@@ -1,48 +1,47 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:5000/api"; // Replace with your API base URL
+const API_BASE_URL = "http://localhost:5000/api";
 
-//TODO to take the url from ENV
-
-// Facade function for GET requests
-export function getFetch(url, params = {}) {
+export function getFetch(url, params = {}, headers = {}) {
   return axios({
     url: `${API_BASE_URL}${url}`,
     method: "GET",
     params: params,
+    headers: headers,
   }).then((res) => res.data);
 }
 
-// Facade function for POST requests
-export function postFetch(url, data) {
+export function postFetch(url, data, headers = {}) {
   return axios({
     url: `${API_BASE_URL}${url}`,
     method: "POST",
     data: data,
+    headers: headers,
   }).then((res) => res.data);
 }
 
-export function putFetch(url, data) {
+export function putFetch(url, data, headers = {}) {
   return axios({
     url: `${API_BASE_URL}${url}`,
     method: "PUT",
     data: data,
+    headers: headers,
   }).then((res) => res.data);
 }
 
-// Facade function for PATCH requests
-export function patchFetch(url, data) {
+export function patchFetch(url, data, headers = {}) {
   return axios({
     url: `${API_BASE_URL}${url}`,
     method: "PATCH",
     data: data,
+    headers: headers,
   }).then((res) => res.data);
 }
 
-// Facade function for DELETE requests
-export function deleteFetch(url) {
+export function deleteFetch(url, headers = {}) {
   return axios({
     url: `${API_BASE_URL}${url}`,
     method: "DELETE",
+    headers: headers,
   }).then((res) => res.data);
 }
