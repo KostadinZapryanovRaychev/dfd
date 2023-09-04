@@ -5,6 +5,7 @@ const cors = require("cors");
 const db = require("./config/db");
 const { authenticateToken } = require("./middlewares/authenticate");
 const userRoutes = require("./routes/userRoutes");
+const stripeRoutes = require("./routes/stripeRoutes");
 
 const port = process.env.SERVER_PORT;
 
@@ -29,6 +30,7 @@ db.sync()
   });
 
 app.use("/api", userRoutes);
+app.use("/stripe", stripeRoutes);
 
 app.use(authenticateToken);
 
