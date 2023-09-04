@@ -1,8 +1,8 @@
-import { postFetch } from "./fetch";
-
 //TO DO to add the needed STRIPE_API_BASE_URLF
 
-const STRIPE_API_BASE_URL = "";
+import { postFetch } from "../lib/fetch";
+
+const STRIPE_API_BASE_URL = "https://api.stripe.com/v1";
 
 const stripeHeaders = {
   Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`,
