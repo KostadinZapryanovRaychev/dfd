@@ -6,6 +6,8 @@ const db = require("./config/db");
 const { authenticateToken } = require("./middlewares/authenticate");
 const userRoutes = require("./routes/userRoutes");
 const stripeRoutes = require("./routes/stripeRoutes");
+const competitionRoutes = require("./routes/competitionRoutes");
+const roleRoutes = require("./routes/roleRoutes");
 
 const port = process.env.SERVER_PORT;
 
@@ -30,6 +32,8 @@ db.sync()
   });
 
 app.use("/api", userRoutes);
+app.use("/competitions", competitionRoutes);
+app.use("/roles", roleRoutes);
 app.use("/stripe", stripeRoutes);
 
 app.use(authenticateToken);
