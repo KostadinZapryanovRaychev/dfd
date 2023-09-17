@@ -32,26 +32,6 @@ const User = db.define(
       allowNull: true,
       defaultValue: false,
     },
-    isLevel1: {
-      type: Sequelize.BOOLEAN,
-      allowNull: true,
-      defaultValue: false,
-    },
-    isLevel2: {
-      type: Sequelize.BOOLEAN,
-      allowNull: true,
-      defaultValue: false,
-    },
-    isLevel3: {
-      type: Sequelize.BOOLEAN,
-      allowNull: true,
-      defaultValue: false,
-    },
-    isParticipant: {
-      type: Sequelize.BOOLEAN,
-      allowNull: true,
-      defaultValue: false,
-    },
     photo: {
       type: Sequelize.BLOB,
       allowNull: true,
@@ -62,11 +42,42 @@ const User = db.define(
       allowNull: true,
       defaultValue: null,
     },
+    roleId: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+    },
+    profession: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
+    cv: {
+      type: Sequelize.BLOB("long"),
+      allowNull: true,
+      defaultValue: null,
+    },
+    age: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+    },
+    address: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
+    company: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
+    phone: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
   },
   { tableName: "users" }
 );
 
-// Synchronize the model with the database (create the table if it doesn't exist)
+const Role = require("./RoleModel");
+
+User.belongsTo(Role, { foreignKey: "roleId" });
 User.sync().then(() => {
   console.log("User table created");
 });
