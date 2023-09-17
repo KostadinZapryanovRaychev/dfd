@@ -35,7 +35,7 @@ const Competition = db.define(
       allowNull: true,
     },
     rating: {
-      type: Sequelize.NUMBER,
+      type: Sequelize.INTEGER,
       allowNull: true,
     },
     requirements: {

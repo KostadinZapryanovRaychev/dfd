@@ -5,7 +5,6 @@ const cors = require("cors");
 const db = require("./config/db");
 const { authenticateToken } = require("./middlewares/authenticate");
 const userRoutes = require("./routes/userRoutes");
-const stripeRoutes = require("./routes/stripeRoutes");
 const competitionRoutes = require("./routes/competitionRoutes");
 const roleRoutes = require("./routes/roleRoutes");
 
@@ -32,16 +31,14 @@ db.sync()
   });
 
 app.use("/api", userRoutes);
-app.use("/stripe", stripeRoutes);
+app.use("/api/competitions", competitionRoutes);
+app.use("/api/roles", roleRoutes);
 
 app.use(authenticateToken);
 
 app.get("/api/protected", (req, res) => {
   res.json({ message: "This is a protected route", user: req.user });
 });
-
-app.use("/competitions", competitionRoutes);
-app.use("/roles", roleRoutes);
 
 app.listen(port, () => {
   console.log("Server is running on port 5000");
