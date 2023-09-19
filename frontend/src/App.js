@@ -9,6 +9,7 @@ import CompetitionsTable from "./components/components/CompetitionsTable/Competi
 import CompetitionForm from "./components/components/CompetitionForm/CompetitionForm";
 import RoleTable from "./components/components/RoleTable/RoleTable";
 import RoleForm from "./components/components/RoleForm/RoleForm";
+import EditRole from "./components/components/EditRole/EditRole";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
         <Route path="/create-competition" element={<CompetitionForm />} />
         <Route path="/roles" element={<RoleTable />} />
         <Route path="/create-role" element={<RoleForm />} />
+        <Route path="/roles/:roleId" element={<EditRole />} />
       </Routes>
     </div>
   );
