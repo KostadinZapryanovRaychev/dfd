@@ -11,6 +11,7 @@ import RoleTable from "./components/components/RoleTable/RoleTable";
 import RoleForm from "./components/components/RoleForm/RoleForm";
 import EditRole from "./components/components/EditRole/EditRole";
 import EditUser from "./components/components/EditUser/EditUser";
+import EditCompetition from "./components/components/EditCompetition/EditCompetition";
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
         <Route path="/create-role" element={<RoleForm />} />
         <Route path="/roles/:roleId" element={<EditRole />} />
         <Route path="/users/:userId" element={<EditUser />} />
+        <Route path="/competitions/:competitionId" element={<EditCompetition />} />
       </Routes>
     </div>
   );

@@ -48,7 +48,7 @@ const CompetitionsTable = () => {
               <td>{competition.startsAt}</td>
               <td>{competition.endsAt}</td>
               <td>
-                <Link to={`/competition/${competition.id}`}>Edit</Link>
+                <Link to={`/competitions/${competition.id}`}>Edit</Link>
                 <button onClick={() => handleDelete(competition.id)}>Delete</button>
               </td>
             </tr>
