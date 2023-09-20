@@ -12,34 +12,14 @@ import RoleForm from "./components/components/RoleForm/RoleForm";
 import EditRole from "./components/components/EditRole/EditRole";
 import EditUser from "./components/components/EditUser/EditUser";
 import EditCompetition from "./components/components/EditCompetition/EditCompetition";
+import ErrorPage from "./components/components/ErrorPage/ErrorPage";
+import HomePage from "./components/components/HomePage/HomePage";
 
 function App() {
   return (
     <div>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/register">Register</Link>
-          </li>
-          <li>
-            <Link to="/protected">Protected</Link>
-          </li>
-          <li>
-            <Link to="/login">Login</Link>
-          </li>
-          <li>
-            <Link to="/checkout">Stripe</Link>
-          </li>
-          <li>
-            <Link to="/competitions">Competitions</Link>
-          </li>
-          <li>
-            <Link to="/roles">Roles</Link>
-          </li>
-        </ul>
-      </nav>
-
       <Routes>
+        <Route path="/" element={<HomePage />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/protected" element={<ProtectedComponent />} />
@@ -51,6 +31,7 @@ function App() {
         <Route path="/roles/:roleId" element={<EditRole />} />
         <Route path="/users/:userId" element={<EditUser />} />
         <Route path="/competitions/:competitionId" element={<EditCompetition />} />
+        <Route path="/*" element={<ErrorPage />} />
       </Routes>
     </div>
   );
