@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { getAllUsers } from "../../../services/userServices";
+import { deleteUser, getAllUsers } from "../../../services/userServices";
+import { Link } from "react-router-dom";
 
 const UserTable = () => {
   const [users, setUsers] = useState([]);
@@ -13,6 +14,16 @@ const UserTable = () => {
         console.error("Error fetching users:", error);
       });
   }, []);
+
+  const handleDelete = async (userId) => {
+    try {
+      await deleteUser(userId);
+      // Remove the deleted user from the local state
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  };
 
   return (
     <table>
@@ -31,6 +42,10 @@ const UserTable = () => {
             <td>{user.firstName}</td>
             <td>{user.lastName}</td>
             <td>{user.email}</td>
+            <td>
+              <Link to={`/users/${user.id}`}>Edit</Link>
+              <button onClick={() => handleDelete(user.id)}>Delete</button>
+            </td>
           </tr>
         ))}
       </tbody>
