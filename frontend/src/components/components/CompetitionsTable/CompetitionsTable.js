@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getAllCompetitions, deleteCompetition } from "../../../services/competitionServices";
-import { Link } from "react-router-dom"; // If using React Router for navigation
+import { Link } from "react-router-dom";
 
 const CompetitionsTable = () => {
   const [competitions, setCompetitions] = useState([]);
@@ -33,9 +33,14 @@ const CompetitionsTable = () => {
           <tr>
             <th>ID</th>
             <th>Name</th>
+            <th>Logo</th>
             <th>Description</th>
             <th>Start Date</th>
             <th>End Date</th>
+            <th>Award</th>
+            <th>Rating</th>
+            <th>Requirements</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -44,9 +49,16 @@ const CompetitionsTable = () => {
             <tr key={competition.id}>
               <td>{competition.id}</td>
               <td>{competition.name}</td>
+              <td>
+                <img src={`data:image/jpeg;base64,${competition.logo}`} alt="Competition Logo" />
+              </td>
               <td>{competition.description}</td>
-              <td>{competition.startsAt}</td>
-              <td>{competition.endsAt}</td>
+              <td>{new Date(competition.startsAt).toLocaleDateString()}</td>
+              <td>{new Date(competition.endsAt).toLocaleDateString()}</td>
+              <td>{competition.award}</td>
+              <td>{competition.rating}</td>
+              <td>{competition.requirements}</td>
+              <td>{competition.status}</td>
               <td>
                 <Link to={`/competitions/${competition.id}`}>Edit</Link>
                 <button onClick={() => handleDelete(competition.id)}>Delete</button>

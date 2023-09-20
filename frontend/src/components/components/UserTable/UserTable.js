@@ -33,6 +33,14 @@ const UserTable = () => {
           <th>First Name</th>
           <th>Last Name</th>
           <th>Email</th>
+          <th>Role ID</th>
+          <th>Profession</th>
+          <th>Age</th>
+          <th>Address</th>
+          <th>Company</th>
+          <th>Phone</th>
+          <th>Admin</th>
+          <th>Approved At</th>
         </tr>
       </thead>
       <tbody>
@@ -42,6 +50,14 @@ const UserTable = () => {
             <td>{user.firstName}</td>
             <td>{user.lastName}</td>
             <td>{user.email}</td>
+            <td>{user.roleId}</td>
+            <td>{user.profession}</td>
+            <td>{user.age}</td>
+            <td>{user.address}</td>
+            <td>{user.company}</td>
+            <td>{user.phone}</td>
+            <td>{user.isAdmin ? "Yes" : "No"}</td>
+            <td>{user.approvedAt}</td>
             <td>
               <Link to={`/users/${user.id}`}>Edit</Link>
               <button onClick={() => handleDelete(user.id)}>Delete</button>

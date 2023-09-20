@@ -7,9 +7,14 @@ const EditCompetition = () => {
   const navigate = useNavigate();
   const [competitionData, setCompetitionData] = useState({
     name: "",
+    logo: null,
     description: "",
     startsAt: "",
     endsAt: "",
+    award: "",
+    rating: 0,
+    requirements: "",
+    status: "",
   });
 
   useEffect(() => {
@@ -24,8 +29,12 @@ const EditCompetition = () => {
   }, [competitionId]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCompetitionData({ ...competitionData, [name]: value });
+    const { name, value, type, files } = e.target;
+
+    // For file input (logo), set the value as a File object
+    const updatedValue = type === "file" ? files[0] : value;
+
+    setCompetitionData({ ...competitionData, [name]: updatedValue });
   };
 
   const handleSubmit = async (e) => {
@@ -46,6 +55,10 @@ const EditCompetition = () => {
         <div>
           <label htmlFor="name">Name</label>
           <input type="text" id="name" name="name" value={competitionData.name} onChange={handleChange} required />
+        </div>
+        <div>
+          <label htmlFor="logo">Logo</label>
+          <input type="file" id="logo" name="logo" onChange={handleChange} accept="image/*" />
         </div>
         <div>
           <label htmlFor="description">Description</label>
@@ -78,6 +91,27 @@ const EditCompetition = () => {
             onChange={handleChange}
             required
           />
+        </div>
+        <div>
+          <label htmlFor="award">Award</label>
+          <input type="text" id="award" name="award" value={competitionData.award} onChange={handleChange} />
+        </div>
+        <div>
+          <label htmlFor="rating">Rating</label>
+          <input type="number" id="rating" name="rating" value={competitionData.rating} onChange={handleChange} />
+        </div>
+        <div>
+          <label htmlFor="requirements">Requirements</label>
+          <textarea
+            id="requirements"
+            name="requirements"
+            value={competitionData.requirements}
+            onChange={handleChange}
+          ></textarea>
+        </div>
+        <div>
+          <label htmlFor="status">Status</label>
+          <input type="text" id="status" name="status" value={competitionData.status} onChange={handleChange} />
         </div>
         <button type="submit">Update Competition</button>
       </form>

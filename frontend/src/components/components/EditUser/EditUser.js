@@ -9,6 +9,15 @@ const EditUser = () => {
     firstName: "",
     lastName: "",
     email: "",
+    roleId: null,
+    profession: "",
+    cv: null,
+    age: null,
+    address: "",
+    company: "",
+    phone: "",
+    isAdmin: false,
+    approvedAt: null,
   });
 
   useEffect(() => {
@@ -26,7 +35,7 @@ const EditUser = () => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
   };
-
+  console.log(userData);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -61,9 +70,63 @@ const EditUser = () => {
           <label htmlFor="email">Email</label>
           <input type="email" id="email" name="email" value={userData.email} onChange={handleChange} required />
         </div>
+        <div>
+          <label htmlFor="roleId">Role ID</label>
+          <input type="number" id="roleId" name="roleId" value={userData.roleId || ""} onChange={handleChange} />
+        </div>
+        <div>
+          <label htmlFor="profession">Profession</label>
+          <input
+            type="text"
+            id="profession"
+            name="profession"
+            value={userData.profession || ""}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="cv">CV</label>
+          <input type="file" id="cv" name="cv" onChange={handleChange} />
+        </div>
+        <div>
+          <label htmlFor="age">Age</label>
+          <input type="number" id="age" name="age" value={userData.age || ""} onChange={handleChange} />
+        </div>
+        <div>
+          <label htmlFor="address">Address</label>
+          <input type="text" id="address" name="address" value={userData.address || ""} onChange={handleChange} />
+        </div>
+        <div>
+          <label htmlFor="company">Company</label>
+          <input type="text" id="company" name="company" value={userData.company || ""} onChange={handleChange} />
+        </div>
+        <div>
+          <label htmlFor="phone">Phone</label>
+          <input type="text" id="phone" name="phone" value={userData.phone || ""} onChange={handleChange} />
+        </div>
+        <div>
+          <label htmlFor="isAdmin">Is Admin</label>
+          <input
+            type="checkbox"
+            id="isAdmin"
+            name="isAdmin"
+            checked={userData.isAdmin}
+            onChange={(e) => setUserData({ ...userData, isAdmin: e.target.checked })}
+          />
+        </div>
+        <div>
+          <label htmlFor="approvedAt">Approved At</label>
+          <input
+            type="date"
+            id="approvedAt"
+            name="approvedAt"
+            value={userData.approvedAt || ""}
+            onChange={handleChange}
+          />
+        </div>
         <button type="submit">Update User</button>
       </form>
-      <Link to="/users">Back to Users</Link>
+      <Link to="/protected">Back to Users</Link>
     </div>
   );
 };
