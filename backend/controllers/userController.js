@@ -58,6 +58,7 @@ exports.loginUser = async (req, res) => {
     const token = jwt.sign({ id: existingUser.id, email: existingUser.email }, secretKey, {
       expiresIn: "1h", // Set the token expiration time as per your requirement
     });
+    console.log("token:", token);
 
     res.status(200).json({ message: "Login successful", token });
   } catch (error) {

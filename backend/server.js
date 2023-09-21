@@ -31,14 +31,14 @@ db.sync()
   });
 
 app.use("/api", userRoutes);
-app.use("/api/competitions", competitionRoutes);
-app.use("/api/roles", roleRoutes);
 
 app.use(authenticateToken);
 
 app.get("/api/protected", (req, res) => {
   res.json({ message: "This is a protected route", user: req.user });
 });
+app.use("/api/competitions", competitionRoutes);
+app.use("/api/roles", roleRoutes);
 
 app.listen(port, () => {
   console.log("Server is running on port 5000");
