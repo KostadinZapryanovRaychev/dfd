@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getRole, updateRole } from "../../../services/roleServices";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext/AuthContext";
+import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
 
 const EditRole = () => {
   const { roleId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [roleData, setRoleData] = useState({
     name: "",
   });
@@ -36,6 +39,10 @@ const EditRole = () => {
       console.error("Error updating role:", error);
     }
   };
+
+  if (!user) {
+    return <NonAuthenticated />;
+  }
 
   return (
     <div>

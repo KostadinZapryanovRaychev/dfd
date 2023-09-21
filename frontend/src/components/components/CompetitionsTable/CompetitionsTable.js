@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { getAllCompetitions, deleteCompetition } from "../../../services/competitionServices";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext/AuthContext";
+import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
 
 const CompetitionsTable = () => {
   const [competitions, setCompetitions] = useState([]);
+  const { user } = useAuth();
 
   useEffect(() => {
     getAllCompetitions()
@@ -25,6 +28,9 @@ const CompetitionsTable = () => {
     }
   };
 
+  if (!user) {
+    return <NonAuthenticated />;
+  }
   return (
     <div>
       <Link to={"/create-competition"}>Create new competition</Link>

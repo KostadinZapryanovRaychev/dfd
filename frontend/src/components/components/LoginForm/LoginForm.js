@@ -21,7 +21,9 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await loginUser(formData);
+      console.log(formData); // Log the form data
+      const token = await loginUser(formData);
+      console.log("Received Token:", token); // Log the received token
       navigate("/");
     } catch (error) {
       console.error(error.message);

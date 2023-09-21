@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { getUser, updateUser } from "../../../services/userServices";
+import { useAuth } from "../../../context/AuthContext/AuthContext";
+import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
 
 const EditUser = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",
@@ -47,6 +50,9 @@ const EditUser = () => {
     }
   };
 
+  if (!user) {
+    return <NonAuthenticated />;
+  }
   return (
     <div>
       <h2>Edit User</h2>

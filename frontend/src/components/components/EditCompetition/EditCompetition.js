@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { getCompetition, updateCompetition } from "../../../services/competitionServices";
+import { useAuth } from "../../../context/AuthContext/AuthContext";
+import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
 
 const EditCompetition = () => {
   const { competitionId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [competitionData, setCompetitionData] = useState({
     name: "",
     logo: null,
@@ -48,6 +51,9 @@ const EditCompetition = () => {
     }
   };
 
+  if (!user) {
+    return <NonAuthenticated />;
+  }
   return (
     <div>
       <h2>Edit Competition</h2>
