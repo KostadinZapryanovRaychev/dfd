@@ -8,48 +8,35 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [autoUser, setAuthUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const login = async (token) => {
-    localStorage.setItem("token", token);
-    console.log(token);
-    try {
-      const response = await axios.get("http://localhost:5000/api/protected", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setUser(response.data.user);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  };
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    setUser(null);
+  const value = {
+    autoUser,
+    setAuthUser,
+    isLoggedIn,
+    setIsLoggedIn,
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("authToken");
     if (token) {
       axios
         .get("http://localhost:5000/api/protected", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
-          console.log(response.data.user);
-          setUser(response.data.user);
+          console.log(response);
+          sessionStorage.setItem("userId", response.data.user.id);
+          sessionStorage.setItem("isAdmin", response.data.user.isAdmin);
+          const userId = sessionStorage.getItem("userId");
+          if (userId) {
+            setAuthUser(userId);
+          }
         })
         .catch((error) => console.error("Error fetching user data:", error));
     }
-  }, []);
-
-  console.log(user);
-
-  const value = {
-    user,
-    login,
-    logout,
-  };
+  }, [isLoggedIn]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

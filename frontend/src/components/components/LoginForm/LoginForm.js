@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../../services/userServices";
+import { useAuth } from "../../../context/AuthContext/AuthContext";
 
 const LoginForm = () => {
+  const { authUser, setIsLoggedIn } = useAuth();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -21,15 +24,19 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log(formData); // Log the form data
       const token = await loginUser(formData);
-      console.log("Received Token:", token); // Log the received token
+      if (token) {
+        setIsLoggedIn(true);
+      }
       navigate("/");
     } catch (error) {
       console.error(error.message);
     }
   };
 
+  useEffect(() => {}, [authUser]);
+
+  console.log(authUser);
   return (
     <form onSubmit={handleSubmit}>
       <div>
