@@ -6,7 +6,7 @@ export const loginUser = async (formData) => {
   try {
     const response = await postFetch("/login", formData);
     const token = response.token;
-    localStorage.setItem("token", token);
+    sessionStorage.setItem("authToken", token);
     return token;
   } catch (error) {
     throw new Error("Error during user login");
