@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { Link, Route, Router, Routes, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
+import { path } from "../../../routes/routes";
 
 function AdminPanel() {
   const naviagete = useNavigate();
   function navigateToHomePage() {
-    naviagete("/");
+    naviagete(path.home);
   }
   const { isAdmin } = useAuth();
 
