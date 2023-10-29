@@ -14,6 +14,7 @@ import EditUser from "./components/components/EditUser/EditUser";
 import EditCompetition from "./components/components/EditCompetition/EditCompetition";
 import ErrorPage from "./components/components/ErrorPage/ErrorPage";
 import HomePage from "./components/components/HomePage/HomePage";
+import AdminPanel from "./components/components/Admin/AdminPanel";
 
 function App() {
   return (
@@ -30,7 +31,11 @@ function App() {
         <Route path="/create-role" element={<RoleForm />} />
         <Route path="/roles/:roleId" element={<EditRole />} />
         <Route path="/users/:userId" element={<EditUser />} />
-        <Route path="/competitions/:competitionId" element={<EditCompetition />} />
+        <Route
+          path="/competitions/:competitionId"
+          element={<EditCompetition />}
+        />
+        <Route path="/admin" element={<AdminPanel />} />
         <Route path="/*" element={<ErrorPage />} />
       </Routes>
     </div>

@@ -28,6 +28,47 @@
   color: #61dafb;
 }
 
+/* Add some basic styles for the table */
+table {
+  border: 1px solid black;
+  border-collapse: collapse;
+  width: 100%;
+  margin: 10px auto;
+}
+
+th,
+td {
+  border: 1px solid black;
+  padding: 10px;
+  text-align: left;
+}
+
+caption {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Use media queries to hide or rearrange some columns on smaller screens */
+@media (max-width: 600px) {
+  td:nth-child(4),
+  th:nth-child(4) {
+    display: none; /* Hide the fourth column */
+  }
+
+  td,
+  th {
+    display: block; /* Wrap each cell into a new row */
+  }
+
+  td:before {
+    content: attr(data-th); /* Add a label for each cell */
+    font-weight: bold;
+    display: inline-block;
+    width: 100px;
+  }
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
