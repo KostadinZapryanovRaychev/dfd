@@ -36,11 +36,12 @@ export function AuthProvider({ children }) {
           sessionStorage.setItem("userId", response.data.user.id);
           sessionStorage.setItem("isAdmin", response.data.user.isAdmin);
           const userId = sessionStorage.getItem("userId");
-          const isAdmin = sessionStorage.getItem("isAdmin");
+          const isAdminData = sessionStorage.getItem("isAdmin");
+          console.log(isAdminData);
           if (userId) {
             setUserId(userId);
           }
-          if (isAdmin) {
+          if (isAdminData === "true") {
             setIsAdmin(true);
           }
         })
