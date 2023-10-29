@@ -35,11 +35,13 @@ export function AuthProvider({ children }) {
           console.log(response);
           sessionStorage.setItem("userId", response.data.user.id);
           sessionStorage.setItem("isAdmin", response.data.user.isAdmin);
-          const user = sessionStorage.setItem("user", response?.data?.user);
           const userId = sessionStorage.getItem("userId");
+          const isAdmin = sessionStorage.getItem("isAdmin");
           if (userId) {
-            setIsAdmin(true);
             setUserId(userId);
+          }
+          if (isAdmin) {
+            setIsAdmin(true);
           }
         })
         .catch((error) => console.error("Error fetching user data:", error));

@@ -30,6 +30,11 @@ function HomePage() {
               <li>
                 <Link to="/roles">Roles</Link>
               </li>
+              {isAdmin ? (
+                <li>
+                  <Link to="/admin">Admin</Link>
+                </li>
+              ) : null}
             </ul>
           </nav>
         </div>
