@@ -10,12 +10,18 @@ export function useAuth() {
 export function AuthProvider({ children }) {
   const [autoUser, setAuthUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [userId, setUserId] = useState(false);
 
   const value = {
     autoUser,
     setAuthUser,
     isLoggedIn,
     setIsLoggedIn,
+    isAdmin,
+    setIsAdmin,
+    userId,
+    setUserId,
   };
 
   useEffect(() => {
@@ -29,9 +35,11 @@ export function AuthProvider({ children }) {
           console.log(response);
           sessionStorage.setItem("userId", response.data.user.id);
           sessionStorage.setItem("isAdmin", response.data.user.isAdmin);
+          const user = sessionStorage.setItem("user", response?.data?.user);
           const userId = sessionStorage.getItem("userId");
           if (userId) {
-            setAuthUser(userId);
+            setIsAdmin(true);
+            setUserId(userId);
           }
         })
         .catch((error) => console.error("Error fetching user data:", error));
