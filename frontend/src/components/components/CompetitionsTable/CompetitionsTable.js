@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { getAllCompetitions, deleteCompetition } from "../../../services/competitionServices";
+import {
+  getAllCompetitions,
+  deleteCompetition,
+} from "../../../services/competitionServices";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
 import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
 
 const CompetitionsTable = () => {
   const [competitions, setCompetitions] = useState([]);
-  const { user } = useAuth();
+  const { userId } = useAuth();
 
   useEffect(() => {
     getAllCompetitions()
@@ -22,13 +25,17 @@ const CompetitionsTable = () => {
     try {
       await deleteCompetition(competitionId);
       // Remove the deleted competition from the local state
-      setCompetitions((prevCompetitions) => prevCompetitions.filter((competition) => competition.id !== competitionId));
+      setCompetitions((prevCompetitions) =>
+        prevCompetitions.filter(
+          (competition) => competition.id !== competitionId
+        )
+      );
     } catch (error) {
       console.error("Error deleting competition:", error);
     }
   };
 
-  if (!user) {
+  if (!userId) {
     return <NonAuthenticated />;
   }
   return (
@@ -56,7 +63,10 @@ const CompetitionsTable = () => {
               <td>{competition.id}</td>
               <td>{competition.name}</td>
               <td>
-                <img src={`data:image/jpeg;base64,${competition.logo}`} alt="Competition Logo" />
+                <img
+                  src={`data:image/jpeg;base64,${competition.logo}`}
+                  alt="Competition Logo"
+                />
               </td>
               <td>{competition.description}</td>
               <td>{new Date(competition.startsAt).toLocaleDateString()}</td>
@@ -67,7 +77,9 @@ const CompetitionsTable = () => {
               <td>{competition.status}</td>
               <td>
                 <Link to={`/competitions/${competition.id}`}>Edit</Link>
-                <button onClick={() => handleDelete(competition.id)}>Delete</button>
+                <button onClick={() => handleDelete(competition.id)}>
+                  Delete
+                </button>
               </td>
             </tr>
           ))}

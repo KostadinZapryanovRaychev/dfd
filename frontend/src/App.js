@@ -15,17 +15,19 @@ import EditCompetition from "./components/components/EditCompetition/EditCompeti
 import ErrorPage from "./components/components/ErrorPage/ErrorPage";
 import HomePage from "./components/components/HomePage/HomePage";
 import AdminPanel from "./components/components/Admin/AdminPanel";
+import Register from "./pages/Register/Register";
+import Competitions from "./pages/Competitions/Competitions";
 
 function App() {
   return (
     <div>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/register" element={<RegisterForm />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/protected" element={<ProtectedComponent />} />
         <Route path="/checkout" element={<StripePricingTable />} />
-        <Route path="/competitions" element={<CompetitionsTable />} />
+        <Route path="/competitions" element={<Competitions />} />
         <Route path="/create-competition" element={<CompetitionForm />} />
         <Route path="/roles" element={<RoleTable />} />
         <Route path="/create-role" element={<RoleForm />} />
