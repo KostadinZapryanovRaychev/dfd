@@ -1,10 +1,23 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
+import { logout } from "../../../services/authServices";
+import { refreshThePage } from "../../../helpers/refresh";
 
 function HomePage() {
-  const { userId, isAdmin } = useAuth();
-  console.log(isAdmin);
+  const { userId, isAdmin, setAuthUser, setIsLoggedIn, setUserId, setIsAdmin } =
+    useAuth();
+
+  async function handleLogout() {
+    sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("userId");
+    setIsLoggedIn(false);
+    setUserId(false);
+    setIsAdmin(false);
+    setAuthUser(null);
+    await logout();
+    refreshThePage();
+  }
 
   return (
     <>
@@ -29,6 +42,11 @@ function HomePage() {
               </li>
               <li>
                 <Link to="/roles">Roles</Link>
+              </li>
+              <li>
+                <Link to="/" onClick={handleLogout}>
+                  Logout
+                </Link>
               </li>
               {isAdmin ? (
                 <li>
