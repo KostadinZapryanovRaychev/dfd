@@ -9,14 +9,19 @@ function HomePage() {
     useAuth();
 
   async function handleLogout() {
-    sessionStorage.removeItem("authToken");
-    sessionStorage.removeItem("userId");
-    setIsLoggedIn(false);
-    setUserId(false);
-    setIsAdmin(false);
-    setAuthUser(null);
-    await logout();
-    refreshThePage();
+    try {
+      sessionStorage.removeItem("authToken");
+      sessionStorage.removeItem("userId");
+      setIsLoggedIn(false);
+      setUserId(false);
+      setIsAdmin(false);
+      setAuthUser(null);
+      await logout();
+      refreshThePage();
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // TODO popup
+    }
   }
 
   return (
