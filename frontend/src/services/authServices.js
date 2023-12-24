@@ -20,5 +20,5 @@ export const logout = async () => {
 };
 
 export const isAutheticated = async () => {
-    return await postFetch("/authenticated");
-  };
+  return await postFetch("/authenticated");
+};
