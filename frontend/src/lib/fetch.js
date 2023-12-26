@@ -6,12 +6,20 @@ function getAuthToken() {
   return sessionStorage.getItem("authToken");
 }
 
+function navigateToHomePag() {
+  window.location.href = "/";
+}
+
 function setAuthHeaders(customHeaders = {}) {
   const authToken = getAuthToken();
-  return {
-    ...customHeaders,
-    Authorization: `Bearer ${authToken}`,
-  };
+
+  if (authToken) {
+    return {
+      ...customHeaders,
+      Authorization: `Bearer ${authToken}`,
+    };
+  }
+  return { ...customHeaders };
 }
 
 function makeRequest(url, method, dataOrParams, customHeaders = {}) {
@@ -21,7 +29,21 @@ function makeRequest(url, method, dataOrParams, customHeaders = {}) {
     data: method === "GET" ? undefined : dataOrParams,
     params: method === "GET" ? dataOrParams : undefined,
     headers: setAuthHeaders(customHeaders),
-  }).then((res) => res.data);
+  })
+    .then((res) => {
+      console.log(res.status, "status");
+      if (res.status === 401 || res.status === 403) {
+        navigateToHomePag();
+      }
+      return res.data;
+    })
+    .catch((error) => {
+      if (error.response.status === 401 || error.response.status === 403) {
+        navigateToHomePag();
+      }
+      console.error("Request error:", error);
+      throw error;
+    });
 }
 
 export function getFetch(url, params = {}, customHeaders = {}) {
