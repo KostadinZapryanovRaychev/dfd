@@ -1,0 +1,68 @@
+/* ConcourseCard.css */
+
+.concourse-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 16px;
+  margin: 8px;
+  flex: 1 0 calc(25% - 16px);
+  box-sizing: border-box;
+}
+
+@media (max-width: 1200px) {
+  .concourse-card {
+    flex: 1 0 calc(33.33% - 16px);
+  }
+}
+
+@media (max-width: 900px) {
+  .concourse-card {
+    flex: 1 0 calc(50% - 16px);
+  }
+}
+
+@media (max-width: 600px) {
+  .concourse-card {
+    flex: 1 0 calc(100% - 16px);
+  }
+}
+
+.concourse-logo {
+  max-width: 100%;
+  height: auto;
+}
+
+.concourse-details {
+  margin-top: 16px;
+}
+
+.concourse-name {
+  font-size: 1.5em;
+  margin-bottom: 8px;
+}
+
+.concourse-dates {
+  margin-bottom: 8px;
+}
+
+/* Media queries for responsiveness */
+/* @media (min-width: 600px) {
+  .concourse-card {
+    flex-direction: row;
+    align-items: center;
+    width: calc(50% - 32px);
+  }
+
+  .concourse-logo {
+    max-width: 150px;
+    margin-right: 16px;
+  }
+} */
+
+/* Media query for smaller screens, e.g., mobile */
+/* @media (max-width: 600px) {
+  .concourse-card {
+    width: calc(100% - 32px); 
+  }
+} */
