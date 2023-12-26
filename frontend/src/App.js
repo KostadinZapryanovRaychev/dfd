@@ -17,6 +17,7 @@ import HomePage from "./components/components/HomePage/HomePage";
 import AdminPanel from "./components/components/Admin/AdminPanel";
 import Register from "./pages/Register/Register";
 import Competitions from "./pages/Competitions/Competitions";
+import Concourses from "./pages/Concourses/Concourses";
 
 function App() {
   return (
@@ -33,10 +34,8 @@ function App() {
         <Route path="/create-role" element={<RoleForm />} />
         <Route path="/roles/:roleId" element={<EditRole />} />
         <Route path="/users/:userId" element={<EditUser />} />
-        <Route
-          path="/competitions/:competitionId"
-          element={<EditCompetition />}
-        />
+        <Route path="/competitions/:competitionId" element={<EditCompetition />} />
+        <Route path="/concourses" element={<Concourses />} />
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/*" element={<ErrorPage />} />
       </Routes>

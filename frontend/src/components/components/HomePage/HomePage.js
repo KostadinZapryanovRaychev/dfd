@@ -30,6 +30,9 @@ function HomePage() {
               <li>
                 <Link to="/roles">Roles</Link>
               </li>
+              <li>
+                <Link to="/concourses">Concourses</Link>
+              </li>
               {isAdmin ? (
                 <li>
                   <Link to="/admin">Admin</Link>
