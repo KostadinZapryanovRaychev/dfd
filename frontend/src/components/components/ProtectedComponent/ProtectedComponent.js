@@ -8,19 +8,21 @@ const ProtectedComponent = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
     navigate("/");
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (token) {
       axios
         .get("http://localhost:5000/api/protected", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => setUserData(response.data))
-        .catch((error) => console.error("Error fetching protected data:", error));
+        .catch((error) =>
+          console.error("Error fetching protected data:", error)
+        );
     }
   }, []);
   return (
