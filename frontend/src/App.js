@@ -18,8 +18,14 @@ import AdminPanel from "./components/components/Admin/AdminPanel";
 import Register from "./pages/Register/Register";
 import Competitions from "./pages/Competitions/Competitions";
 import Concourses from "./pages/Concourses/Concourses";
+import { useApp } from "./context/DataContext/DataContext";
+import Loading from "./components/components/Loading/Loading";
 
 function App() {
+  const { isLoading } = useApp();
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div>
       <Routes>

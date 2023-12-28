@@ -5,8 +5,7 @@ import { logout } from "../../../services/authServices";
 import { refreshThePage } from "../../../helpers/refresh";
 
 function HomePage() {
-  const { userId, isAdmin, setAuthUser, setIsLoggedIn, setUserId, setIsAdmin } =
-    useAuth();
+  const { userId, isAdmin, setAuthUser, setIsLoggedIn, setUserId, setIsAdmin } = useAuth();
 
   async function handleLogout() {
     try {
@@ -47,6 +46,9 @@ function HomePage() {
               </li>
               <li>
                 <Link to="/roles">Roles</Link>
+              </li>
+              <li>
+                <Link to="/concourses">Concourses</Link>
               </li>
               <li>
                 <Link to="/" onClick={handleLogout}>
