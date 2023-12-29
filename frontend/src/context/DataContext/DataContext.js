@@ -8,29 +8,41 @@ export function useApp() {
 }
 
 export function DataProvider({ children }) {
-  const [isLoading, setIsLoading] = useState(false);
-  const value = { isLoading, setIsLoading };
+  const [requestCounter, setRequestCounter] = useState(0);
 
-//   useEffect(() => {
-//     const requestInterceptor = axios.interceptors.request.use((config) => {
-//       setIsLoading(true);
-//       return config;
-//     });
-//     const responseInterceptor = axios.interceptors.response.use(
-//       (response) => {
-//         setIsLoading(false);
-//         return response;
-//       },
-//       (error) => {
-//         setIsLoading(false);
-//         throw error;
-//       }
-//     );
-//     return () => {
-//       axios.interceptors.request.eject(requestInterceptor);
-//       axios.interceptors.response.eject(responseInterceptor);
-//     };
-//   }, []);
+  const incrementCounter = () => setRequestCounter((count) => count + 1);
+  const decrementCounter = () => {
+    setRequestCounter((count) => Math.max(0, count - 1));
+    setTimeout(() => {
+      setRequestCounter((count) => Math.max(0, count - 1));
+    }, 500);
+  };
+
+  const isLoading = requestCounter > 0;
+  const value = { isLoading, incrementCounter, decrementCounter };
+
+  useEffect(() => {
+    const requestInterceptor = axios.interceptors.request.use((config) => {
+      incrementCounter();
+      return config;
+    });
+
+    const responseInterceptor = axios.interceptors.response.use(
+      (response) => {
+        decrementCounter();
+        return response;
+      },
+      (error) => {
+        decrementCounter();
+        throw error;
+      }
+    );
+
+    return () => {
+      axios.interceptors.request.eject(requestInterceptor);
+      axios.interceptors.response.eject(responseInterceptor);
+    };
+  }, [incrementCounter, decrementCounter]);
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
 }
