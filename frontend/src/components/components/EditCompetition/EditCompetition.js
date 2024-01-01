@@ -46,9 +46,13 @@ const EditCompetition = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await updateCompetition(competitionId, competitionData);
-      // Redirect to the competitions list after successfully updating the competition
-      navigate("/competitions");
+      const confirm = window.confirm(
+        `Потвърдете ъпдейта на състезание с id ${competitionId}`
+      );
+      if (confirm) {
+        await updateCompetition(competitionId, competitionData);
+        navigate("/competitions");
+      }
     } catch (error) {
       console.error("Error updating competition:", error);
     }
