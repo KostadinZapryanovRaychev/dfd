@@ -4,7 +4,16 @@ import React from "react";
 import "./ConcourseCard.css";
 
 function ConcourseCard(props) {
-  const { name, logo, description, startDate, endDate, awardRating, requirements } = props;
+  const {
+    name,
+    logo,
+    description,
+    startsAt,
+    endsAt,
+    awardRating,
+    requirements,
+    status,
+  } = props;
 
   return (
     <div className="concourse-card">
@@ -13,10 +22,10 @@ function ConcourseCard(props) {
         <h2 className="concourse-name">{name}</h2>
         <p className="concourse-description">{description}</p>
         <p className="concourse-dates">
-          {startDate} - {endDate}
+          {startsAt} - {endsAt}
         </p>
-        <p className="concourse-rating">Award Rating: {awardRating}</p>
-        <p className="concourse-requirements">Requirements: {requirements}</p>
+        <p className="concourse-rating">Рейтинг: {awardRating}</p>
+        <p className="concourse-requirements">Условия: {requirements}</p>
       </div>
     </div>
   );
