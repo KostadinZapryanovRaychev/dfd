@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { getCompetition, updateCompetition } from "../../../services/competitionServices";
+import {
+  getCompetition,
+  updateCompetition,
+} from "../../../services/competitionServices";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
 import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
 
 const EditCompetition = () => {
   const { competitionId } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { isAdmin, userId } = useAuth();
   const [competitionData, setCompetitionData] = useState({
     name: "",
     logo: null,
@@ -51,7 +54,7 @@ const EditCompetition = () => {
     }
   };
 
-  if (!user) {
+  if (!userId || !isAdmin) {
     return <NonAuthenticated />;
   }
   return (
@@ -60,11 +63,24 @@ const EditCompetition = () => {
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="name">Name</label>
-          <input type="text" id="name" name="name" value={competitionData.name} onChange={handleChange} required />
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={competitionData.name}
+            onChange={handleChange}
+            required
+          />
         </div>
         <div>
           <label htmlFor="logo">Logo</label>
-          <input type="file" id="logo" name="logo" onChange={handleChange} accept="image/*" />
+          <input
+            type="file"
+            id="logo"
+            name="logo"
+            onChange={handleChange}
+            accept="image/*"
+          />
         </div>
         <div>
           <label htmlFor="description">Description</label>
@@ -100,11 +116,23 @@ const EditCompetition = () => {
         </div>
         <div>
           <label htmlFor="award">Award</label>
-          <input type="text" id="award" name="award" value={competitionData.award} onChange={handleChange} />
+          <input
+            type="text"
+            id="award"
+            name="award"
+            value={competitionData.award}
+            onChange={handleChange}
+          />
         </div>
         <div>
           <label htmlFor="rating">Rating</label>
-          <input type="number" id="rating" name="rating" value={competitionData.rating} onChange={handleChange} />
+          <input
+            type="number"
+            id="rating"
+            name="rating"
+            value={competitionData.rating}
+            onChange={handleChange}
+          />
         </div>
         <div>
           <label htmlFor="requirements">Requirements</label>
@@ -117,7 +145,13 @@ const EditCompetition = () => {
         </div>
         <div>
           <label htmlFor="status">Status</label>
-          <input type="text" id="status" name="status" value={competitionData.status} onChange={handleChange} />
+          <input
+            type="text"
+            id="status"
+            name="status"
+            value={competitionData.status}
+            onChange={handleChange}
+          />
         </div>
         <button type="submit">Update Competition</button>
       </form>

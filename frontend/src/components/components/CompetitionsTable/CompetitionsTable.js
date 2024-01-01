@@ -23,13 +23,17 @@ const CompetitionsTable = () => {
 
   const handleDelete = async (competitionId) => {
     try {
-      await deleteCompetition(competitionId);
-      // Remove the deleted competition from the local state
-      setCompetitions((prevCompetitions) =>
-        prevCompetitions.filter(
-          (competition) => competition.id !== competitionId
-        )
+      const confirmed = window.confirm(
+        `Потвърди изтриването на на състезание с Id ${competitionId}`
       );
+      if (confirmed) {
+        await deleteCompetition(competitionId);
+        setCompetitions((prevCompetitions) =>
+          prevCompetitions.filter(
+            (competition) => competition.id !== competitionId
+          )
+        );
+      }
     } catch (error) {
       console.error("Error deleting competition:", error);
     }

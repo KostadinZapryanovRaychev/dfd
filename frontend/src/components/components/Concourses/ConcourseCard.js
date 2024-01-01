@@ -15,6 +15,8 @@ function ConcourseCard(props) {
     status,
   } = props;
 
+  function apply() {}
+
   return (
     <div className="concourse-card">
       <img src={logo} alt={`${name} Logo`} className="concourse-logo" />
@@ -26,6 +28,7 @@ function ConcourseCard(props) {
         </p>
         <p className="concourse-rating">Рейтинг: {awardRating}</p>
         <p className="concourse-requirements">Условия: {requirements}</p>
+        <button onClick={() => apply()}>Apply</button>
       </div>
     </div>
   );
