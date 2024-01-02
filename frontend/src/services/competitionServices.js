@@ -4,7 +4,11 @@ const API_BASE_URL = "http://localhost:5000/api"; // Adjust the URL as needed
 
 export const createCompetition = async (competitionData) => {
   try {
-    return await postFetch("/competitions", competitionData);
+    const formData = new FormData();
+    Object.entries(competitionData).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    return await postFetch("/competitions", formData);
   } catch (error) {
     throw new Error("Error creating competition");
   }

@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  getAllCompetitions,
-  deleteCompetition,
-} from "../../../services/competitionServices";
+import { getAllCompetitions, deleteCompetition } from "../../../services/competitionServices";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
 import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
@@ -23,15 +20,11 @@ const CompetitionsTable = () => {
 
   const handleDelete = async (competitionId) => {
     try {
-      const confirmed = window.confirm(
-        `Потвърди изтриването на на състезание с Id ${competitionId}`
-      );
+      const confirmed = window.confirm(`Потвърди изтриването на на състезание с Id ${competitionId}`);
       if (confirmed) {
         await deleteCompetition(competitionId);
         setCompetitions((prevCompetitions) =>
-          prevCompetitions.filter(
-            (competition) => competition.id !== competitionId
-          )
+          prevCompetitions.filter((competition) => competition.id !== competitionId)
         );
       }
     } catch (error) {
@@ -68,7 +61,8 @@ const CompetitionsTable = () => {
               <td>{competition.name}</td>
               <td>
                 <img
-                  src={`data:image/jpeg;base64,${competition.logo}`}
+                  // src={`data:image/jpeg;base64,${competition.logo}`}
+                  src={competition.logo}
                   alt="Competition Logo"
                 />
               </td>
@@ -81,9 +75,7 @@ const CompetitionsTable = () => {
               <td>{competition.status}</td>
               <td>
                 <Link to={`/competitions/${competition.id}`}>Edit</Link>
-                <button onClick={() => handleDelete(competition.id)}>
-                  Delete
-                </button>
+                <button onClick={() => handleDelete(competition.id)}>Delete</button>
               </td>
             </tr>
           ))}

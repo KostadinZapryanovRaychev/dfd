@@ -16,13 +16,14 @@ const CompetitionForm = () => {
     status: "",
   });
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setCompetitionData((prevData) => ({ ...prevData, logo: file }));
+  };
+
   const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
-
-    // For file input (logo), set the value as a File object
-    const updatedValue = type === "file" ? files[0] : value;
-
-    setCompetitionData({ ...competitionData, [name]: updatedValue });
+    const { name, value } = e.target;
+    setCompetitionData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -58,7 +59,7 @@ const CompetitionForm = () => {
         </div>
         <div>
           <label htmlFor="logo">Logo</label>
-          <input type="file" id="logo" name="logo" onChange={handleChange} accept="image/*" />
+          <input type="file" id="logo" name="logo" onChange={handleFileChange} accept="image/*" />
         </div>
         <div>
           <label htmlFor="description">Description</label>
