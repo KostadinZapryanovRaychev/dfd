@@ -15,7 +15,7 @@ const Competition = db.define(
       allowNull: false,
     },
     logo: {
-      type: Sequelize.BLOB("long"), // Binary data for the logo file (assuming it's an image)
+      type: Sequelize.STRING,
       allowNull: true,
     },
     description: {

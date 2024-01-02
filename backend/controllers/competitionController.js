@@ -1,9 +1,43 @@
 const Competition = require("../models/CompetitionModel");
+const multer = require("multer");
+const path = require("path");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "../public"));
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage: storage }).single("logo");
 
 exports.createCompetition = async (req, res) => {
   try {
-    const competition = await Competition.create(req.body);
-    res.status(201).json({ message: "Competition created successfully", competition });
+    upload(req, res, async function (err) {
+      if (err) {
+        console.error(err);
+        return res.status(500).send("Error uploading file");
+      }
+
+      const { name, description, startsAt, endsAt, award, rating, requirements, status } = req.body;
+      const logo = req.file ? `/public/${req.file.filename}` : null;
+
+      const competition = await Competition.create({
+        name,
+        logo,
+        description,
+        startsAt,
+        endsAt,
+        award,
+        rating,
+        requirements,
+        status,
+      });
+
+      res.status(201).json({ message: "Competition created successfully", competition });
+    });
   } catch (error) {
     console.error("Error creating competition:", error);
     res.status(500).json({ message: "Internal server error" });
