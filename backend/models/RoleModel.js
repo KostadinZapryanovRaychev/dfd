@@ -18,9 +18,4 @@ const Role = db.define(
   { tableName: "roles" }
 );
 
-// Create the Role table in the database
-Role.sync().then(() => {
-  console.log("Role table created");
-});
-
 module.exports = Role;

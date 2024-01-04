@@ -78,8 +78,5 @@ const User = db.define(
 const Role = require("./RoleModel");
 
 User.belongsTo(Role, { foreignKey: "roleId" });
-User.sync().then(() => {
-  console.log("User table created");
-});
 
 module.exports = User;

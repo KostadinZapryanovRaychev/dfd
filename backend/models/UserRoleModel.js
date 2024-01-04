@@ -11,7 +11,7 @@ const UserRole = db.define(
       allowNull: false,
     },
   },
-  { tableName: "user_roles" }
+  { tableName: "userroles" }
 );
 
 const User = require("./UserModel");
@@ -19,9 +19,5 @@ const Role = require("./RoleModel");
 
 User.belongsToMany(Role, { through: UserRole });
 Role.belongsToMany(User, { through: UserRole });
-
-UserRole.sync().then(() => {
-  console.log("UserRole table created");
-});
 
 module.exports = UserRole;

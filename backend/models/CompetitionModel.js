@@ -50,8 +50,4 @@ const Competition = db.define(
   { tableName: "competitions" }
 );
 
-Competition.sync().then(() => {
-  console.log("Competition table created");
-});
-
 module.exports = Competition;
