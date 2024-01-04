@@ -7,6 +7,7 @@ const { authenticateToken } = require("./middlewares/authenticate");
 const userRoutes = require("./routes/userRoutes");
 const competitionRoutes = require("./routes/competitionRoutes");
 const roleRoutes = require("./routes/roleRoutes");
+const applicationRoutes = require("./routes/applicationRoutes");
 
 const port = process.env.SERVER_PORT;
 
@@ -39,6 +40,7 @@ app.get("/api/protected", (req, res) => {
 });
 app.use("/api/competitions", competitionRoutes);
 app.use("/api/roles", roleRoutes);
+app.use("/api/applications", applicationRoutes);
 
 app.listen(port, () => {
   console.log("Server is running on port 5000");

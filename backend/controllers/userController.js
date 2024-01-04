@@ -24,7 +24,7 @@ exports.registerUser = async (req, res) => {
       email,
       password: hashedPassword,
     });
-
+    
     const secretKey = process.env.SECRET_KEY;
     const token = jwt.sign({ id: newUser.id, email: newUser.email }, secretKey, {
       expiresIn: "1h", // Set the token expiration time as per your requirement
