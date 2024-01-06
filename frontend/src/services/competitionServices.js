@@ -45,3 +45,12 @@ export const deleteCompetition = async (competitionId) => {
     throw new Error("Error deleting competition");
   }
 };
+
+export const applyToCompetition = async (applicationData) => {
+  try {
+    const response = await postFetch("/applications", applicationData);
+    return response;
+  } catch (error) {
+    throw new Error("Error applying to competition");
+  }
+};

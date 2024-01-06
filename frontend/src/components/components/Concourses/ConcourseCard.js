@@ -2,9 +2,12 @@
 
 import React from "react";
 import "./ConcourseCard.css";
+import { useAuth } from "../../../context/AuthContext/AuthContext";
+import { applyToCompetition } from "../../../services/competitionServices";
 
 function ConcourseCard(props) {
   const {
+    id,
     name,
     logo,
     description,
@@ -15,7 +18,28 @@ function ConcourseCard(props) {
     status,
   } = props;
 
-  function apply() {}
+  const { userId } = useAuth();
+
+  async function apply(currentUserId, currentCompetitionId) {
+    const userId = currentUserId;
+    const competitionId = currentCompetitionId;
+    const grade = 6;
+
+    try {
+      const applicationData = {
+        userId,
+        competitionId,
+        grade,
+      };
+      const response = await applyToCompetition(applicationData);
+      console.log("Application response:", response);
+    } catch (error) {
+      console.error("Error applying to competition:", error);
+    }
+  }
+
+  console.log(id, "competion id");
+  console.log(userId, "user Id");
 
   return (
     <div className="concourse-card">
@@ -28,7 +52,7 @@ function ConcourseCard(props) {
         </p>
         <p className="concourse-rating">Рейтинг: {awardRating}</p>
         <p className="concourse-requirements">Условия: {requirements}</p>
-        <button onClick={() => apply()}>Apply</button>
+        <button onClick={() => apply(userId, id)}>Apply</button>
       </div>
     </div>
   );
