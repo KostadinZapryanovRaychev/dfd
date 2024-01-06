@@ -9,6 +9,7 @@ export function useApp() {
 
 export function DataProvider({ children }) {
   const [requestCounter, setRequestCounter] = useState(0);
+  const [competitionsOfUser, setCompetitionOfUser] = useState([]);
 
   const incrementCounter = () => setRequestCounter((count) => count + 1);
   const decrementCounter = () => {
@@ -19,7 +20,13 @@ export function DataProvider({ children }) {
   };
 
   const isLoading = requestCounter > 0;
-  const value = { isLoading, incrementCounter, decrementCounter };
+  const value = {
+    isLoading,
+    incrementCounter,
+    decrementCounter,
+    competitionsOfUser,
+    setCompetitionOfUser,
+  };
 
   useEffect(() => {
     const requestInterceptor = axios.interceptors.request.use((config) => {

@@ -31,7 +31,7 @@ function makeRequest(url, method, dataOrParams, customHeaders = {}) {
     headers: setAuthHeaders(customHeaders),
   })
     .then((res) => {
-      console.log(res.status, "status");
+      //console.log(res.status, "status");
       if (res.status === 401 || res.status === 403) {
         navigateToIndexPage();
       }

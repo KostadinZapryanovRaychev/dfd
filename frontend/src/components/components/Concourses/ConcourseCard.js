@@ -1,9 +1,8 @@
-// ConcourseCard.js
-
 import React from "react";
 import "./ConcourseCard.css";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
 import { applyToCompetition } from "../../../services/competitionServices";
+import { useApp } from "../../../context/DataContext/DataContext";
 
 function ConcourseCard(props) {
   const {
@@ -19,6 +18,11 @@ function ConcourseCard(props) {
   } = props;
 
   const { userId } = useAuth();
+  const { competitionsOfUser } = useApp();
+
+  const isApplied = competitionsOfUser.some(
+    (entry) => entry.competitionId === id
+  );
 
   async function apply(currentUserId, currentCompetitionId) {
     const userId = currentUserId;
@@ -32,14 +36,12 @@ function ConcourseCard(props) {
         grade,
       };
       const response = await applyToCompetition(applicationData);
-      console.log("Application response:", response);
     } catch (error) {
       console.error("Error applying to competition:", error);
     }
   }
 
-  console.log(id, "competion id");
-  console.log(userId, "user Id");
+  console.log(competitionsOfUser, "in card");
 
   return (
     <div className="concourse-card">
@@ -52,7 +54,9 @@ function ConcourseCard(props) {
         </p>
         <p className="concourse-rating">Рейтинг: {awardRating}</p>
         <p className="concourse-requirements">Условия: {requirements}</p>
-        <button onClick={() => apply(userId, id)}>Apply</button>
+        <button onClick={() => apply(userId, id)} disabled={isApplied}>
+          {isApplied ? "Applied" : "Apply"}
+        </button>
       </div>
     </div>
   );

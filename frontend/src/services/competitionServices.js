@@ -54,3 +54,12 @@ export const applyToCompetition = async (applicationData) => {
     throw new Error("Error applying to competition");
   }
 };
+
+export const getCompetitionPerUser = async (userId) => {
+  try {
+    const response = await getFetch(`/applications/${userId}`);
+    return response;
+  } catch (error) {
+    throw new Error("Error getting competition for a given user");
+  }
+};
