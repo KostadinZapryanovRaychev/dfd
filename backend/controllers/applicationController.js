@@ -5,9 +5,9 @@ exports.applyToCompetition = async (req, res) => {
   const { userId, competitionId } = req.body;
 
   try {
-    // const existingApplication = await UserCompetition.findOne({
-    //   where: { userId, competitionId },
-    // });
+    const existingApplication = await UserCompetition.findOne({
+      where: { userId, competitionId },
+    });
 
     if (existingApplication) {
       return res

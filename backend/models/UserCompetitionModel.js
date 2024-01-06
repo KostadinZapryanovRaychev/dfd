@@ -14,6 +14,14 @@ const UserCompetition = db.define(
       type: Sequelize.FLOAT,
       allowNull: true,
     },
+    userId: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+    },
+    competitionId: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+    },
   },
   { tableName: "user_competitions" }
 );

@@ -9,8 +9,6 @@ const UserRole = require("./models/UserRoleModel");
 const UserCompetition = require("./models/UserCompetitionModel");
 
 User.belongsTo(Role, { foreignKey: "roleId" });
-User.belongsToMany(Role, { through: UserRole });
-Role.belongsToMany(User, { through: UserRole });
 
 UserCompetition.belongsTo(User);
 UserCompetition.belongsTo(Competition);
