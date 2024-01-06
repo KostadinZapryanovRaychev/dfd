@@ -3,6 +3,7 @@ const router = express.Router();
 const ApplicationController = require("../controllers/applicationController");
 
 router.post("/", ApplicationController.applyToCompetition);
+router.get("/:userId", ApplicationController.getCompetitionsForUser);
 // router.get(
 //   "/:competitionId/applications",
 //   ApplicationController.getApplicationsForCompetition
