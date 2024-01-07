@@ -1,7 +1,10 @@
 import React from "react";
 import "./ConcourseCard.css";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
-import { applyToCompetition } from "../../../services/competitionServices";
+import {
+  applyToCompetition,
+  deleteCompetitionPerUser,
+} from "../../../services/competitionServices";
 import { useApp } from "../../../context/DataContext/DataContext";
 
 function ConcourseCard(props) {
@@ -41,7 +44,18 @@ function ConcourseCard(props) {
     }
   }
 
-  console.log(competitionsOfUser, "in card");
+  async function cancel(currentUserId, currentCompetitionId) {
+    try {
+      const response = await deleteCompetitionPerUser(
+        currentUserId,
+        currentCompetitionId
+      );
+    } catch (error) {
+      console.error("Error deleting this competition:", error);
+    }
+  }
+
+  //console.log(competitionsOfUser, "in card");
 
   return (
     <div className="concourse-card">
@@ -57,6 +71,7 @@ function ConcourseCard(props) {
         <button onClick={() => apply(userId, id)} disabled={isApplied}>
           {isApplied ? "Applied" : "Apply"}
         </button>
+        <button onClick={() => cancel(userId, id)}>Cancel</button>
       </div>
     </div>
   );

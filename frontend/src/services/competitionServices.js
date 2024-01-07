@@ -63,3 +63,14 @@ export const getCompetitionPerUser = async (userId) => {
     throw new Error("Error getting competition for a given user");
   }
 };
+
+export const deleteCompetitionPerUser = async (userId, competitionId) => {
+  try {
+    const response = await deleteFetch(
+      `/applications/${userId}/${competitionId}`
+    );
+    return response;
+  } catch (error) {
+    throw new Error("Error getting competition for a given user");
+  }
+};
