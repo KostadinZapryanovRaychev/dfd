@@ -117,3 +117,28 @@ exports.getAllApplications = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+exports.updateApplication = async (req, res) => {
+  const { userId, competitionId, grade } = req.body;
+
+  try {
+    const application = await UserCompetition.findOne({
+      where: { userId, competitionId },
+    });
+
+    if (!application) {
+      return res
+        .status(404)
+        .json({ message: "User has not applied to this competition" });
+    }
+
+    await application.update({ grade });
+
+    res
+      .status(200)
+      .json({ message: "Application grade updated successfully", application });
+  } catch (error) {
+    console.error("Error updating application grade:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

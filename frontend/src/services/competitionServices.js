@@ -92,3 +92,11 @@ export const getAllApplications = async () => {
     throw new Error("Error getting all applications");
   }
 };
+
+export const updateApplicationForCompetition = async (competitionData) => {
+  try {
+    return await patchFetch(`/competitions`, competitionData);
+  } catch (error) {
+    throw new Error("Error updating this application");
+  }
+};
