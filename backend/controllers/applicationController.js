@@ -60,12 +60,10 @@ exports.getCompetitionsForUser = async (req, res) => {
   }
 };
 
-// Remove application for a competition
 exports.removeApplication = async (req, res) => {
-  const { userId, competitionId } = req.body;
+  const { userId, competitionId } = req.params;
 
   try {
-    // Check if the user has applied to the competition
     const existingApplication = await UserCompetition.findOne({
       where: { userId, competitionId },
     });
@@ -76,7 +74,6 @@ exports.removeApplication = async (req, res) => {
         .json({ message: "User has not applied to this competition" });
     }
 
-    // Remove the application
     await existingApplication.destroy();
 
     res.status(200).json({ message: "Application removed successfully" });
