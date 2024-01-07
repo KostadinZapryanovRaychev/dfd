@@ -48,7 +48,16 @@ export const deleteCompetition = async (competitionId) => {
 
 export const applyToCompetition = async (applicationData) => {
   try {
-    const response = await postFetch("/applications", applicationData);
+    const formData = new FormData();
+    formData.append("userId", applicationData.userId);
+    formData.append("competitionId", applicationData.competitionId);
+    formData.append("grade", applicationData.grade);
+
+    if (applicationData.solution) {
+      formData.append("solution", applicationData.solution);
+    }
+    const response = await postFetch("/applications", formData);
+
     return response;
   } catch (error) {
     throw new Error("Error applying to competition");
@@ -72,5 +81,14 @@ export const deleteCompetitionPerUser = async (userId, competitionId) => {
     return response;
   } catch (error) {
     throw new Error("Error getting competition for a given user");
+  }
+};
+
+export const getAllApplications = async () => {
+  try {
+    const response = await getFetch(`/applications`);
+    return response;
+  } catch (error) {
+    throw new Error("Error getting all applications");
   }
 };

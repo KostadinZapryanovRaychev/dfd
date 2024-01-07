@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./ConcourseCard.css";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
 import {
@@ -22,27 +22,33 @@ function ConcourseCard(props) {
 
   const { userId } = useAuth();
   const { competitionsOfUser } = useApp();
+  const [file, setFile] = useState(null);
 
   const isApplied = competitionsOfUser.some(
     (entry) => entry.competitionId === id
   );
 
-  async function apply(currentUserId, currentCompetitionId) {
-    const userId = currentUserId;
-    const competitionId = currentCompetitionId;
-    const grade = 6;
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const grade = null;
 
     try {
       const applicationData = {
-        userId,
-        competitionId,
-        grade,
+        userId: userId,
+        competitionId: id,
+        grade: grade,
+        solution: file,
       };
       const response = await applyToCompetition(applicationData);
     } catch (error) {
       console.error("Error applying to competition:", error);
     }
-  }
+  };
 
   async function cancel(currentUserId, currentCompetitionId) {
     try {
@@ -68,10 +74,18 @@ function ConcourseCard(props) {
         </p>
         <p className="concourse-rating">Рейтинг: {awardRating}</p>
         <p className="concourse-requirements">Условия: {requirements}</p>
-        <button onClick={() => apply(userId, id)} disabled={isApplied}>
-          {isApplied ? "Applied" : "Apply"}
-        </button>
-        <button onClick={() => cancel(userId, id)}>Cancel</button>
+
+        <form onSubmit={handleSubmit}>
+          <label>
+            Upload Solution:
+            <input type="file" onChange={handleFileChange} />
+          </label>
+          <button type="submit" disabled={isApplied}>
+            {isApplied ? "Applied" : "Apply"}
+          </button>
+        </form>
+
+        <button onClick={cancel}>Cancel</button>
       </div>
     </div>
   );
