@@ -22,6 +22,14 @@ const UserCompetition = db.define(
       type: Sequelize.INTEGER,
       allowNull: true,
     },
+    solutionUrl: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
+    appliedAt: {
+      type: Sequelize.DATE,
+      allowNull: true,
+    },
   },
   { tableName: "user_competitions" }
 );

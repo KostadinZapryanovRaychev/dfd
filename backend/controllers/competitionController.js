@@ -7,7 +7,10 @@ const storage = multer.diskStorage({
     cb(null, path.join(__dirname, "../public"));
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
   },
 });
 
@@ -21,7 +24,16 @@ exports.createCompetition = async (req, res) => {
         return res.status(500).send("Error uploading file");
       }
 
-      const { name, description, startsAt, endsAt, award, rating, requirements, status } = req.body;
+      const {
+        name,
+        description,
+        startsAt,
+        endsAt,
+        award,
+        rating,
+        requirements,
+        status,
+      } = req.body;
       const logo = req.file ? `/public/${req.file.filename}` : null;
 
       const competition = await Competition.create({
@@ -36,7 +48,9 @@ exports.createCompetition = async (req, res) => {
         status,
       });
 
-      res.status(201).json({ message: "Competition created successfully", competition });
+      res
+        .status(201)
+        .json({ message: "Competition created successfully", competition });
     });
   } catch (error) {
     console.error("Error creating competition:", error);
@@ -50,7 +64,9 @@ exports.getAllCompetitions = async (req, res) => {
     res.status(200).json({ competitions });
   } catch (error) {
     console.error("Error while fetching all competitions:", error);
-    res.status(500).json({ message: "Internal server error during fetching all competitions" });
+    res.status(500).json({
+      message: "Internal server error during fetching all competitions",
+    });
   }
 };
 
@@ -83,7 +99,9 @@ exports.updateCompetitionById = async (req, res) => {
 
     await competition.update(req.body);
 
-    res.status(200).json({ message: "Competition updated successfully", competition });
+    res
+      .status(200)
+      .json({ message: "Competition updated successfully", competition });
   } catch (error) {
     console.error("Error updating competition:", error);
     res.status(500).json({ message: "Internal server error" });
