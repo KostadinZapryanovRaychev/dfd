@@ -20,6 +20,7 @@ import Competitions from "./pages/Competitions/Competitions";
 import Concourses from "./pages/Concourses/Concourses";
 import { useApp } from "./context/DataContext/DataContext";
 import Loading from "./components/components/Loading/Loading";
+import CompetitionDetails from "./components/components/CompetitionDetails/CompetitionDetails";
 
 function App() {
   const { isLoading } = useApp();
@@ -41,6 +42,7 @@ function App() {
         <Route path="/roles/:roleId" element={<EditRole />} />
         <Route path="/users/:userId" element={<EditUser />} />
         <Route path="/competitions/:competitionId" element={<EditCompetition />} />
+        <Route path="applications/competitions/:competitionId" element={<CompetitionDetails />} />
         <Route path="/concourses" element={<Concourses />} />
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/*" element={<ErrorPage />} />

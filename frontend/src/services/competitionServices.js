@@ -66,7 +66,18 @@ export const applyToCompetition = async (applicationData) => {
 
 export const getCompetitionPerUser = async (userId) => {
   try {
-    const response = await getFetch(`/applications/${userId}`);
+    const response = await getFetch(`/applications/user/${userId}`);
+    return response;
+  } catch (error) {
+    throw new Error("Error getting competition for a given user");
+  }
+};
+
+export const getApplicationForAcompetition = async (competitionId, setCompetitions) => {
+  console.log(competitionId, "in service");
+  try {
+    const response = await getFetch(`/applications/competitions/${competitionId}`);
+    setCompetitions(response);
     return response;
   } catch (error) {
     throw new Error("Error getting competition for a given user");
@@ -75,9 +86,7 @@ export const getCompetitionPerUser = async (userId) => {
 
 export const deleteCompetitionPerUser = async (userId, competitionId) => {
   try {
-    const response = await deleteFetch(
-      `/applications/${userId}/${competitionId}`
-    );
+    const response = await deleteFetch(`/applications/${userId}/${competitionId}`);
     return response;
   } catch (error) {
     throw new Error("Error getting competition for a given user");
