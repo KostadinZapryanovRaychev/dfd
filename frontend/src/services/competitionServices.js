@@ -77,7 +77,7 @@ export const getApplicationForAcompetition = async (competitionId, setCompetitio
   console.log(competitionId, "in service");
   try {
     const response = await getFetch(`/applications/competitions/${competitionId}`);
-    setCompetitions(response);
+    setCompetitions(response.applications);
     return response;
   } catch (error) {
     throw new Error("Error getting competition for a given user");

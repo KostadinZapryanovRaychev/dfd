@@ -1,32 +1,17 @@
 import React, { useState } from "react";
 import "./ConcourseCard.css";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
-import {
-  applyToCompetition,
-  deleteCompetitionPerUser,
-} from "../../../services/competitionServices";
+import { applyToCompetition, deleteCompetitionPerUser } from "../../../services/competitionServices";
 import { useApp } from "../../../context/DataContext/DataContext";
 
 function ConcourseCard(props) {
-  const {
-    id,
-    name,
-    logo,
-    description,
-    startsAt,
-    endsAt,
-    awardRating,
-    requirements,
-    status,
-  } = props;
+  const { id, name, logo, description, startsAt, endsAt, awardRating, requirements, status } = props;
 
   const { userId } = useAuth();
   const { competitionsOfUser } = useApp();
   const [file, setFile] = useState(null);
 
-  const isApplied = competitionsOfUser.some(
-    (entry) => entry.competitionId === id
-  );
+  const isApplied = competitionsOfUser.some((entry) => entry.competitionId === id);
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
@@ -52,10 +37,7 @@ function ConcourseCard(props) {
 
   async function cancel(currentUserId, currentCompetitionId) {
     try {
-      const response = await deleteCompetitionPerUser(
-        currentUserId,
-        currentCompetitionId
-      );
+      const response = await deleteCompetitionPerUser(currentUserId, currentCompetitionId);
     } catch (error) {
       console.error("Error deleting this competition:", error);
     }
