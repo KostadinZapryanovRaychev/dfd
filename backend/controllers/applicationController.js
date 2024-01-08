@@ -7,10 +7,7 @@ const storage = multer.diskStorage({
     cb(null, path.join(__dirname, "../solutions"));
   },
   filename: function (req, file, cb) {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
+    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
   },
 });
 
@@ -31,9 +28,7 @@ exports.applyToCompetition = async (req, res) => {
       });
 
       if (existingApplication) {
-        return res
-          .status(400)
-          .json({ message: "User already applied to this competition" });
+        return res.status(400).json({ message: "User already applied to this competition" });
       }
 
       const application = await UserCompetition.create({
@@ -44,9 +39,7 @@ exports.applyToCompetition = async (req, res) => {
         appliedAt: new Date(),
       });
 
-      res
-        .status(201)
-        .json({ message: "Application created successfully", application });
+      res.status(201).json({ message: "Application created successfully", application });
     });
   } catch (error) {
     console.error("Error applying to competition:", error);
@@ -55,7 +48,6 @@ exports.applyToCompetition = async (req, res) => {
 };
 exports.getApplicationsForCompetition = async (req, res) => {
   const { competitionId } = req.params;
-
   try {
     const applications = await UserCompetition.findAll({
       where: { competitionId },
@@ -93,9 +85,7 @@ exports.removeApplication = async (req, res) => {
     });
 
     if (!existingApplication) {
-      return res
-        .status(404)
-        .json({ message: "User has not applied to this competition" });
+      return res.status(404).json({ message: "User has not applied to this competition" });
     }
 
     await existingApplication.destroy();
@@ -127,16 +117,12 @@ exports.updateApplication = async (req, res) => {
     });
 
     if (!application) {
-      return res
-        .status(404)
-        .json({ message: "User has not applied to this competition" });
+      return res.status(404).json({ message: "User has not applied to this competition" });
     }
 
     await application.update({ grade });
 
-    res
-      .status(200)
-      .json({ message: "Application grade updated successfully", application });
+    res.status(200).json({ message: "Application grade updated successfully", application });
   } catch (error) {
     console.error("Error updating application grade:", error);
     res.status(500).json({ message: "Internal server error" });
