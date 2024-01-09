@@ -1,6 +1,8 @@
 const UserCompetition = require("../models/UserCompetitionModel");
 const multer = require("multer");
 const path = require("path");
+const Competition = require("../models/CompetitionModel");
+const User = require("../models/UserModel");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -51,9 +53,36 @@ exports.getApplicationsForCompetition = async (req, res) => {
   try {
     const applications = await UserCompetition.findAll({
       where: { competitionId },
+      include: [
+        {
+          model: User,
+          attributes: ["firstName", "lastName"],
+        },
+        {
+          model: Competition,
+          attributes: ["name"],
+        },
+      ],
     });
 
-    res.status(200).json({ applications });
+    const formattedApplications = applications.map((application) => {
+      return {
+        id: application.id,
+        grade: application.grade,
+        user: {
+          id: application.User.id,
+          firstName: application.User.firstName,
+          lastName: application.User.lastName,
+        },
+        competition: {
+          id: application.Competition.id,
+          name: application.Competition.name,
+        },
+        solutionUrl: application.solutionUrl,
+        appliedAt: application.appliedAt,
+      };
+    });
+    res.status(200).json({ applications: formattedApplications });
   } catch (error) {
     console.error("Error fetching applications for competition:", error);
     res.status(500).json({ message: "Internal server error" });
