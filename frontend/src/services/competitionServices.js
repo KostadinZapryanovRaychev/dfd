@@ -74,7 +74,6 @@ export const getCompetitionPerUser = async (userId) => {
 };
 
 export const getApplicationForAcompetition = async (competitionId, setCompetitions) => {
-  console.log(competitionId, "in service");
   try {
     const response = await getFetch(`/applications/competitions/${competitionId}`);
     setCompetitions(response.applications);

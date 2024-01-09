@@ -27,7 +27,8 @@ export const getAllUsers = async () => {
 
 export const getUser = async (userId) => {
   try {
-    return await getFetch(`/users/${userId}`);
+    const currentUser = await getFetch(`/users/${userId}`);
+    return currentUser;
   } catch (error) {
     throw new Error("Error fetching user");
   }
