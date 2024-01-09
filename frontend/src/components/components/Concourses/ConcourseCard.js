@@ -67,7 +67,7 @@ function ConcourseCard(props) {
           </button>
         </form>
 
-        <button onClick={cancel}>Cancel</button>
+        <button onClick={() => cancel(userId, id)}>Cancel</button>
       </div>
     </div>
   );
