@@ -5,6 +5,8 @@ import { getCurrentUser } from "../../../helpers/getCurrentUser";
 
 function CompetitionDetails() {
   const [applicationsForCompetition, setApplicationForCompetition] = useState([]);
+  const [isPopUpOpen, setIsPopUpOpen] = useState(false);
+  const [selectedApplication, setSelectedApplication] = useState(null);
   const { competitionId } = useParams();
   useEffect(() => {
     if (competitionId) {
@@ -13,6 +15,27 @@ function CompetitionDetails() {
   }, [competitionId]);
 
   const nameOfCompetition = applicationsForCompetition[0]?.competition?.name;
+
+  const getCompetitionById = async () => {};
+
+  const handleClosePopUp = () => {
+    setIsPopUpOpen(false);
+  };
+
+  const handleOpenPopUp = (application) => {
+    setSelectedApplication(application);
+    setIsPopUpOpen(true);
+  };
+
+  const handleUpdateGrade = async (newGrade) => {
+    // if (selectedApplication) {
+    //   // Perform the update and then close the pop-up
+    //   await updateApplicationGrade(selectedApplication.id, newGrade);
+    //   // Refresh the data after update
+    //   getApplicationForAcompetition(competitionId, setApplicationForCompetition);
+    //   handleClosePopUp();
+    // }
+  };
 
   return (
     <div>
@@ -36,13 +59,28 @@ function CompetitionDetails() {
               <td>{application?.solutionUrl}</td>
               <td>{application?.appliedAt}</td>
               <td>
-                {/* update user competition by id */}
-                <Link to={`/competitions/${application?.id}`}>Оцени</Link>
+                <button onClick={() => handleOpenPopUp(application)}>Оцени</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {isPopUpOpen && (
+        <div>
+          <h2>{`Оцени application с ID: ${selectedApplication?.id}`}</h2>
+          <div>
+            <label>New Grade:</label>
+            <input
+              type="number"
+              value={selectedApplication?.grade}
+              onChange={(e) => setSelectedApplication({ ...selectedApplication, grade: e.target.value })}
+            />
+          </div>
+          <button onClick={() => handleUpdateGrade(selectedApplication?.grade)}>Update Grade</button>
+          <button onClick={handleClosePopUp}>Close</button>
+        </div>
+      )}
     </div>
   );
 }
