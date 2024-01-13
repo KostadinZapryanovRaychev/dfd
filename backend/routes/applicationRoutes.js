@@ -8,6 +8,7 @@ router.get("/user/:userId", ApplicationController.getCompetitionsForUser);
 router.delete("/:userId/:competitionId", ApplicationController.removeApplication);
 router.get("/", ApplicationController.getAllApplications);
 router.put("/", ApplicationController.updateApplication);
+router.put("/:applicationId", ApplicationController.updateApplicationGrade);
 router.get("/:applicationId", ApplicationController.getApplicationById);
 
 module.exports = router;

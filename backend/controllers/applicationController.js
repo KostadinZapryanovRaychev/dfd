@@ -158,6 +158,26 @@ exports.updateApplication = async (req, res) => {
   }
 };
 
+exports.updateApplicationGrade = async (req, res) => {
+  const { applicationId } = req.params;
+  const { grade } = req.body;
+
+  try {
+    const application = await UserCompetition.findByPk(applicationId);
+
+    if (!application) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    await application.update({ grade });
+
+    res.status(200).json({ message: "Application grade updated successfully", application });
+  } catch (error) {
+    console.error("Error updating application grade:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 exports.getApplicationById = async (req, res) => {
   const { applicationId } = req.params;
 
