@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getApplicationForAcompetition } from "../../../services/competitionServices";
 import { getCurrentUser } from "../../../helpers/getCurrentUser";
 
@@ -11,8 +11,6 @@ function CompetitionDetails() {
       getApplicationForAcompetition(competitionId, setApplicationForCompetition);
     }
   }, [competitionId]);
-
-  console.log(applicationsForCompetition);
 
   const nameOfCompetition = applicationsForCompetition[0]?.competition?.name;
 
@@ -37,6 +35,10 @@ function CompetitionDetails() {
               <td>{application?.user?.firstName + " " + application?.user?.lastName}</td>
               <td>{application?.solutionUrl}</td>
               <td>{application?.appliedAt}</td>
+              <td>
+                {/* update user competition by id */}
+                <Link to={`/competitions/${application?.id}`}>Оцени</Link>
+              </td>
             </tr>
           ))}
         </tbody>

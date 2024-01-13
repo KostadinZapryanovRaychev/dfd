@@ -157,3 +157,20 @@ exports.updateApplication = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+exports.getApplicationById = async (req, res) => {
+  const { applicationId } = req.params;
+
+  try {
+    const application = await UserCompetition.findByPk(applicationId);
+
+    if (!application) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    res.status(200).json({ application: formattedApplication });
+  } catch (error) {
+    console.error("Error fetching application by ID:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
