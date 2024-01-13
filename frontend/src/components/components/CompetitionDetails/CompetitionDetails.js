@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getApplicationForAcompetition } from "../../../services/competitionServices";
+import { getApplicationForAcompetition, updateApplicationGrade } from "../../../services/competitionServices";
 import { getCurrentUser } from "../../../helpers/getCurrentUser";
 
 function CompetitionDetails() {
@@ -28,13 +28,17 @@ function CompetitionDetails() {
   };
 
   const handleUpdateGrade = async (newGrade) => {
-    // if (selectedApplication) {
-    //   // Perform the update and then close the pop-up
-    //   await updateApplicationGrade(selectedApplication.id, newGrade);
-    //   // Refresh the data after update
-    //   getApplicationForAcompetition(competitionId, setApplicationForCompetition);
-    //   handleClosePopUp();
-    // }
+    try {
+      if (selectedApplication) {
+        const updatedApplication = await updateApplicationGrade(selectedApplication.id, newGrade);
+        if (updatedApplication) {
+          window.location.reload();
+        }
+      }
+    } catch (e) {
+      console.log("Error occured during update of competition");
+    }
+    handleClosePopUp();
   };
 
   return (

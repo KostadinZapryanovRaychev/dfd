@@ -1,4 +1,4 @@
-import { getFetch, postFetch, patchFetch, deleteFetch } from "../lib/fetch";
+import { getFetch, postFetch, patchFetch, deleteFetch, putFetch } from "../lib/fetch";
 
 const API_BASE_URL = "http://localhost:5000/api"; // Adjust the URL as needed
 
@@ -104,6 +104,16 @@ export const getAllApplications = async () => {
 export const updateApplicationForCompetition = async (competitionData) => {
   try {
     return await patchFetch(`/competitions`, competitionData);
+  } catch (error) {
+    throw new Error("Error updating this application");
+  }
+};
+
+export const updateApplicationGrade = async (applicationId, grade) => {
+  try {
+    const endpoint = `/applications/${applicationId}`;
+    const updatedData = { grade };
+    return await putFetch(endpoint, updatedData);
   } catch (error) {
     throw new Error("Error updating this application");
   }
