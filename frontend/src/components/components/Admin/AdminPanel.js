@@ -1,53 +1,67 @@
-import React, { useEffect } from "react";
-import { Link, Route, Router, Routes, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { getAllUsers, deleteUser } from "../../../services/userServices";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
 import { path } from "../../../routes/routes";
 
 function AdminPanel() {
-  const naviagete = useNavigate();
-  function navigateToHomePage() {
-    naviagete(path.home);
-  }
+  const navigate = useNavigate();
   const { isAdmin } = useAuth();
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     if (!isAdmin) {
-      navigateToHomePage();
+      navigate(path.home);
+    } else {
+      fetchUsers();
     }
-  }, []);
+  }, [isAdmin]);
+
+  const fetchUsers = async () => {
+    try {
+      const usersData = await getAllUsers();
+      setUsers(usersData.users);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  const handleDeleteUser = async (userId) => {
+    const confirmed = window.confirm(`Потвърди изтриването на потребител с Id ${userId}`);
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      await deleteUser(userId);
+      fetchUsers();
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  };
+
   return (
     <div>
       <table>
-        <caption>Responsive Table Example</caption>
-
+        <caption>User Management</caption>
         <thead>
           <tr>
             <th>Name</th>
             <th>Email</th>
-            <th>Phone</th>
-            <th>Website</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td data-th="Name">Alice</td>
-
-            <td data-th="Email">alice@example.com</td>
-            <td data-th="Phone">123-456-7890</td>
-            <td data-th="Website">alice.com [^1^]</td>
-          </tr>
-          <tr>
-            <td data-th="Name">Bob</td>
-            <td data-th="Email">bob@example.com</td>
-            <td data-th="Phone">234-567-8901</td>
-            <td data-th="Website">bob.com [^2^]</td>
-          </tr>
-          <tr>
-            <td data-th="Name">Charlie</td>
-            <td data-th="Email">charlie@example.com</td>
-            <td data-th="Phone">345-678-9012</td>
-            <td data-th="Website">charlie.com [^3^]</td>
-          </tr>
+          {users.map((user) => (
+            <tr key={user?.id}>
+              <td>{`${user?.firstName} ${user?.lastName}`}</td>
+              <td>{user?.email}</td>
+              <td>
+                <Link to={`/edit-user/${user.id}`}>Edit</Link>
+                <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

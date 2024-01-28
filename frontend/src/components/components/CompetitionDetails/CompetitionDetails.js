@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getApplicationForAcompetition, updateApplicationGrade } from "../../../services/competitionServices";
-import { getCurrentUser } from "../../../helpers/getCurrentUser";
 
 function CompetitionDetails() {
   const [applicationsForCompetition, setApplicationForCompetition] = useState([]);
