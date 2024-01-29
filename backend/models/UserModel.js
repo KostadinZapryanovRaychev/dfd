@@ -33,7 +33,7 @@ const User = db.define(
       defaultValue: false,
     },
     photo: {
-      type: Sequelize.BLOB,
+      type: Sequelize.STRING,
       allowNull: true,
       defaultValue: null,
     },
@@ -50,8 +50,8 @@ const User = db.define(
       type: Sequelize.STRING,
       allowNull: true,
     },
-    cv: {
-      type: Sequelize.BLOB("long"),
+    cvUrl: {
+      type: Sequelize.STRING,
       allowNull: true,
       defaultValue: null,
     },
@@ -70,6 +70,11 @@ const User = db.define(
     phone: {
       type: Sequelize.STRING,
       allowNull: true,
+    },
+    isBlocked: {
+      type: Sequelize.BOOLEAN,
+      allowNull: true,
+      defaultValue: false,
     },
   },
   { tableName: "users" }

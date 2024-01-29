@@ -3,21 +3,16 @@ const User = require("../models/UserModel");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-// Function to register a new user
 exports.registerUser = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
 
   try {
-    // Check if the user with the given email already exists
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ message: "User with this email already exists" });
     }
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create the user in the database
     const newUser = await User.create({
       firstName,
       lastName,
@@ -41,7 +36,7 @@ exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Check if the user with the given email exists
+    
     const existingUser = await User.findOne({ where: { email } });
     if (!existingUser) {
       return res.status(400).json({ message: "User with this email does not exist" });
@@ -71,13 +66,11 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-// Function to logout a user (optional)
 exports.logoutUser = async (req, res) => {
   // You can clear any session or token-related data here if needed
   res.status(200).json({ message: "Logout successful" });
 };
 
-// Function to update password (optional)
 exports.updateUserPassword = async (req, res) => {
   const { userId } = req.params;
   const { currentPassword, newPassword } = req.body;
@@ -88,17 +81,13 @@ exports.updateUserPassword = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
-    // Compare the current password with the one stored in the database
     const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid current password" });
     }
 
-    // Hash the new password
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
-    // Update the user's password in the database
     await user.update({ password: hashedNewPassword });
 
     res.status(200).json({ message: "Password updated successfully" });
