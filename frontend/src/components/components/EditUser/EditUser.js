@@ -50,7 +50,7 @@ const EditUser = () => {
     }
   };
 
-  if (!user) {
+  if (!user && !userId) {
     return <NonAuthenticated />;
   }
   return (
@@ -91,8 +91,8 @@ const EditUser = () => {
           />
         </div>
         <div>
-          <label htmlFor="cv">CV</label>
-          <input type="file" id="cv" name="cv" onChange={handleChange} />
+          <label htmlFor="cvUrl">CV</label>
+          <input type="file" id="cvUrl" name="cvUrl" onChange={handleChange} />
         </div>
         <div>
           <label htmlFor="age">Age</label>
