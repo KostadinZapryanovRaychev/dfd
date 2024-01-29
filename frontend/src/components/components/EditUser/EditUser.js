@@ -7,7 +7,7 @@ import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
 const EditUser = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",
@@ -27,7 +27,7 @@ const EditUser = () => {
     // Fetch the user data based on the userId from the URL parameter
     getUser(userId)
       .then((data) => {
-        setUserData(data.user);
+        setUserData(data?.user);
       })
       .catch((error) => {
         console.error("Error fetching user:", error);
@@ -49,8 +49,7 @@ const EditUser = () => {
       console.error("Error updating user:", error);
     }
   };
-
-  if (!user && !userId) {
+  if (!userData && !userId) {
     return <NonAuthenticated />;
   }
   return (
@@ -132,7 +131,7 @@ const EditUser = () => {
         </div>
         <button type="submit">Update User</button>
       </form>
-      <Link to="/protected">Back to Users</Link>
+      <Link to={isAdmin ? "/admin" : "/"}>{isAdmin ? "Back to Users" : "Back"}</Link>
     </div>
   );
 };
