@@ -51,6 +51,9 @@ function HomePage() {
                 <Link to="/concourses">Concourses</Link>
               </li>
               <li>
+                <Link to="/profile">Profile</Link>
+              </li>
+              <li>
                 <Link to="/" onClick={handleLogout}>
                   Logout
                 </Link>

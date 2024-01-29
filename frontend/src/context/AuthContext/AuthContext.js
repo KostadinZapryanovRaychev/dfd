@@ -8,13 +8,13 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  const [autoUser, setAuthUser] = useState(null);
+  const [authUser, setAuthUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [userId, setUserId] = useState(false);
 
   const value = {
-    autoUser,
+    authUser,
     setAuthUser,
     isLoggedIn,
     setIsLoggedIn,
