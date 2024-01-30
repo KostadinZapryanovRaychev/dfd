@@ -10,5 +10,6 @@ router.get("/", ApplicationController.getAllApplications);
 router.put("/", ApplicationController.updateApplication);
 router.put("/:applicationId", ApplicationController.updateApplicationGrade);
 router.get("/:applicationId", ApplicationController.getApplicationById);
+router.get("/download/:fileName", ApplicationController.downloadSolutionFile);
 
 module.exports = router;

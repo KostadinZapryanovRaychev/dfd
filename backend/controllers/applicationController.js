@@ -209,3 +209,26 @@ exports.getApplicationById = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+exports.downloadSolutionFile = async (req, res) => {
+  const { fileName } = req.params;
+  const filePath = path.join(__dirname, `../solutions/${fileName}`);
+
+  try {
+    if (fs.existsSync(filePath)) {
+      // If the file exists, initiate a download
+      res.download(filePath, (err) => {
+        if (err) {
+          console.error("Error during file download:", err);
+          res.status(500).json({ message: "Internal server error during download" });
+        }
+      });
+    } else {
+      // If the file doesn't exist, return a 404 response
+      res.status(404).json({ message: "File not found" });
+    }
+  } catch (error) {
+    console.error("Error during file download:", error);
+    res.status(500).json({ message: "Internal server error during download" });
+  }
+};
