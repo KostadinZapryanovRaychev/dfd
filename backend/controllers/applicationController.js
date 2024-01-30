@@ -65,23 +65,38 @@ exports.getApplicationsForCompetition = async (req, res) => {
       ],
     });
 
-    const formattedApplications = applications.map((application) => {
-      return {
-        id: application.id,
-        grade: application.grade,
-        user: {
-          id: application.User.id,
-          firstName: application.User.firstName,
-          lastName: application.User.lastName,
-        },
-        competition: {
-          id: application.Competition.id,
-          name: application.Competition.name,
-        },
-        solutionUrl: application.solutionUrl,
-        appliedAt: application.appliedAt,
-      };
-    });
+    if (!applications.length) {
+      res.status(404).json({ message: "There is no such applications" });
+    }
+
+    const formattedApplications = applications
+      .map((application) => {
+        if (!application.User || !application.Competition) {
+          console.log("There are no longer such users or competitions");
+          return {};
+        }
+        return {
+          id: application.id,
+          grade: application.grade,
+          user: {
+            id: application.User.id,
+            firstName: application.User.firstName,
+            lastName: application.User.lastName,
+          },
+          competition: {
+            id: application.Competition.id,
+            name: application.Competition.name,
+          },
+          solutionUrl: application.solutionUrl,
+          appliedAt: application.appliedAt,
+        };
+      })
+      .filter((entry) => Object.keys(entry).length !== 0);
+
+    if (formattedApplications.length === 0) {
+      console.log("No competition meeting the required conditions");
+      return res.status(200).json({ applications: [] });
+    }
     res.status(200).json({ applications: formattedApplications });
   } catch (error) {
     console.error("Error fetching applications for competition:", error);
