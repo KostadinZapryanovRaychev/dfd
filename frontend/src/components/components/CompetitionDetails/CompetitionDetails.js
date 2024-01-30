@@ -45,17 +45,18 @@ function CompetitionDetails() {
   };
 
   const handleDownload = async (fileName) => {
+    console.log(fileName, "FE filename");
     try {
       const response = await downloadSolutionFile(fileName);
-      const blob = await response.blob();
-      const link = document.createElement("a");
-      const url = window.URL.createObjectURL(blob);
-      link.href = url;
-      link.download = fileName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      // const blob = await response.blob();
+      // const link = document.createElement("a");
+      // const url = window.URL.createObjectURL(blob);
+      // link.href = url;
+      // link.download = fileName;
+      // document.body.appendChild(link);
+      // link.click();
+      // document.body.removeChild(link);
+      // window.URL.revokeObjectURL(url);
     } catch (error) {
       console.log("Error occurred during file download:", error);
     }
