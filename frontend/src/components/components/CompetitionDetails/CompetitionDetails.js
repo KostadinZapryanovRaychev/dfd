@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getApplicationForAcompetition, updateApplicationGrade } from "../../../services/competitionServices";
+import {
+  downloadSolutionFile,
+  getApplicationForAcompetition,
+  updateApplicationGrade,
+} from "../../../services/competitionServices";
 
 function CompetitionDetails() {
   const [applicationsForCompetition, setApplicationForCompetition] = useState([]);
@@ -40,6 +44,23 @@ function CompetitionDetails() {
     handleClosePopUp();
   };
 
+  const handleDownload = async (fileName) => {
+    try {
+      const response = await downloadSolutionFile(fileName);
+      const blob = await response.blob();
+      const link = document.createElement("a");
+      const url = window.URL.createObjectURL(blob);
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.log("Error occurred during file download:", error);
+    }
+  };
+
   return (
     <div>
       <h1>{nameOfCompetition}</h1>
@@ -59,7 +80,9 @@ function CompetitionDetails() {
               <td>{application?.id}</td>
               <td>{application?.grade}</td>
               <td>{application?.user?.firstName + " " + application?.user?.lastName}</td>
-              <td>{application?.solutionUrl}</td>
+              <td>
+                <button onClick={() => handleDownload(application?.solutionUrl)}>Download Solution</button>
+              </td>
               <td>{application?.appliedAt}</td>
               <td>
                 <button onClick={() => handleOpenPopUp(application)}>Оцени</button>

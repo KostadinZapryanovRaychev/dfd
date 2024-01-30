@@ -118,3 +118,12 @@ export const updateApplicationGrade = async (applicationId, grade) => {
     throw new Error("Error updating this application");
   }
 };
+
+export const downloadSolutionFile = async (fileName) => {
+  try {
+    const response = await getFetch(`/applications/download${fileName}`);
+    return response;
+  } catch (error) {
+    throw new Error("Error downloading solution file");
+  }
+};
