@@ -216,15 +216,14 @@ exports.downloadSolutionFile = async (req, res) => {
 
   try {
     if (fs.existsSync(filePath)) {
-      // If the file exists, initiate a download
       res.download(filePath, (err) => {
         if (err) {
+          console.log("Error trying to download", err);
           console.error("Error during file download:", err);
           res.status(500).json({ message: "Internal server error during download" });
         }
       });
     } else {
-      // If the file doesn't exist, return a 404 response
       res.status(404).json({ message: "File not found" });
     }
   } catch (error) {
