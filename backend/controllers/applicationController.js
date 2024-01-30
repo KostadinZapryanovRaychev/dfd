@@ -211,22 +211,28 @@ exports.getApplicationById = async (req, res) => {
 };
 
 exports.downloadSolutionFile = async (req, res) => {
+   // TODO why im not here
+  console.log("we are here");
   const { fileName } = req.params;
-  const filePath = path.join(__dirname, `../solutions/${fileName}`);
+  const filePath = path.join(__dirname, `../${fileName}`);
+
+  console.log("we are here 0");
 
   try {
     if (fs.existsSync(filePath)) {
       res.download(filePath, (err) => {
         if (err) {
-          console.log("Error trying to download", err);
+          console.log("Error trying to download 1", err);
           console.error("Error during file download:", err);
           res.status(500).json({ message: "Internal server error during download" });
         }
       });
     } else {
+      console.log("Error here 2", err);
       res.status(404).json({ message: "File not found" });
     }
   } catch (error) {
+    console.log("Error here 3", err);
     console.error("Error during file download:", error);
     res.status(500).json({ message: "Internal server error during download" });
   }

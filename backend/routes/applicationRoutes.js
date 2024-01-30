@@ -10,6 +10,7 @@ router.get("/", ApplicationController.getAllApplications);
 router.put("/", ApplicationController.updateApplication);
 router.put("/:applicationId", ApplicationController.updateApplicationGrade);
 router.get("/:applicationId", ApplicationController.getApplicationById);
+// TODO why i dont touch this
 router.get("/download/:fileName", ApplicationController.downloadSolutionFile);
 
 module.exports = router;
