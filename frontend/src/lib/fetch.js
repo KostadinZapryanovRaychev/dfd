@@ -23,7 +23,6 @@ function setAuthHeaders(customHeaders = {}) {
 }
 
 function makeRequest(url, method, dataOrParams, customHeaders = {}) {
-  console.log(`${API_BASE_URL}${url}`, "final url");
   return axios({
     url: `${API_BASE_URL}${url}`,
     method: method,

@@ -38,13 +38,17 @@ const EditUser = () => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
   };
-  console.log(userData);
+  console.log(userData, "updated version");
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await updateUser(userId, userData);
       // Redirect to the users list after successfully updating the user
-      navigate("/users");
+      if (isAdmin) {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       console.error("Error updating user:", error);
     }
@@ -52,6 +56,7 @@ const EditUser = () => {
   if (!userData && !userId) {
     return <NonAuthenticated />;
   }
+
   return (
     <div>
       <h2>Edit User</h2>
@@ -109,26 +114,42 @@ const EditUser = () => {
           <label htmlFor="phone">Phone</label>
           <input type="text" id="phone" name="phone" value={userData.phone || ""} onChange={handleChange} />
         </div>
-        <div>
-          <label htmlFor="isAdmin">Is Admin</label>
-          <input
-            type="checkbox"
-            id="isAdmin"
-            name="isAdmin"
-            checked={userData.isAdmin}
-            onChange={(e) => setUserData({ ...userData, isAdmin: e.target.checked })}
-          />
-        </div>
-        <div>
-          <label htmlFor="approvedAt">Approved At</label>
-          <input
-            type="date"
-            id="approvedAt"
-            name="approvedAt"
-            value={userData.approvedAt || ""}
-            onChange={handleChange}
-          />
-        </div>
+        {isAdmin && (
+          <div>
+            <label htmlFor="isAdmin">Is Admin</label>
+            <input
+              type="checkbox"
+              id="isAdmin"
+              name="isAdmin"
+              checked={userData?.isAdmin}
+              onChange={(e) => setUserData({ ...userData, isAdmin: e.target.checked })}
+            />
+          </div>
+        )}
+        {isAdmin && (
+          <div>
+            <label htmlFor="isBlocked">Status</label>
+            <input
+              type="checkbox"
+              id="isBlocked"
+              name="isBlocked"
+              checked={userData?.isBlocked}
+              onChange={(e) => setUserData({ ...userData, isBlocked: e.target.checked })}
+            />
+          </div>
+        )}
+        {isAdmin && (
+          <div>
+            <label htmlFor="approvedAt">Approved At</label>
+            <input
+              type="date"
+              id="approvedAt"
+              name="approvedAt"
+              value={userData.approvedAt || ""}
+              onChange={handleChange}
+            />
+          </div>
+        )}
         <button type="submit">Update User</button>
       </form>
       <Link to={isAdmin ? "/admin" : "/"}>{isAdmin ? "Back to Users" : "Back"}</Link>
