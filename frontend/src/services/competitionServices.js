@@ -120,9 +120,14 @@ export const updateApplicationGrade = async (applicationId, grade) => {
 };
 
 export const downloadSolutionFile = async (fileName) => {
+  const url = `/applications/download${fileName}`;
   try {
-    // TODO give as parameter
-    const response = await getFetch(`/applications/download${fileName}`);
+    const response = await getFetch(url);
+    if (response) {
+      return response;
+    } else {
+      return null;
+    }
   } catch (error) {
     throw new Error("Error downloading solution file");
   }
