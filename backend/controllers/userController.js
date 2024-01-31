@@ -19,7 +19,7 @@ exports.registerUser = async (req, res) => {
       email,
       password: hashedPassword,
     });
-    
+
     const secretKey = process.env.SECRET_KEY;
     const token = jwt.sign({ id: newUser.id, email: newUser.email }, secretKey, {
       expiresIn: "1h", // Set the token expiration time as per your requirement
@@ -36,7 +36,6 @@ exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    
     const existingUser = await User.findOne({ where: { email } });
     if (!existingUser) {
       return res.status(400).json({ message: "User with this email does not exist" });
@@ -128,7 +127,7 @@ exports.getUser = async (req, res) => {
 // Update User Information
 exports.updateUserInfo = async (req, res) => {
   const userId = req.params.userId;
-  const { firstName, lastName, email } = req.body;
+  const { firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age } = req.body;
 
   try {
     const user = await User.findByPk(userId);
@@ -137,10 +136,15 @@ exports.updateUserInfo = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Update user information
     user.firstName = firstName;
     user.lastName = lastName;
     user.email = email;
+    user.isAdmin = isAdmin;
+    user.isBlocked = isBlocked;
+    user.address = address;
+    user.phone = phone;
+    user.phone = company;
+    user.age = age;
 
     await user.save();
 
