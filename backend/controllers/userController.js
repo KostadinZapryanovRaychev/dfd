@@ -7,7 +7,7 @@ const path = require("path");
 
 const storageForUserImages = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(__dirname, path.join(__dirname, "../profilepictures"));
+    cb(null, path.join(__dirname, "../profilepictures"));
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
@@ -47,6 +47,8 @@ exports.registerUser = async (req, res) => {
 
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
+
+  console.log(email);
 
   try {
     const existingUser = await User.findOne({ where: { email } });
@@ -145,11 +147,9 @@ exports.updateUserInfo = async (req, res) => {
         console.error(err);
         return res.status(500).json({ message: "Error uploading user photo" });
       }
-      console.log(req.body);
+
       const { firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age, photoUrl, proffession } =
         req.body;
-      console.log(firstName);
-      console.log(lastName);
 
       user.firstName = firstName;
       user.lastName = lastName;
