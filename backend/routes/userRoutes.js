@@ -8,7 +8,7 @@ router.post("/logout", UserController.logoutUser);
 router.post("/update-password/:userId", UserController.updateUserPassword);
 router.get("/users", UserController.getAllUsers);
 router.get("/users/:userId", UserController.getUser);
-router.patch("/users/:userId", UserController.updateUserInfo);
+router.post("/users/:userId", UserController.updateUserInfo);
 router.delete("/users/:userId", UserController.deleteUser);
 
 module.exports = router;

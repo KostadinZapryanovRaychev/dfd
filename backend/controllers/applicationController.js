@@ -25,12 +25,13 @@ exports.applyToCompetition = async (req, res) => {
       }
 
       const { userId, competitionId, grade } = req.body;
+
       const solutionUrl = req.file ? `/solutions/${req.file.filename}` : null;
 
       const user = await User.findByPk(userId);
 
-      console.log(user, "user");
       const isUserBlocked = user?.isBlocked;
+
       if (isUserBlocked) {
         return res.status(400).json({ message: "User can't apply because it is blocked" });
       }

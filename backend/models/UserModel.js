@@ -32,7 +32,7 @@ const User = db.define(
       allowNull: true,
       defaultValue: false,
     },
-    photo: {
+    photoUrl: {
       type: Sequelize.STRING,
       allowNull: true,
       defaultValue: null,

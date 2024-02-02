@@ -2,6 +2,19 @@ const bcrypt = require("bcrypt");
 const User = require("../models/UserModel");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const multer = require("multer");
+const path = require("path");
+
+const storageForUserImages = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(__dirname, path.join(__dirname, "../profilepictures"));
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+  },
+});
+
+const uploadForUserImages = multer({ storage: storageForUserImages }).single("photo");
 
 exports.registerUser = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
@@ -40,14 +53,11 @@ exports.loginUser = async (req, res) => {
     if (!existingUser) {
       return res.status(400).json({ message: "User with this email does not exist" });
     }
-
-    // Check if the password is correct
     const isPasswordValid = await bcrypt.compare(password, existingUser.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid password" });
     }
 
-    // Generate JWT token
     const secretKey = process.env.SECRET_KEY;
     const token = jwt.sign(
       { id: existingUser.id, email: existingUser.email, isAdmin: existingUser.isAdmin },
@@ -56,7 +66,6 @@ exports.loginUser = async (req, res) => {
         expiresIn: "1h", // Set the token expiration time as per your requirement
       }
     );
-    console.log("token:", token);
 
     res.status(200).json({ message: "Login successful", token });
   } catch (error) {
@@ -66,7 +75,6 @@ exports.loginUser = async (req, res) => {
 };
 
 exports.logoutUser = async (req, res) => {
-  // You can clear any session or token-related data here if needed
   res.status(200).json({ message: "Logout successful" });
 };
 
@@ -124,38 +132,49 @@ exports.getUser = async (req, res) => {
   }
 };
 
-// Update User Information
 exports.updateUserInfo = async (req, res) => {
   const userId = req.params.userId;
-  const { firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age } = req.body;
-
   try {
     const user = await User.findByPk(userId);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+    uploadForUserImages(req, res, async function (err) {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Error uploading user photo" });
+      }
+      console.log(req.body);
+      const { firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age, photoUrl, proffession } =
+        req.body;
+      console.log(firstName);
+      console.log(lastName);
 
-    user.firstName = firstName;
-    user.lastName = lastName;
-    user.email = email;
-    user.isAdmin = isAdmin;
-    user.isBlocked = isBlocked;
-    user.address = address;
-    user.phone = phone;
-    user.phone = company;
-    user.age = age;
+      user.firstName = firstName;
+      user.lastName = lastName;
+      user.email = email;
+      user.isAdmin = isAdmin;
+      user.isBlocked = isBlocked;
+      user.address = address;
+      user.phone = phone;
+      user.company = company;
+      user.age = age;
+      user.proffession = proffession;
 
-    await user.save();
+      user.photoUrl = req.file ? `/profilepictures/${req.file.filename}` : null;
+      if (user.changed()) {
+        await user.save();
+      }
 
-    res.status(200).json({ message: "User information updated successfully", user });
+      res.status(200).json({ message: "User information updated successfully", user });
+    });
   } catch (error) {
     console.error("Error updating user information:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
-// Delete User
 exports.deleteUser = async (req, res) => {
   const userId = req.params.userId;
 
