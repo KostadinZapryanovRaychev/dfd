@@ -42,7 +42,7 @@ function UserProfile() {
       <p>Company: {user.company}</p>
       <p>Phone: {user.phone}</p>
       <p>CV: {user.cvUrl}</p>
-      <p>Photo: {user.photo}</p>
+      <p>Photo: {user.photoUrl}</p>
       <Link to={`/users/${user.id}`}>Edit</Link>
     </div>
   );

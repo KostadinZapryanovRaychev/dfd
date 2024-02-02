@@ -61,8 +61,6 @@ function ConcourseCard(props) {
     }
   }
 
-  //console.log(competitionsOfUser, "in card");
-
   return (
     <div className="concourse-card">
       <img src={logo} alt={`${name} Logo`} className="concourse-logo" />

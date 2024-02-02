@@ -8,18 +8,21 @@ const EditUser = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
   const { user, isAdmin } = useAuth();
+  const [file, setFile] = useState(null);
   const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     roleId: null,
+    photoUrl: null,
     profession: "",
-    cv: null,
+    cvUrl: null,
     age: null,
     address: "",
     company: "",
     phone: "",
     isAdmin: false,
+    photo: null,
     approvedAt: null,
   });
 
@@ -38,12 +41,33 @@ const EditUser = () => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
   };
-  console.log(userData, "updated version");
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  const updatedUserData = { ...userData };
+
+  // TODO to be added all the data for update of an user
+  console.log(updatedUserData, "user data");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const data = {
+      firstName: updatedUserData.firstName,
+      lastName: updatedUserData.lastName,
+      email: updatedUserData.email,
+      address: updatedUserData.address,
+      isAdmin: updatedUserData.isAdmin,
+      company: updatedUserData.company,
+      age: updatedUserData.age,
+      isBlocked: updatedUserData.isBlocked,
+      profession: updatedUserData.profession,
+      photo: file,
+    };
     try {
-      await updateUser(userId, userData);
-      // Redirect to the users list after successfully updating the user
+      await updateUser(userId, data);
+
       if (isAdmin) {
         navigate("/admin");
       } else {
@@ -53,6 +77,7 @@ const EditUser = () => {
       console.error("Error updating user:", error);
     }
   };
+
   if (!userData && !userId) {
     return <NonAuthenticated />;
   }
@@ -94,10 +119,10 @@ const EditUser = () => {
             onChange={handleChange}
           />
         </div>
-        <div>
+        {/* <div>
           <label htmlFor="cvUrl">CV</label>
-          <input type="file" id="cvUrl" name="cvUrl" onChange={handleChange} />
-        </div>
+          <input type="file" id="cvUrl" name="cvUrl" onChange={handleFileChange} />
+        </div> */}
         <div>
           <label htmlFor="age">Age</label>
           <input type="number" id="age" name="age" value={userData.age || ""} onChange={handleChange} />
@@ -109,6 +134,10 @@ const EditUser = () => {
         <div>
           <label htmlFor="company">Company</label>
           <input type="text" id="company" name="company" value={userData.company || ""} onChange={handleChange} />
+        </div>
+        <div>
+          <label htmlFor="photo">Photo</label>
+          <input type="file" id="photo" name="photo" onChange={handleFileChange} />
         </div>
         <div>
           <label htmlFor="phone">Phone</label>

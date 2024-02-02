@@ -35,8 +35,23 @@ export const getUser = async (userId) => {
 };
 
 export const updateUser = async (userId, userData) => {
+  const { firstName, lastName, email, address, isAdmin, company, age, isBlocked, profession, photo } = userData;
+  const formData = new FormData();
+  formData.append("firstName", firstName);
+  formData.append("lastName", lastName);
+  formData.append("email", email);
+  formData.append("isAdmin", isAdmin);
+  formData.append("address", address);
+  formData.append("company", company);
+  formData.append("age", age);
+  formData.append("isBlocked", isBlocked);
+  formData.append("profession", profession);
+
   try {
-    return await patchFetch(`/users/${userId}`, userData);
+    if (photo) {
+      formData.append("photo", photo);
+    }
+    return await postFetch(`/users/${userId}`, formData);
   } catch (error) {
     throw new Error("Error updating user");
   }

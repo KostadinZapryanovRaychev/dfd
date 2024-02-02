@@ -56,6 +56,7 @@ export const applyToCompetition = async (applicationData) => {
     if (applicationData.solution) {
       formData.append("solution", applicationData.solution);
     }
+
     const response = await postFetch("/applications", formData);
 
     return response;
