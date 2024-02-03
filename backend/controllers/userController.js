@@ -155,7 +155,7 @@ exports.updateUserInfo = async (req, res) => {
         return res.status(500).json({ message: "Error uploading user photo" });
       }
 
-      const { firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age, proffession } = req.body;
+      const { firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age, profession } = req.body;
 
       user.firstName = firstName;
       user.lastName = lastName;
@@ -166,7 +166,7 @@ exports.updateUserInfo = async (req, res) => {
       user.phone = phone;
       user.company = company;
       user.age = age;
-      user.proffession = proffession;
+      user.profession = profession;
 
       user.photoUrl = req.file ? `/profilepictures/${req.file.filename}` : null;
       if (user.changed()) {
