@@ -47,7 +47,7 @@ function App() {
         <Route path="/concourses" element={<Concourses />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/admin" element={<AdminPanel />} />
-        {/* <Route path="/*" element={<ErrorPage />} /> */}
+        <Route path="/*" element={<ErrorPage />} />
       </Routes>
     </div>
   );
