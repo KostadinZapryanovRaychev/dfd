@@ -17,9 +17,11 @@ const UserTable = () => {
 
   const handleDelete = async (userId) => {
     try {
-      await deleteUser(userId);
-      // Remove the deleted user from the local state
-      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+      const confirm = window.confirm(`Потвърдете изтриване на потребител с id  ${userId}`);
+      if (confirm) {
+        await deleteUser(userId);
+        setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+      }
     } catch (error) {
       console.error("Error deleting user:", error);
     }

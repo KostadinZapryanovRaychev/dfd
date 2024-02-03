@@ -66,12 +66,14 @@ const EditUser = () => {
       photo: file,
     };
     try {
-      await updateUser(userId, data);
-
-      if (isAdmin) {
-        navigate("/admin");
-      } else {
-        navigate("/");
+      const confirm = window.confirm(`Потвърдете ъпдейта на потребител с име  ${userData?.firstName}`);
+      if (confirm) {
+        await updateUser(userId, data);
+        if (isAdmin) {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
       }
     } catch (error) {
       console.error("Error updating user:", error);
