@@ -63,7 +63,7 @@ exports.loginUser = async (req, res) => {
       { id: existingUser.id, email: existingUser.email, isAdmin: existingUser.isAdmin },
       secretKey,
       {
-        expiresIn: "1h", // Set the token expiration time as per your requirement
+        expiresIn: "1h",
       }
     );
 
