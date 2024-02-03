@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 
 const storageForUserImages = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -124,8 +125,6 @@ exports.getUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // TODO delete previous file before uploading the new one
-
     const baseUrl = process.env.BASE_URL;
     user.photoUrl = user.photoUrl ? `${baseUrl}/${path.basename(user.photoUrl)}` : null;
 
@@ -144,6 +143,12 @@ exports.updateUserInfo = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+
+    if (user.photoUrl && fs.existsSync(previousPhotoPath)) {
+      const previousPhotoPath = path.join(__dirname, "../", user.photoUrl);
+      fs.unlinkSync(previousPhotoPath);
+    }
+
     uploadForUserImages(req, res, async function (err) {
       if (err) {
         console.error(err);
