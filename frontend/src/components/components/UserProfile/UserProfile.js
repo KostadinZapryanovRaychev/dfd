@@ -43,6 +43,9 @@ function UserProfile() {
       <p>Phone: {user.phone}</p>
       <p>CV: {user.cvUrl}</p>
       <p>Photo: {user.photoUrl}</p>
+      <p>
+        <img src={user.photoUrl} alt="profile picture" width="300" height="300" />
+      </p>
       <Link to={`/users/${user.id}`}>Edit</Link>
       <Link to={`/`}>Back To Home</Link>
     </div>

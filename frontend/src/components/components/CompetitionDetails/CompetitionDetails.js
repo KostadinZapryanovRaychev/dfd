@@ -46,16 +46,21 @@ function CompetitionDetails() {
 
   const handleDownload = async (fileName) => {
     try {
-      const response = await downloadSolutionFile(fileName);
-      const blob = new Blob([response], { type: "application/pdf" });
-      console.log(blob, "res in fn");
-      const link = document.createElement("a");
-      link.href = window.URL.createObjectURL(blob);
-      link.download = fileName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(link.href);
+      const confirm = window.confirm(`Потвърдете свалянето на файл с име  ${fileName}`);
+      if (confirm) {
+        const response = await downloadSolutionFile(fileName);
+        const blob = new Blob([response], { type: "application/pdf" });
+        if (!blob) {
+          console.log("The file is in unsuported format:");
+        }
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(link.href);
+      }
     } catch (error) {
       console.log("Error occurred during file download:", error);
     }
