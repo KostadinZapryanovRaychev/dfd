@@ -50,11 +50,6 @@ const User = db.define(
       type: Sequelize.STRING,
       allowNull: true,
     },
-    cvUrl: {
-      type: Sequelize.STRING,
-      allowNull: true,
-      defaultValue: null,
-    },
     age: {
       type: Sequelize.INTEGER,
       allowNull: true,
