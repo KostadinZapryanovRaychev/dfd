@@ -76,7 +76,7 @@ exports.getApplicationsForCompetition = async (req, res) => {
     });
 
     if (!applications.length) {
-      res.status(404).json({ message: "There is no such applications" });
+      return res.status(404).json({ message: "There is no such applications" });
     }
 
     const formattedApplications = applications
@@ -104,8 +104,7 @@ exports.getApplicationsForCompetition = async (req, res) => {
       .filter((entry) => Object.keys(entry).length !== 0);
 
     if (formattedApplications.length === 0) {
-      console.log("No competition meeting the required conditions");
-      return res.status(200).json({ applications: [] });
+      return res.status(404).json({ message: "No competition found" });
     }
     res.status(200).json({ applications: formattedApplications });
   } catch (error) {
