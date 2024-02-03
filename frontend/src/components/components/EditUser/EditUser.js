@@ -42,7 +42,16 @@ const EditUser = () => {
   };
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+      if (allowedTypes.includes(selectedFile.type)) {
+        setFile(selectedFile);
+      } else {
+        console.error("Invalid file type. Please select a JPEG, PNG, or JPG file.");
+        event.target.value = null;
+      }
+    }
   };
 
   const updatedUserData = { ...userData };
