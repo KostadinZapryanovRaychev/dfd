@@ -3,10 +3,11 @@ import { getAllCompetitions, deleteCompetition } from "../../../services/competi
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
 import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
+import NonAuthorized from "../NonAuthorized/NonAuthorized";
 
 const CompetitionsTable = () => {
   const [competitions, setCompetitions] = useState([]);
-  const { userId } = useAuth();
+  const { userId, isAdmin } = useAuth();
 
   useEffect(() => {
     getAllCompetitions()
@@ -34,6 +35,10 @@ const CompetitionsTable = () => {
 
   if (!userId) {
     return <NonAuthenticated />;
+  }
+
+  if (!isAdmin) {
+    return <NonAuthorized />;
   }
   return (
     <div>

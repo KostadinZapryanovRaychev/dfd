@@ -5,12 +5,17 @@ import {
   getApplicationForAcompetition,
   updateApplicationGrade,
 } from "../../../services/competitionServices";
+import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
+import NonAuthorized from "../NonAuthorized/NonAuthorized";
+import { useAuth } from "../../../context/AuthContext/AuthContext";
 
 function CompetitionDetails() {
   const [applicationsForCompetition, setApplicationForCompetition] = useState([]);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState(null);
   const { competitionId } = useParams();
+  const { userId, isAdmin } = useAuth();
+
   useEffect(() => {
     if (competitionId) {
       getApplicationForAcompetition(competitionId, setApplicationForCompetition);
@@ -43,6 +48,15 @@ function CompetitionDetails() {
     }
     handleClosePopUp();
   };
+  console.log(userId);
+
+  if (!userId) {
+    return <NonAuthenticated />;
+  }
+
+  if (!isAdmin) {
+    return <NonAuthorized />;
+  }
 
   const handleDownload = async (fileName) => {
     try {

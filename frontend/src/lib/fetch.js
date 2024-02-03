@@ -10,6 +10,10 @@ function navigateToIndexPage() {
   window.location.href = "/";
 }
 
+function navigateToPageNotFound() {
+  window.location.href = "/nonfound";
+}
+
 function setAuthHeaders(customHeaders = {}) {
   const authToken = getAuthToken();
 
@@ -40,6 +44,9 @@ function makeRequest(url, method, dataOrParams, customHeaders = {}) {
     .catch((error) => {
       if (error.response.status === 401 || error.response.status === 403) {
         navigateToIndexPage();
+      }
+      if (error.response.status === 404) {
+        navigateToPageNotFound();
       }
       console.error("Request error:", error);
       throw error;

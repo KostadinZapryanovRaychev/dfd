@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import ConcourseCard from "../../components/components/Concourses/ConcourseCard";
 import "./Concourses.css";
-import {
-  getAllCompetitions,
-  getCompetitionPerUser,
-} from "../../services/competitionServices";
+import { getAllCompetitions, getCompetitionPerUser } from "../../services/competitionServices";
 import { useAuth } from "../../context/AuthContext/AuthContext";
 import { useApp } from "../../context/DataContext/DataContext";
+import { Link } from "react-router-dom";
 
 let isDataFetched = false;
 
@@ -54,6 +52,7 @@ function Concourses() {
       ) : (
         <div className="no-data">Currently No competitions available</div>
       )}
+      <Link to="/">Back</Link>
     </>
   );
 }
