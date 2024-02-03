@@ -16,7 +16,6 @@ const EditUser = () => {
     roleId: null,
     photoUrl: null,
     profession: "",
-    cvUrl: null,
     age: null,
     address: "",
     company: "",
@@ -121,10 +120,6 @@ const EditUser = () => {
             onChange={handleChange}
           />
         </div>
-        {/* <div>
-          <label htmlFor="cvUrl">CV</label>
-          <input type="file" id="cvUrl" name="cvUrl" onChange={handleFileChange} />
-        </div> */}
         <div>
           <label htmlFor="age">Age</label>
           <input type="number" id="age" name="age" value={userData.age || ""} onChange={handleChange} />

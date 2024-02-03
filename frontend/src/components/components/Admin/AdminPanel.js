@@ -40,8 +40,6 @@ function AdminPanel() {
     }
   };
 
-  console.log(users);
-
   return (
     <div>
       <table>
@@ -60,6 +58,7 @@ function AdminPanel() {
               <td>{`${user?.firstName} ${user?.lastName}`}</td>
               <td>{user?.email}</td>
               <td>{user?.isBlocked ? "Blocked" : "Active"}</td>
+              <td>{user?.isAdmin ? "Admin" : "User"}</td>
               <td>
                 <Link to={`/users/${user.id}`}>Edit</Link>
                 <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
