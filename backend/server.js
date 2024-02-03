@@ -13,6 +13,7 @@ const port = process.env.SERVER_PORT;
 
 const app = express();
 app.use("/public", express.static("public"));
+app.use("/profilepictures", express.static("profilepictures"));
 app.use(express.json());
 app.use(cors());
 

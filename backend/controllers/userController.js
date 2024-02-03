@@ -47,9 +47,6 @@ exports.registerUser = async (req, res) => {
 
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
-
-  console.log(email);
-
   try {
     const existingUser = await User.findOne({ where: { email } });
     if (!existingUser) {
@@ -127,6 +124,11 @@ exports.getUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // TODO delete previous file before uploading the new one
+
+    const baseUrl = process.env.BASE_URL;
+    user.photoUrl = user.photoUrl ? `${baseUrl}/${path.basename(user.photoUrl)}` : null;
+
     res.status(200).json({ user });
   } catch (error) {
     console.error("Error while fetching user:", error);
@@ -148,8 +150,7 @@ exports.updateUserInfo = async (req, res) => {
         return res.status(500).json({ message: "Error uploading user photo" });
       }
 
-      const { firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age, photoUrl, proffession } =
-        req.body;
+      const { firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age, proffession } = req.body;
 
       user.firstName = firstName;
       user.lastName = lastName;
