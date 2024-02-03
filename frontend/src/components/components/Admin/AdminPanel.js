@@ -68,6 +68,7 @@ function AdminPanel() {
           ))}
         </tbody>
       </table>
+      <Link to={`/`}>Back To Home</Link>
     </div>
   );
 }

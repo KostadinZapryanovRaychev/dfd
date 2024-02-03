@@ -44,6 +44,7 @@ function UserProfile() {
       <p>CV: {user.cvUrl}</p>
       <p>Photo: {user.photoUrl}</p>
       <Link to={`/users/${user.id}`}>Edit</Link>
+      <Link to={`/`}>Back To Home</Link>
     </div>
   );
 }
