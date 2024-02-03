@@ -56,9 +56,6 @@ const EditUser = () => {
 
   const updatedUserData = { ...userData };
 
-  // TODO to be added all the data for update of an user
-  console.log(updatedUserData, "user data");
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
