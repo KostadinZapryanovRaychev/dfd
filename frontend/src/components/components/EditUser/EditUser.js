@@ -106,10 +106,12 @@ const EditUser = () => {
           <label htmlFor="email">Email</label>
           <input type="email" id="email" name="email" value={userData.email} onChange={handleChange} required />
         </div>
-        <div>
-          <label htmlFor="roleId">Role ID</label>
-          <input type="number" id="roleId" name="roleId" value={userData.roleId || ""} onChange={handleChange} />
-        </div>
+        {isAdmin && (
+          <div>
+            <label htmlFor="roleId">Role ID</label>
+            <input type="number" id="roleId" name="roleId" value={userData.roleId || ""} onChange={handleChange} />
+          </div>
+        )}
         <div>
           <label htmlFor="profession">Profession</label>
           <input

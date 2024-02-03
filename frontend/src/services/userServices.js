@@ -35,7 +35,7 @@ export const getUser = async (userId) => {
 };
 
 export const updateUser = async (userId, userData) => {
-  const { firstName, lastName, email, address, isAdmin, company, age, isBlocked, profession, photo } = userData;
+  const { firstName, lastName, email, address, isAdmin, company, age, isBlocked, profession, photo, phone } = userData;
   const formData = new FormData();
   formData.append("firstName", firstName);
   formData.append("lastName", lastName);
@@ -43,6 +43,7 @@ export const updateUser = async (userId, userData) => {
   formData.append("isAdmin", isAdmin);
   formData.append("address", address);
   formData.append("company", company);
+  formData.append("phone", phone);
   formData.append("age", age);
   formData.append("isBlocked", isBlocked);
   formData.append("profession", profession);
