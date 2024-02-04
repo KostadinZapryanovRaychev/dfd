@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../../services/userServices";
+import { useAuth } from "../../../context/AuthContext/AuthContext";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ const RegisterForm = () => {
   });
 
   const navigate = useNavigate();
+  const { userId } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,6 +24,10 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (userId) {
+      alert("You are already logged in");
+      navigate("/");
+    }
     try {
       await registerUser(formData);
       navigate("/");

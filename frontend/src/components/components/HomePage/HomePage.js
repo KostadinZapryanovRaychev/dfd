@@ -29,9 +29,11 @@ function HomePage() {
         <div>
           <nav>
             <ul>
-              <li>
-                <Link to="/register">Register</Link>
-              </li>
+              {!userId && (
+                <li>
+                  <Link to="/register">Register</Link>
+                </li>
+              )}
               <li>
                 <Link to="/protected">Protected</Link>
               </li>
