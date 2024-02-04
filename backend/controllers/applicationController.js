@@ -70,7 +70,7 @@ exports.getApplicationsForCompetition = async (req, res) => {
         },
         {
           model: Competition,
-          attributes: ["name"],
+          attributes: ["name", "status"],
         },
       ],
     });
@@ -96,6 +96,7 @@ exports.getApplicationsForCompetition = async (req, res) => {
           competition: {
             id: application.Competition.id,
             name: application.Competition.name,
+            staus: application.Competition.status || "closed",
           },
           solutionUrl: application.solutionUrl,
           appliedAt: application.appliedAt,
