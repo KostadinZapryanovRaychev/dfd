@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { createCompetition } from "../../../services/competitionServices";
 import { useNavigate } from "react-router-dom";
+import { competitionStatus } from "../../../config/constants";
 
 const CompetitionForm = () => {
   const navigate = useNavigate();
@@ -15,7 +16,6 @@ const CompetitionForm = () => {
     requirements: "",
     status: "",
   });
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setCompetitionData((prevData) => ({ ...prevData, logo: file }));
@@ -112,7 +112,15 @@ const CompetitionForm = () => {
         </div>
         <div>
           <label htmlFor="status">Status</label>
-          <input type="text" id="status" name="status" value={competitionData.status} onChange={handleChange} />
+          <select id="status" name="status" value={competitionData.status} onChange={handleChange} required>
+            <option value="" disabled>
+              Select competition status
+            </option>
+            <option value={competitionStatus.active}>Active</option>
+            <option value={competitionStatus.pending}>Pending</option>
+            <option value={competitionStatus.closed}>Closed</option>
+            <option value={competitionStatus.published}>Published</option>
+          </select>
         </div>
         <button type="submit">Create Competition</button>
       </form>

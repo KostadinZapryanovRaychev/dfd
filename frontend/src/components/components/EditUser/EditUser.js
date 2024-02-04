@@ -142,7 +142,7 @@ const EditUser = () => {
         </div>
         <div>
           <label htmlFor="photo">Photo</label>
-          <input type="file" id="photo" name="photo" onChange={handleFileChange} />
+          <input type="file" id="photo" name="photo" onChange={handleFileChange} accept="image/*" />
         </div>
         <div>
           <label htmlFor="phone">Phone</label>

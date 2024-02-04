@@ -6,7 +6,6 @@ import {
   updateApplicationGrade,
 } from "../../../services/competitionServices";
 import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
-import NonAuthorized from "../NonAuthorized/NonAuthorized";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
 
 function CompetitionDetails() {
@@ -23,8 +22,6 @@ function CompetitionDetails() {
   }, [competitionId]);
 
   const nameOfCompetition = applicationsForCompetition[0]?.competition?.name;
-
-  const getCompetitionById = async () => {};
 
   const handleClosePopUp = () => {
     setIsPopUpOpen(false);
@@ -48,14 +45,10 @@ function CompetitionDetails() {
     }
     handleClosePopUp();
   };
-  console.log(userId);
+  console.log(applicationsForCompetition, "application for competition");
 
   if (!userId) {
     return <NonAuthenticated />;
-  }
-
-  if (!isAdmin) {
-    return <NonAuthorized />;
   }
 
   const handleDownload = async (fileName) => {
@@ -89,8 +82,8 @@ function CompetitionDetails() {
             <th>ID</th>
             <th>Grade</th>
             <th>User ID</th>
-            <th>Solution URL</th>
-            <th>Applied At</th>
+            {isAdmin && <th>Solution URL</th>}
+            {isAdmin && <th>Applied At</th>}
           </tr>
         </thead>
         <tbody>
@@ -99,19 +92,24 @@ function CompetitionDetails() {
               <td>{application?.id}</td>
               <td>{application?.grade}</td>
               <td>{application?.user?.firstName + " " + application?.user?.lastName}</td>
-              <td>
-                <button onClick={() => handleDownload(application?.solutionUrl)}>Download Solution</button>
-              </td>
-              <td>{application?.appliedAt}</td>
-              <td>
-                <button onClick={() => handleOpenPopUp(application)}>Оцени</button>
-              </td>
+              {isAdmin && (
+                <td>
+                  <button onClick={() => handleDownload(application?.solutionUrl)}>Download Solution</button>
+                </td>
+              )}
+              {isAdmin && <td>{application?.appliedAt}</td>}
+              {isAdmin && (
+                <td>
+                  <button onClick={() => handleOpenPopUp(application)}>Оцени</button>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
+        <Link to="/">Back</Link>
       </table>
 
-      {isPopUpOpen && (
+      {isPopUpOpen && isAdmin && (
         <div>
           <h2>{`Оцени application с ID: ${selectedApplication?.id}`}</h2>
           <div>

@@ -77,7 +77,8 @@ export const getCompetitionPerUser = async (userId) => {
 export const getApplicationForAcompetition = async (competitionId, setCompetitions) => {
   try {
     const response = await getFetch(`/applications/competitions/${competitionId}`);
-    setCompetitions(response.applications);
+    const sortedApplications = response.applications.sort((a, b) => b.grade - a.grade);
+    setCompetitions(sortedApplications);
     return response;
   } catch (error) {
     throw new Error("Error getting competition for a given user");
