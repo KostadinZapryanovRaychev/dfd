@@ -1,16 +1,14 @@
 const Competition = require("../models/CompetitionModel");
 const multer = require("multer");
 const path = require("path");
+const UserCompetition = require("../models/UserCompetitionModel");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, "../public"));
   },
   filename: function (req, file, cb) {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
+    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
   },
 });
 
@@ -24,16 +22,7 @@ exports.createCompetition = async (req, res) => {
         return res.status(500).send("Error uploading file");
       }
 
-      const {
-        name,
-        description,
-        startsAt,
-        endsAt,
-        award,
-        rating,
-        requirements,
-        status,
-      } = req.body;
+      const { name, description, startsAt, endsAt, award, rating, requirements, status } = req.body;
       const logo = req.file ? `/public/${req.file.filename}` : null;
 
       const competition = await Competition.create({
@@ -48,9 +37,7 @@ exports.createCompetition = async (req, res) => {
         status,
       });
 
-      res
-        .status(201)
-        .json({ message: "Competition created successfully", competition });
+      res.status(201).json({ message: "Competition created successfully", competition });
     });
   } catch (error) {
     console.error("Error creating competition:", error);
@@ -99,9 +86,7 @@ exports.updateCompetitionById = async (req, res) => {
 
     await competition.update(req.body);
 
-    res
-      .status(200)
-      .json({ message: "Competition updated successfully", competition });
+    res.status(200).json({ message: "Competition updated successfully", competition });
   } catch (error) {
     console.error("Error updating competition:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -121,9 +106,23 @@ exports.deleteCompetitionById = async (req, res) => {
 
     await competition.destroy();
 
+    await deleteCompetitionRecords(competitionId);
+
     res.status(200).json({ message: "Competition deleted successfully" });
   } catch (error) {
     console.error("Error deleting competition:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const deleteCompetitionRecords = async (competitionId) => {
+  try {
+    await UserCompetition.destroy({
+      where: {
+        competitionId: competitionId,
+      },
+    });
+  } catch (error) {
+    console.error(`Error deleting UserCompetition records for competition ${competitionId}:`, error);
   }
 };

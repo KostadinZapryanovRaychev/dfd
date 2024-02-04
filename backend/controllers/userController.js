@@ -5,6 +5,7 @@ require("dotenv").config();
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const UserCompetition = require("../models/UserCompetitionModel");
 
 const storageForUserImages = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -192,12 +193,25 @@ exports.deleteUser = async (req, res) => {
     }
 
     // Perform any additional checks, e.g., user's authorization to delete their own account
-
     await user.destroy();
+
+    await deleteUserRecords(userId);
 
     res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
     console.error("Error deleting user:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const deleteUserRecords = async (userId) => {
+  try {
+    await UserCompetition.destroy({
+      where: {
+        userId: userId,
+      },
+    });
+  } catch (error) {
+    console.error(`Error deleting UserCompetition records for userId ${userId}:`, error);
   }
 };
