@@ -23,6 +23,7 @@ import Loading from "./components/components/Loading/Loading";
 import CompetitionDetails from "./components/components/CompetitionDetails/CompetitionDetails";
 import UserProfile from "./components/components/UserProfile/UserProfile";
 import Results from "./components/components/Results/Results";
+import MyResults from "./components/components/MyResults/MyResults";
 
 function App() {
   const { isLoading } = useApp();
@@ -49,6 +50,7 @@ function App() {
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/results" element={<Results />} />
+        <Route path="/my-results" element={<MyResults />} />
         <Route path="/*" element={<ErrorPage />} />
       </Routes>
     </div>

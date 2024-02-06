@@ -55,6 +55,9 @@ function HomePage() {
                 <Link to="/results">Results</Link>
               </li>
               <li>
+                <Link to="/my-results">My Results</Link>
+              </li>
+              <li>
                 <Link to="/concourses">Concourses</Link>
               </li>
               <li>
