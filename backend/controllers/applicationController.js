@@ -4,6 +4,7 @@ const path = require("path");
 const Competition = require("../models/CompetitionModel");
 const User = require("../models/UserModel");
 const fs = require("fs");
+const competitionStatus = require("../constants/constants");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -121,9 +122,33 @@ exports.getCompetitionsForUser = async (req, res) => {
   try {
     const applications = await UserCompetition.findAll({
       where: { userId },
+      include: [
+        {
+          model: Competition,
+          attributes: ["name", "status"],
+          required: true,
+        },
+      ],
     });
 
-    res.status(200).json({ applications });
+    const formattedApplications = applications
+      .map((application) => ({
+        id: application.id,
+        grade: application.grade,
+        userId: application.userId,
+        competitionId: application.competitionId,
+        competitionName: application.Competition.name,
+        status: application.Competition.status,
+        appliedAt: application.appliedAt,
+      }))
+      .filter((application) => application.status === competitionStatus.published);
+
+    // TODO it destroyes during refresh should be checked
+
+    if (!formattedApplications.length) {
+      res.status(200).json([]);
+    }
+    res.status(200).json({ formattedApplications });
   } catch (error) {
     console.error("Error fetching competitions for user:", error);
     res.status(500).json({ message: "Internal server error" });
