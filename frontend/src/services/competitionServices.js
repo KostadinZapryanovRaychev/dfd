@@ -68,7 +68,6 @@ export const applyToCompetition = async (applicationData) => {
 export const getCompetitionPerUser = async (userId) => {
   try {
     const response = await getFetch(`/applications/user/${userId}`);
-    console.log(response, "res in FE");
     return response;
   } catch (error) {
     throw new Error("Error getting competition for a given user");

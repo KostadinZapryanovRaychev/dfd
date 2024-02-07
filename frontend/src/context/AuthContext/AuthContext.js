@@ -24,6 +24,8 @@ export function AuthProvider({ children }) {
     setUserId,
   };
 
+  console.log(userId);
+
   useEffect(() => {
     const token = sessionStorage.getItem("authToken");
     if (token) {
