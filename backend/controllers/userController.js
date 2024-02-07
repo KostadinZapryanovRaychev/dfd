@@ -184,6 +184,7 @@ exports.updateUserInfo = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
   const userId = req.params.userId;
+  const requestingUserId = req.user.id;
 
   try {
     const user = await User.findByPk(userId);
@@ -191,8 +192,10 @@ exports.deleteUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
-    // Perform any additional checks, e.g., user's authorization to delete their own account
+    const numberedUserId = Number(userId);
+    if (numberedUserId === requestingUserId) {
+      return res.status(403).json({ message: "Cannot delete your own account" });
+    }
     await user.destroy();
 
     await deleteUserRecords(userId);
