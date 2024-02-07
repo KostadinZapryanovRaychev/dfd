@@ -14,14 +14,16 @@ function Concourses() {
   const { competitionsOfUser, setCompetitionOfUser } = useApp();
 
   useEffect(() => {
-    getAllCompetitions()
-      .then((data) => {
-        setCompetitions(data.competitions);
-      })
-      .catch((error) => {
-        console.error("Error fetching competitions:", error);
-      });
-  }, []);
+    if (userId) {
+      getAllCompetitions()
+        .then((data) => {
+          setCompetitions(data.competitions);
+        })
+        .catch((error) => {
+          console.error("Error fetching competitions:", error);
+        });
+    }
+  }, [userId]);
 
   async function seeAll(fn) {
     await getCompetitionPerUser(userId)
@@ -37,9 +39,11 @@ function Concourses() {
       });
   }
 
-  useEffect(() => {
-    seeAll(setCompetitionOfUser);
-  }, []);
+  // useEffect(() => {
+  //   if (userId) {
+  //     seeAll(setCompetitionOfUser);
+  //   }
+  // }, [userId]);
 
   return (
     <>
