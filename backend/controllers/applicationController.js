@@ -115,7 +115,6 @@ exports.getApplicationsForCompetition = async (req, res) => {
   }
 };
 
-// Get all competitions applied by a user
 exports.getCompetitionsForUser = async (req, res) => {
   const { userId } = req.params;
 
