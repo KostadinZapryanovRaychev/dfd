@@ -11,7 +11,7 @@ let isDataFetched = false;
 function Concourses() {
   const [competitions, setCompetitions] = useState([]);
   const { userId } = useAuth();
-  const { competitionsOfUser, setCompetitionOfUser } = useApp();
+  const { setCompetitionOfUser } = useApp();
 
   useEffect(() => {
     if (userId) {
@@ -25,8 +25,8 @@ function Concourses() {
     }
   }, [userId]);
 
-  async function seeAll(fn) {
-    await getCompetitionPerUser(userId)
+  async function seeAll(fn, isPublished) {
+    await getCompetitionPerUser(userId, isPublished)
       .then((data) => {
         if (data.applications.length) {
           fn(data.applications);
@@ -39,11 +39,11 @@ function Concourses() {
       });
   }
 
-  // useEffect(() => {
-  //   if (userId) {
-  //     seeAll(setCompetitionOfUser);
-  //   }
-  // }, [userId]);
+  useEffect(() => {
+    if (userId) {
+      seeAll(setCompetitionOfUser, false);
+    }
+  }, [userId]);
 
   return (
     <>

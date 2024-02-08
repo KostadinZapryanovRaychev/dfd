@@ -65,9 +65,9 @@ export const applyToCompetition = async (applicationData) => {
   }
 };
 
-export const getCompetitionPerUser = async (userId) => {
+export const getCompetitionPerUser = async (userId, isPublished) => {
   try {
-    const response = await getFetch(`/applications/user/${userId}`);
+    const response = await getFetch(`/applications/user/${userId}/${isPublished}`);
     return response;
   } catch (error) {
     throw new Error("Error getting competition for a given user");

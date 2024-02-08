@@ -10,7 +10,7 @@ function MyResults() {
 
   useEffect(() => {
     if (userId) {
-      getCompetitionPerUser(userId)
+      getCompetitionPerUser(userId, true)
         .then((data) => {
           console.log(data);
           setCompetitions(data.formattedApplications);

@@ -1,32 +1,17 @@
 import React, { useState } from "react";
 import "./ConcourseCard.css";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
-import {
-  applyToCompetition,
-  deleteCompetitionPerUser,
-} from "../../../services/competitionServices";
+import { applyToCompetition, deleteCompetitionPerUser } from "../../../services/competitionServices";
 import { useApp } from "../../../context/DataContext/DataContext";
 
 function ConcourseCard(props) {
-  const {
-    id,
-    name,
-    logo,
-    description,
-    startsAt,
-    endsAt,
-    awardRating,
-    requirements,
-    status,
-  } = props;
+  const { id, name, logo, description, startsAt, endsAt, awardRating, requirements, status } = props;
 
   const { userId } = useAuth();
   const { competitionsOfUser } = useApp();
   const [file, setFile] = useState(null);
 
-  const isApplied = competitionsOfUser.some(
-    (entry) => entry.competitionId === id
-  );
+  const isApplied = competitionsOfUser.some((entry) => entry.competitionId === id);
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
@@ -50,12 +35,15 @@ function ConcourseCard(props) {
     }
   };
 
-  async function cancel(currentUserId, currentCompetitionId) {
+  // TODO to fixed logic if an user is already applied
+  async function cancel(currentUserId, currentCompetitionId, isApplied) {
+    console.log(isApplied);
     try {
-      const response = await deleteCompetitionPerUser(
-        currentUserId,
-        currentCompetitionId
-      );
+      const response = await deleteCompetitionPerUser(currentUserId, currentCompetitionId);
+      if (response.message === "User has not applied to this competition") {
+        console.log("User does not applied for this competition");
+        return null;
+      }
     } catch (error) {
       console.error("Error deleting this competition:", error);
     }
@@ -76,18 +64,14 @@ function ConcourseCard(props) {
         <form onSubmit={handleSubmit}>
           <label>
             Upload Solution:
-            <input
-              disabled={isApplied}
-              type="file"
-              onChange={handleFileChange}
-            />
+            <input disabled={isApplied} type="file" onChange={handleFileChange} />
           </label>
           <button type="submit" disabled={isApplied}>
             {isApplied ? "Applied" : "Apply"}
           </button>
         </form>
 
-        <button onClick={() => cancel(userId, id)}>Cancel</button>
+        <button onClick={() => cancel(userId, id, isApplied)}>Cancel</button>
       </div>
     </div>
   );
