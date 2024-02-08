@@ -119,6 +119,10 @@ exports.getApplicationsForCompetition = async (req, res) => {
 exports.getCompetitionsForUser = async (req, res) => {
   const { userId } = req.params;
 
+  if (!userId) {
+    return res.status(200).json({ formattedApplications: [] });
+  }
+
   try {
     const applications = await UserCompetition.findAll({
       where: { userId },
@@ -143,12 +147,10 @@ exports.getCompetitionsForUser = async (req, res) => {
       }))
       .filter((application) => application.status === competitionStatus.published);
 
-    // TODO it destroyes during refresh should be checked
-
     if (!formattedApplications.length) {
-      res.status(200).json([]);
+      return res.status(200).json({ formattedApplications });
     }
-    res.status(200).json({ formattedApplications });
+    return res.status(200).json({ formattedApplications });
   } catch (error) {
     console.error("Error fetching competitions for user:", error);
     res.status(500).json({ message: "Internal server error" });
