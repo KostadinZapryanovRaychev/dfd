@@ -28,8 +28,8 @@ function Concourses() {
   async function seeAll(fn, isPublished) {
     await getCompetitionPerUser(userId, isPublished)
       .then((data) => {
-        if (data.applications.length) {
-          fn(data.applications);
+        if (data.formattedApplications.length) {
+          fn(data.formattedApplications);
         } else {
           isDataFetched = true;
         }

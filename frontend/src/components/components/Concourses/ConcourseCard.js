@@ -38,6 +38,10 @@ function ConcourseCard(props) {
   // TODO to fixed logic if an user is already applied
   async function cancel(currentUserId, currentCompetitionId, isApplied) {
     console.log(isApplied);
+    if (!isApplied) {
+      console.log("You cant cancel a competition for which you dont applied");
+      return null;
+    }
     try {
       const response = await deleteCompetitionPerUser(currentUserId, currentCompetitionId);
       if (response.message === "User has not applied to this competition") {
@@ -71,7 +75,9 @@ function ConcourseCard(props) {
           </button>
         </form>
 
-        <button onClick={() => cancel(userId, id, isApplied)}>Cancel</button>
+        <button onClick={() => cancel(userId, id, isApplied)} disabled={!isApplied}>
+          Cancel
+        </button>
       </div>
     </div>
   );
