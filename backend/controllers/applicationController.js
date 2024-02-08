@@ -167,7 +167,6 @@ exports.getCompetitionsForUser = async (req, res) => {
         appliedAt: application.appliedAt,
       }));
     }
-    console.log(formattedApplications);
     if (!formattedApplications.length) {
       return res.status(200).json({ formattedApplications });
     }
