@@ -5,7 +5,7 @@ const { adminAuthorizationMiddleware } = require("../middlewares/adminAuthorizat
 
 router.post("/", ApplicationController.applyToCompetition);
 router.get("/competitions/:competitionId", ApplicationController.getApplicationsForCompetition);
-router.get("/user/:userId", ApplicationController.getCompetitionsForUser);
+router.get("/user/:userId/:isPublished", ApplicationController.getCompetitionsForUser);
 router.delete("/:userId/:competitionId", ApplicationController.removeApplication);
 router.get("/", ApplicationController.getAllApplications);
 router.put("/", ApplicationController.updateApplication);

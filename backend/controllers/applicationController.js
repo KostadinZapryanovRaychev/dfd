@@ -52,7 +52,7 @@ exports.applyToCompetition = async (req, res) => {
         appliedAt: new Date(),
       });
 
-      res.status(201).json({ message: "Application created successfully", application });
+      return res.status(201).json({ message: "Application created successfully", application });
     });
   } catch (error) {
     console.error("Error applying to competition:", error);
@@ -116,7 +116,16 @@ exports.getApplicationsForCompetition = async (req, res) => {
 };
 
 exports.getCompetitionsForUser = async (req, res) => {
-  const { userId } = req.params;
+  let { userId, isPublished } = req.params;
+  const requestingUserId = req.user.id;
+
+  if (typeof isPublished === "string" && isPublished === "false") {
+    isPublished = false;
+  } else if (typeof isPublished === "string" && isPublished === "true") {
+    isPublished = true;
+  } else {
+    isPublished = null;
+  }
 
   if (!userId) {
     return res.status(200).json({ formattedApplications: [] });
@@ -134,8 +143,21 @@ exports.getCompetitionsForUser = async (req, res) => {
       ],
     });
 
-    const formattedApplications = applications
-      .map((application) => ({
+    let formattedApplications;
+    if (isPublished) {
+      formattedApplications = applications
+        .map((application) => ({
+          id: application.id,
+          grade: application.grade,
+          userId: application.userId,
+          competitionId: application.competitionId,
+          competitionName: application.Competition.name,
+          status: application.Competition.status,
+          appliedAt: application.appliedAt,
+        }))
+        .filter((application) => application.status === competitionStatus.published);
+    } else {
+      formattedApplications = applications.map((application) => ({
         id: application.id,
         grade: application.grade,
         userId: application.userId,
@@ -143,9 +165,9 @@ exports.getCompetitionsForUser = async (req, res) => {
         competitionName: application.Competition.name,
         status: application.Competition.status,
         appliedAt: application.appliedAt,
-      }))
-      .filter((application) => application.status === competitionStatus.published);
-
+      }));
+    }
+    console.log(formattedApplications);
     if (!formattedApplications.length) {
       return res.status(200).json({ formattedApplications });
     }
@@ -159,13 +181,21 @@ exports.getCompetitionsForUser = async (req, res) => {
 exports.removeApplication = async (req, res) => {
   const { userId, competitionId } = req.params;
 
+  if (!userId) {
+    return res.status(404).json({ message: "No Id of the User" });
+  }
+
+  if (!competitionId) {
+    return res.status(404).json({ message: "No competitionId of the Competition" });
+  }
+
   try {
     const existingApplication = await UserCompetition.findOne({
       where: { userId, competitionId },
     });
 
     if (!existingApplication) {
-      return res.status(404).json({ message: "User has not applied to this competition" });
+      return res.status(200).json({ message: "User has not applied to this competition" });
     }
 
     await existingApplication.destroy();
