@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import { createCompetition } from "../../../services/competitionServices";
 import { useNavigate } from "react-router-dom";
 import { competitionStatus } from "../../../config/constants";
+import { useAuth } from "../../../context/AuthContext/AuthContext";
+import NonAuthorized from "../NonAuthorized/NonAuthorized";
+import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
 
 const CompetitionForm = () => {
   const navigate = useNavigate();
+  const { userId, isAdmin } = useAuth();
   const [competitionData, setCompetitionData] = useState({
     name: "",
     logo: null,
@@ -48,6 +52,14 @@ const CompetitionForm = () => {
       console.error("Error creating competition:", error);
     }
   };
+
+  if (!userId) {
+    return <NonAuthenticated />;
+  }
+
+  if (!isAdmin) {
+    return <NonAuthorized />;
+  }
 
   return (
     <div>

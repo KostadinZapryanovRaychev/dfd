@@ -55,7 +55,7 @@ const EditCompetition = () => {
     }
   };
 
-  if (!userId || !isAdmin) {
+  if (!userId) {
     return <NonAuthenticated />;
   }
 

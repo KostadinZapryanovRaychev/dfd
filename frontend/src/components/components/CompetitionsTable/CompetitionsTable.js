@@ -17,7 +17,7 @@ const CompetitionsTable = () => {
       .catch((error) => {
         console.error("Error fetching competitions:", error);
       });
-  }, []);
+  }, [isAdmin, userId]);
 
   const handleDelete = async (competitionId) => {
     try {
