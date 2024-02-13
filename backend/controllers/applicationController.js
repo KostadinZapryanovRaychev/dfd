@@ -59,6 +59,7 @@ exports.applyToCompetition = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 exports.getApplicationsForCompetition = async (req, res) => {
   const { competitionId } = req.params;
   try {
@@ -67,17 +68,17 @@ exports.getApplicationsForCompetition = async (req, res) => {
       include: [
         {
           model: User,
-          attributes: ["firstName", "lastName"],
+          attributes: ["id", "firstName", "lastName"],
         },
         {
           model: Competition,
-          attributes: ["name", "status"],
+          attributes: ["id", "name", "status"],
         },
       ],
     });
 
     if (!applications.length) {
-      return res.status(404).json({ message: "There is no such applications" });
+      return res.status(200).json({ applications: [] });
     }
 
     const formattedApplications = applications
@@ -104,6 +105,8 @@ exports.getApplicationsForCompetition = async (req, res) => {
         };
       })
       .filter((entry) => Object.keys(entry).length !== 0);
+
+    console.log(formattedApplications);
 
     if (formattedApplications.length === 0) {
       return res.status(404).json({ message: "No competition found" });
