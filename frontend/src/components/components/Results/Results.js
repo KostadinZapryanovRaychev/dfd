@@ -23,7 +23,6 @@ function Results() {
       });
   }, []);
 
-  console.log(competitions, "competitions");
   if (!userId) {
     return <NonAuthenticated />;
   }

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
 import { getUser } from "../../../services/userServices";
 import { Link } from "react-router-dom";
+import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
 
 function UserProfile() {
   const { userId } = useAuth();
@@ -26,10 +27,13 @@ function UserProfile() {
     return () => {};
   }, [userId]);
 
+  if (!userId) {
+    return <NonAuthenticated />;
+  }
+
   if (!user) {
     return <div>Something went wrong with this user</div>;
   }
-  console.log(user);
   return (
     <div>
       <h2>User Profile</h2>

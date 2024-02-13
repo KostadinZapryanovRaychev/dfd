@@ -3,11 +3,13 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { getUser, updateUser } from "../../../services/userServices";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
 import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
+import NonAuthorized from "../NonAuthorized/NonAuthorized";
+import { path } from "../../../routes/routes";
 
 const EditUser = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
-  const { user, isAdmin } = useAuth();
+  const { userId: currentUserId, isAdmin } = useAuth();
   const [file, setFile] = useState(null);
   const [userData, setUserData] = useState({
     firstName: "",
@@ -34,6 +36,7 @@ const EditUser = () => {
       .catch((error) => {
         console.error("Error fetching user:", error);
       });
+    console.log(currentUserId === userId);
   }, [userId]);
 
   const handleChange = (e) => {
@@ -84,11 +87,16 @@ const EditUser = () => {
       console.error("Error updating user:", error);
     }
   };
+  console.log(currentUserId, "current user id", typeof currentUserId);
+  console.log(userId, "target user id", typeof userId);
 
   if (!userData && !userId) {
     return <NonAuthenticated />;
   }
 
+  if (currentUserId !== userId) {
+    return <NonAuthorized />;
+  }
   return (
     <div>
       <h2>Edit User</h2>
