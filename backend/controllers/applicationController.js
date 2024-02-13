@@ -62,6 +62,8 @@ exports.applyToCompetition = async (req, res) => {
 
 exports.getApplicationsForCompetition = async (req, res) => {
   const { competitionId } = req.params;
+  const userId = req.user.id;
+  const isAdmin = req.user.isAdmin;
   try {
     const applications = await UserCompetition.findAll({
       where: { competitionId },
@@ -77,12 +79,13 @@ exports.getApplicationsForCompetition = async (req, res) => {
       ],
     });
 
-    // TODO check if current user and User.id are the same if the role of current user is not admin to stop here
-
+    // TODO this check to be done after we are sure that there is competitions and users -- > 2second one
     if (!applications.length) {
       return res.status(200).json({ applications: [] });
     }
-
+    if (!isAdmin && applications.length >= 1 && applications[0].User.id !== userId) {
+      return res.status(403).json({ message: "You do not have permission to access this resource" });
+    }
     const formattedApplications = applications
       .map((application) => {
         if (!application.User || !application.Competition) {
@@ -107,8 +110,6 @@ exports.getApplicationsForCompetition = async (req, res) => {
         };
       })
       .filter((entry) => Object.keys(entry).length !== 0);
-
-    console.log(formattedApplications);
 
     if (formattedApplications.length === 0) {
       return res.status(404).json({ message: "No competition found" });
