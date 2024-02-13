@@ -28,7 +28,6 @@ const EditUser = () => {
   });
 
   useEffect(() => {
-    // Fetch the user data based on the userId from the URL parameter
     getUser(userId)
       .then((data) => {
         setUserData(data?.user);
