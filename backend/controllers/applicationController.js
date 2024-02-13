@@ -77,6 +77,8 @@ exports.getApplicationsForCompetition = async (req, res) => {
       ],
     });
 
+    // TODO check if current user and User.id are the same if the role of current user is not admin to stop here
+
     if (!applications.length) {
       return res.status(200).json({ applications: [] });
     }
