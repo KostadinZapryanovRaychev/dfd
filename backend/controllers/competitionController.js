@@ -81,6 +81,7 @@ exports.getCompetitionById = async (req, res) => {
   }
 };
 
+// TODO to fix upload of the new picture during update of competitionById
 exports.updateCompetitionById = async (req, res) => {
   const { competitionId } = req.params;
 
