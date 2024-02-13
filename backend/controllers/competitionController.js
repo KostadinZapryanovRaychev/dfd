@@ -2,6 +2,7 @@ const Competition = require("../models/CompetitionModel");
 const multer = require("multer");
 const path = require("path");
 const UserCompetition = require("../models/UserCompetitionModel");
+require("dotenv").config();
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -46,8 +47,14 @@ exports.createCompetition = async (req, res) => {
 };
 
 exports.getAllCompetitions = async (req, res) => {
+  const baseUrl = process.env.BASE_URL_LOGO;
   try {
-    const competitions = await Competition.findAll();
+    const initialCompetitions = await Competition.findAll();
+    const competitions = initialCompetitions.map((competition) => ({
+      ...competition.toJSON(),
+      logo: competition.logo ? `${baseUrl}/${path.basename(competition.logo)}` : null,
+    }));
+
     res.status(200).json({ competitions });
   } catch (error) {
     console.error("Error while fetching all competitions:", error);
