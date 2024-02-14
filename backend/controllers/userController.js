@@ -144,9 +144,8 @@ exports.updateUserInfo = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
+    const previousPhotoPath = path.join(__dirname, "../", user.photoUrl);
     if (user.photoUrl && fs.existsSync(previousPhotoPath)) {
-      const previousPhotoPath = path.join(__dirname, "../", user.photoUrl);
       fs.unlinkSync(previousPhotoPath);
     }
 
@@ -195,6 +194,10 @@ exports.deleteUser = async (req, res) => {
     const numberedUserId = Number(userId);
     if (numberedUserId === requestingUserId) {
       return res.status(403).json({ message: "Cannot delete your own account" });
+    }
+    const previousPhotoPath = path.join(__dirname, "../", user.photoUrl);
+    if (user.photoUrl && fs.existsSync(previousPhotoPath)) {
+      fs.unlinkSync(previousPhotoPath);
     }
     await user.destroy();
 
