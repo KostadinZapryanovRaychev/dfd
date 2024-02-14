@@ -86,8 +86,6 @@ const EditUser = () => {
       console.error("Error updating user:", error);
     }
   };
-  console.log(currentUserId, "current user id", typeof currentUserId);
-  console.log(userId, "target user id", typeof userId);
 
   if (!userData && !userId) {
     return <NonAuthenticated />;

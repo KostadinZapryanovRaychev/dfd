@@ -10,6 +10,7 @@ const EditCompetition = () => {
   const { competitionId } = useParams();
   const navigate = useNavigate();
   const { isAdmin, userId } = useAuth();
+  const [file, setFile] = useState(null);
   const [competitionData, setCompetitionData] = useState({
     name: "",
     logo: null,
@@ -34,20 +35,40 @@ const EditCompetition = () => {
   }, [competitionId]);
 
   const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
+    const { name, value } = e.target;
+    setCompetitionData({ ...competitionData, [name]: value });
+  };
 
-    // For file input (logo), set the value as a File object
-    const updatedValue = type === "file" ? files[0] : value;
-
-    setCompetitionData({ ...competitionData, [name]: updatedValue });
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+      if (allowedTypes.includes(selectedFile.type)) {
+        setFile(selectedFile);
+      } else {
+        console.error("Invalid file type. Please select a JPEG, PNG, or JPG file.");
+        event.target.value = null;
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const data = {
+      name: competitionData.name,
+      logo: file,
+      description: competitionData.description,
+      startsAt: competitionData.startsAt,
+      endsAt: competitionData.endsAt,
+      award: competitionData.award,
+      rating: competitionData.rating,
+      requirements: competitionData.requirements,
+      status: competitionData.status,
+    };
     try {
       const confirm = window.confirm(`Потвърдете ъпдейта на състезание с id ${competitionId}`);
       if (confirm) {
-        await updateCompetition(competitionId, competitionData);
+        await updateCompetition(competitionId, data);
         navigate("/competitions");
       }
     } catch (error) {
@@ -72,7 +93,7 @@ const EditCompetition = () => {
         </div>
         <div>
           <label htmlFor="logo">Logo</label>
-          <input type="file" id="logo" name="logo" onChange={handleChange} accept="image/*" />
+          <input type="file" id="logo" name="logo" onChange={handleFileChange} accept="image/*" />
         </div>
         <div>
           <label htmlFor="description">Description</label>
