@@ -3,6 +3,7 @@ const multer = require("multer");
 const path = require("path");
 const UserCompetition = require("../models/UserCompetitionModel");
 require("dotenv").config();
+const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -108,8 +109,8 @@ exports.updateCompetitionById = async (req, res) => {
 
       competition.logo = req.file ? `/public/${req.file.filename}` : null;
 
-      if (user.changed()) {
-        await user.save();
+      if (competition.changed()) {
+        await competition.save();
       }
 
       res.status(200).json({ message: "Competition updated successfully", competition });
