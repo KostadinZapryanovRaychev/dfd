@@ -92,9 +92,28 @@ exports.updateCompetitionById = async (req, res) => {
       return res.status(404).json({ message: "Competition not found" });
     }
 
-    await competition.update(req.body);
+    if (competition.logo && fs.existsSync(path.join(__dirname, "../public", competition.logo))) {
+      fs.unlinkSync(path.join(__dirname, "../public", competition.logo));
+    }
 
-    res.status(200).json({ message: "Competition updated successfully", competition });
+    upload(req, res, async function (err) {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Error uploading competition logo" });
+      }
+
+      Object.keys(req.body).forEach((key) => {
+        competition[key] = req.body[key];
+      });
+
+      competition.logo = req.file ? `/public/${req.file.filename}` : null;
+
+      if (user.changed()) {
+        await user.save();
+      }
+
+      res.status(200).json({ message: "Competition updated successfully", competition });
+    });
   } catch (error) {
     console.error("Error updating competition:", error);
     res.status(500).json({ message: "Internal server error" });
