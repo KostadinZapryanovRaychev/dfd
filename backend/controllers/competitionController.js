@@ -92,9 +92,11 @@ exports.updateCompetitionById = async (req, res) => {
     if (!competition) {
       return res.status(404).json({ message: "Competition not found" });
     }
-    const previousPhotoPath = path.join(__dirname, "../", competition.logo);
-    if (competition.logo && fs.existsSync(previousPhotoPath)) {
-      fs.unlinkSync(previousPhotoPath);
+    if (competition.logo) {
+      const previousPhotoPath = path.join(__dirname, "../", competition.logo);
+      if (competition.logo && fs.existsSync(previousPhotoPath)) {
+        fs.unlinkSync(previousPhotoPath);
+      }
     }
 
     upload(req, res, async function (err) {
@@ -131,9 +133,11 @@ exports.deleteCompetitionById = async (req, res) => {
       return res.status(404).json({ message: "Competition not found" });
     }
     // Perform any additional checks, e.g., authorization to delete a competition
-    const previousPhotoPath = path.join(__dirname, "../", competition.logo);
-    if (competition.logo && fs.existsSync(previousPhotoPath)) {
-      fs.unlinkSync(previousPhotoPath);
+    if (competition.logo) {
+      const previousPhotoPath = path.join(__dirname, "../", competition.logo);
+      if (competition.logo && fs.existsSync(previousPhotoPath)) {
+        fs.unlinkSync(previousPhotoPath);
+      }
     }
     await competition.destroy();
 
