@@ -40,9 +40,6 @@ function HomePage() {
               <li>
                 <Link to="/login">Login</Link>
               </li>
-              <li>
-                <Link to="/checkout">Stripe</Link>
-              </li>
               {isAdmin ? (
                 <li>
                   <Link to="/competitions">Competitions</Link>
