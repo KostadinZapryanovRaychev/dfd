@@ -228,7 +228,6 @@ exports.removeApplication = async (req, res) => {
 exports.getAllApplications = async (req, res) => {
   try {
     const applications = await UserCompetition.findAll();
-
     res.status(200).json({ applications });
   } catch (error) {
     console.error("Error fetching competitions for user:", error);
