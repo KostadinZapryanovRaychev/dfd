@@ -20,8 +20,8 @@ exports.createCompetition = async (req, res) => {
   try {
     upload(req, res, async function (err) {
       if (err) {
-        console.error(err);
-        return res.status(500).send("Error uploading file");
+        console.error("Error during uploading file", err);
+        return res.status(500).send("Internal server error");
       }
 
       const { name, description, startsAt, endsAt, award, rating, requirements, status } = req.body;

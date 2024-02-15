@@ -27,6 +27,14 @@ exports.applyToCompetition = async (req, res) => {
 
       const { userId, competitionId, grade } = req.body;
 
+      if (!userId) {
+        return res.status(404).json({ message: "No Id of the User" });
+      }
+
+      if (!competitionId) {
+        return res.status(404).json({ message: "No competitionId of the Competition" });
+      }
+
       let user;
       try {
         user = await User.findByPk(userId);
