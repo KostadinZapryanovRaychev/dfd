@@ -21,38 +21,53 @@ exports.applyToCompetition = async (req, res) => {
   try {
     upload(req, res, async function (err) {
       if (err) {
-        console.error(err);
-        return res.status(500).send("Error uploading file");
+        console.error("Error uploading file:", err);
+        return res.status(500).json({ message: "Error uploading file" });
       }
 
       const { userId, competitionId, grade } = req.body;
 
-      const solutionUrl = req.file ? `/solutions/${req.file.filename}` : null;
+      let user;
+      try {
+        user = await User.findByPk(userId);
+      } catch (error) {
+        console.error("Error fetching user information:", error);
+        return res.status(500).json({ message: "Internal server error" });
+      }
 
-      const user = await User.findByPk(userId);
-
-      const isUserBlocked = user?.isBlocked;
-
-      if (isUserBlocked) {
+      if (user && user.isBlocked) {
         return res.status(400).json({ message: "User can't apply because it is blocked" });
       }
-      const existingApplication = await UserCompetition.findOne({
-        where: { userId, competitionId },
-      });
+
+      let existingApplication;
+      try {
+        existingApplication = await UserCompetition.findOne({
+          where: { userId, competitionId },
+        });
+      } catch (error) {
+        console.error("Error checking for existing application:", error);
+        return res.status(500).json({ message: "Internal server error" });
+      }
 
       if (existingApplication) {
         return res.status(400).json({ message: "User already applied to this competition" });
       }
 
-      const application = await UserCompetition.create({
-        userId,
-        competitionId,
-        grade,
-        solutionUrl,
-        appliedAt: new Date(),
-      });
+      let application;
+      try {
+        application = await UserCompetition.create({
+          userId,
+          competitionId,
+          grade,
+          solutionUrl: req.file ? `/solutions/${req.file.filename}` : null,
+          appliedAt: new Date(),
+        });
+      } catch (error) {
+        console.error("Error creating new application:", error);
+        return res.status(500).json({ message: "Internal server error" });
+      }
 
-      return res.status(201).json({ message: "Application created successfully", application });
+      res.status(201).json({ message: "Application created successfully", application });
     });
   } catch (error) {
     console.error("Error applying to competition:", error);
