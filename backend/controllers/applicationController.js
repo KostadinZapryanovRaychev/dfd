@@ -238,13 +238,21 @@ exports.getAllApplications = async (req, res) => {
 exports.updateApplication = async (req, res) => {
   const { userId, competitionId, grade } = req.body;
 
+  if (!userId) {
+    return res.status(404).json({ message: "No Id of the User" });
+  }
+
+  if (!competitionId) {
+    return res.status(404).json({ message: "No competitionId of the Competition" });
+  }
+
   try {
     const application = await UserCompetition.findOne({
       where: { userId, competitionId },
     });
 
     if (!application) {
-      return res.status(404).json({ message: "User has not applied to this competition" });
+      return res.status(404).json({ message: "No application with this userId and competitionId" });
     }
 
     await application.update({ grade });
@@ -259,6 +267,14 @@ exports.updateApplication = async (req, res) => {
 exports.updateApplicationGrade = async (req, res) => {
   const { applicationId } = req.params;
   const { grade } = req.body;
+
+  if (!applicationId) {
+    return res.status(404).json({ message: "No ApplicationId provided" });
+  }
+
+  if (!grade) {
+    return res.status(404).json({ message: "No grade provided" });
+  }
 
   try {
     const application = await UserCompetition.findByPk(applicationId);
@@ -278,6 +294,10 @@ exports.updateApplicationGrade = async (req, res) => {
 
 exports.getApplicationById = async (req, res) => {
   const { applicationId } = req.params;
+
+  if (!applicationId) {
+    return res.status(404).json({ message: "No ApplicationId provided" });
+  }
 
   try {
     const application = await UserCompetition.findByPk(applicationId);
