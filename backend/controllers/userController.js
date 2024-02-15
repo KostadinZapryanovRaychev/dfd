@@ -49,6 +49,11 @@ exports.registerUser = async (req, res) => {
 
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: "Please provide valid credentials" });
+  }
+
   try {
     const existingUser = await User.findOne({ where: { email } });
     if (!existingUser) {
@@ -82,6 +87,18 @@ exports.logoutUser = async (req, res) => {
 exports.updateUserPassword = async (req, res) => {
   const { userId } = req.params;
   const { currentPassword, newPassword } = req.body;
+
+  if (!userId) {
+    return res.status(404).json({ message: "No id for user" });
+  }
+
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ message: "Please provide valid new password" });
+  }
+
+  if (currentPassword === newPassword) {
+    return res.status(400).json({ message: "The password is the same as before" });
+  }
 
   try {
     const user = await User.findByPk(userId);
@@ -119,6 +136,10 @@ exports.getAllUsers = async (req, res) => {
 exports.getUser = async (req, res) => {
   const { userId } = req.params;
 
+  if (!userId) {
+    return res.status(404).json({ message: "No id for user" });
+  }
+
   try {
     const user = await User.findByPk(userId);
 
@@ -138,6 +159,11 @@ exports.getUser = async (req, res) => {
 
 exports.updateUserInfo = async (req, res) => {
   const userId = req.params.userId;
+
+  if (!userId) {
+    return res.status(404).json({ message: "No id for user" });
+  }
+
   try {
     const user = await User.findByPk(userId);
 
@@ -154,8 +180,8 @@ exports.updateUserInfo = async (req, res) => {
 
     uploadForUserImages(req, res, async function (err) {
       if (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Error uploading user photo" });
+        console.error("Error uploading user photo", err);
+        return res.status(500).json({ message: "Internal server error" });
       }
 
       const { firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age, profession } = req.body;
@@ -187,6 +213,19 @@ exports.updateUserInfo = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   const userId = req.params.userId;
   const requestingUserId = req.user.id;
+  const isAdmin = req.user.isAdmin;
+
+  if (!userId) {
+    return res.status(404).json({ message: "No id for user" });
+  }
+
+  if (!requestingUserId) {
+    return res.status(404).json({ message: "No requestingUserId for user" });
+  }
+
+  if (!isAdmin) {
+    return res.status(403).json({ message: "Unauthorized request" });
+  }
 
   try {
     const user = await User.findByPk(userId);
