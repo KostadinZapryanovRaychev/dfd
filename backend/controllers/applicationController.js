@@ -94,13 +94,14 @@ exports.getApplicationsForCompetition = async (req, res) => {
       ],
     });
 
-    // TODO this check to be done after we are sure that there is competitions and users -- > 2second one
     if (!applications.length) {
       return res.status(200).json({ applications: [] });
     }
+
     if (!isAdmin && applications.length >= 1 && applications[0].User.id !== userId) {
       return res.status(403).json({ message: "You do not have permission to access this resource" });
     }
+
     const formattedApplications = applications
       .map((application) => {
         if (!application.User || !application.Competition) {
@@ -118,7 +119,7 @@ exports.getApplicationsForCompetition = async (req, res) => {
           competition: {
             id: application.Competition.id,
             name: application.Competition.name,
-            staus: application.Competition.status || "closed",
+            status: application.Competition.status || "closed",
           },
           solutionUrl: application.solutionUrl,
           appliedAt: application.appliedAt,
@@ -126,9 +127,6 @@ exports.getApplicationsForCompetition = async (req, res) => {
       })
       .filter((entry) => Object.keys(entry).length !== 0);
 
-    if (formattedApplications.length === 0) {
-      return res.status(404).json({ message: "No competition found" });
-    }
     res.status(200).json({ applications: formattedApplications });
   } catch (error) {
     console.error("Error fetching applications for competition:", error);
