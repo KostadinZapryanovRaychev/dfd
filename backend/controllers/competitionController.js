@@ -58,15 +58,17 @@ exports.getAllCompetitions = async (req, res) => {
 
     res.status(200).json({ competitions });
   } catch (error) {
-    console.error("Error while fetching all competitions:", error);
-    res.status(500).json({
-      message: "Internal server error during fetching all competitions",
-    });
+    console.error("Internal server error during fetching all competitions", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
 exports.getCompetitionById = async (req, res) => {
   const { competitionId } = req.params;
+
+  if (!competitionId) {
+    return res.status(404).json({ message: "No competitionId for the competition" });
+  }
 
   try {
     const competition = await Competition.findByPk(competitionId);
@@ -82,9 +84,12 @@ exports.getCompetitionById = async (req, res) => {
   }
 };
 
-// TODO to fix upload of the new picture during update of competitionById
 exports.updateCompetitionById = async (req, res) => {
   const { competitionId } = req.params;
+
+  if (!competitionId) {
+    return res.status(404).json({ message: "No competitionId for the competition" });
+  }
 
   try {
     const competition = await Competition.findByPk(competitionId);
@@ -125,6 +130,11 @@ exports.updateCompetitionById = async (req, res) => {
 
 exports.deleteCompetitionById = async (req, res) => {
   const { competitionId } = req.params;
+  const isAdmin = req.user.isAdmin;
+
+  if (!isAdmin) {
+    return res.status(403).json({ message: "Unauthorized request" });
+  }
 
   try {
     const competition = await Competition.findByPk(competitionId);
@@ -132,7 +142,7 @@ exports.deleteCompetitionById = async (req, res) => {
     if (!competition) {
       return res.status(404).json({ message: "Competition not found" });
     }
-    // Perform any additional checks, e.g., authorization to delete a competition
+
     if (competition.logo) {
       const previousPhotoPath = path.join(__dirname, "../", competition.logo);
       if (competition.logo && fs.existsSync(previousPhotoPath)) {
