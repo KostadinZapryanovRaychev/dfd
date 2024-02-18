@@ -18,72 +18,6 @@ const storage = multer.diskStorage({
 
 const uploadSolution = multer({ storage: storage }).single("solution");
 
-// exports.applyToCompetition = async (req, res) => {
-//   try {
-//     uploadSolution(req, res, async function (err) {
-//       if (err) {
-//         console.error("Error uploading file:", err);
-//         return res.status(500).json({ message: "Error uploading file" });
-//       }
-
-//       const { userId, competitionId, grade } = req.body;
-
-//       if (!userId) {
-//         return res.status(404).json({ message: "No Id of the User" });
-//       }
-
-//       if (!competitionId) {
-//         return res.status(404).json({ message: "No competitionId of the Competition" });
-//       }
-
-//       let user;
-//       try {
-//         user = await User.findByPk(userId);
-//       } catch (error) {
-//         console.error("Error fetching user information:", error);
-//         return res.status(500).json({ message: "Internal server error" });
-//       }
-
-//       if (user && user.isBlocked) {
-//         return res.status(400).json({ message: "User can't apply because it is blocked" });
-//       }
-
-//       let existingApplication;
-//       try {
-//         existingApplication = await UserCompetition.findOne({
-//           where: { userId, competitionId },
-//         });
-//       } catch (error) {
-//         console.error("Error checking for existing application:", error);
-//         return res.status(500).json({ message: "Internal server error" });
-//       }
-
-//       if (existingApplication) {
-//         return res.status(400).json({ message: "User already applied to this competition" });
-//       }
-
-//       let application;
-//       try {
-//         application = await UserCompetition.create({
-//           userId,
-//           competitionId,
-//           grade,
-//           solutionUrl: req.file ? `/solutions/${req.file.filename}` : null,
-//           appliedAt: new Date(),
-//         });
-//       } catch (error) {
-//         console.error("Error creating new application:", error);
-//         return res.status(500).json({ message: "Internal server error" });
-//       }
-
-//       res.status(201).json({ message: "Application created successfully", application });
-//     });
-//   } catch (error) {
-//     console.error("Error applying to competition:", error);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// };
-
 exports.applyToCompetition = async (req, res) => {
   try {
     uploadSolution(req, res, async function (err) {
@@ -106,57 +40,12 @@ exports.getApplicationsForCompetition = async (req, res) => {
   const { competitionId } = req.params;
   const userId = req.user.id;
   const isAdmin = req.user.isAdmin;
+
   try {
-    const applications = await UserCompetition.findAll({
-      where: { competitionId },
-      include: [
-        {
-          model: User,
-          attributes: ["id", "firstName", "lastName"],
-        },
-        {
-          model: Competition,
-          attributes: ["id", "name", "status"],
-        },
-      ],
-    });
-
-    if (!applications.length) {
-      return res.status(200).json({ applications: [] });
-    }
-
-    if (!isAdmin && applications.length >= 1 && applications[0].User.id !== userId) {
-      return res.status(403).json({ message: "You do not have permission to access this resource" });
-    }
-
-    const formattedApplications = applications
-      .map((application) => {
-        if (!application.User || !application.Competition) {
-          console.log("There are no longer such users or competitions");
-          return {};
-        }
-        return {
-          id: application.id,
-          grade: application.grade,
-          user: {
-            id: application.User.id,
-            firstName: application.User.firstName,
-            lastName: application.User.lastName,
-          },
-          competition: {
-            id: application.Competition.id,
-            name: application.Competition.name,
-            status: application.Competition.status || "closed",
-          },
-          solutionUrl: application.solutionUrl,
-          appliedAt: application.appliedAt,
-        };
-      })
-      .filter((entry) => Object.keys(entry).length !== 0);
-
-    res.status(200).json({ applications: formattedApplications });
+    const applications = await applicationService.getApplicationsForCompetition(competitionId, userId, isAdmin);
+    res.status(200).json({ applications });
   } catch (error) {
-    console.error("Error fetching applications for competition:", error);
+    console.error("Error fetching applications for competition:", error.message);
     res.status(500).json({ message: "Internal server error" });
   }
 };

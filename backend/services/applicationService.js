@@ -37,4 +37,52 @@ const applyToCompetition = async (userId, competitionId, grade, file, req, res) 
   }
 };
 
-module.exports = { applyToCompetition };
+const getApplicationsForCompetition = async (competitionId, userId, isAdmin) => {
+  try {
+    const applications = await UserCompetition.findAll({
+      where: { competitionId },
+      include: [
+        {
+          model: User,
+          attributes: ["id", "firstName", "lastName"],
+        },
+        {
+          model: Competition,
+          attributes: ["id", "name", "status"],
+        },
+      ],
+    });
+
+    if (!applications.length) {
+      return [];
+    }
+
+    if (!isAdmin && applications.length >= 1 && applications[0].User.id !== userId) {
+      throw new Error("Unauthorized access");
+    }
+
+    const formattedApplications = applications.map((application) => ({
+      id: application.id,
+      grade: application.grade,
+      user: {
+        id: application.User.id,
+        firstName: application.User.firstName,
+        lastName: application.User.lastName,
+      },
+      competition: {
+        id: application.Competition.id,
+        name: application.Competition.name,
+        status: application.Competition.status || "closed",
+      },
+      solutionUrl: application.solutionUrl,
+      appliedAt: application.appliedAt,
+    }));
+
+    return formattedApplications;
+  } catch (error) {
+    console.error("Error fetching applications for competition:", error);
+    throw new Error("Internal server error");
+  }
+};
+
+module.exports = { applyToCompetition, getApplicationsForCompetition };
