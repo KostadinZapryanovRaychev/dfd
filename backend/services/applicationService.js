@@ -208,6 +208,17 @@ const updateApplicationGradeById = async (applicationId, grade) => {
   return application;
 };
 
+const getApplicationById = async (applicationId) => {
+  if (!applicationId) {
+    return res.status(404).json({ message: "No ApplicationId provided" });
+  }
+  const application = await UserCompetition.findByPk(applicationId);
+  if (!application) {
+    return res.status(404).json({ message: "Application not found" });
+  }
+  return application;
+};
+
 module.exports = {
   applyToCompetition,
   getApplicationsForCompetition,
@@ -217,4 +228,5 @@ module.exports = {
   findApplication,
   updateApplicationGrade,
   updateApplicationGradeById,
+  getApplicationById,
 };

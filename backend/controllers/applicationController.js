@@ -116,18 +116,9 @@ exports.updateApplicationGrade = async (req, res) => {
 exports.getApplicationById = async (req, res) => {
   const { applicationId } = req.params;
 
-  if (!applicationId) {
-    return res.status(404).json({ message: "No ApplicationId provided" });
-  }
-
   try {
-    const application = await UserCompetition.findByPk(applicationId);
-
-    if (!application) {
-      return res.status(404).json({ message: "Application not found" });
-    }
-
-    res.status(200).json({ application: formattedApplication });
+    const application = await applicationService.getApplicationById(applicationId);
+    res.status(200).json({ application });
   } catch (error) {
     console.error("Error fetching application by ID:", error);
     res.status(500).json({ message: "Internal server error" });
