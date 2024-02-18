@@ -1,9 +1,6 @@
 const UserCompetition = require("../models/UserCompetitionModel");
-const multer = require("multer");
-const path = require("path");
 const Competition = require("../models/CompetitionModel");
 const User = require("../models/UserModel");
-const fs = require("fs");
 const competitionStatus = require("../constants/constants");
 
 const applyToCompetition = async (userId, competitionId, grade, file, req, res) => {
