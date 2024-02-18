@@ -1,10 +1,7 @@
 const UserCompetition = require("../models/UserCompetitionModel");
 const multer = require("multer");
 const path = require("path");
-const Competition = require("../models/CompetitionModel");
-const User = require("../models/UserModel");
 const fs = require("fs");
-const competitionStatus = require("../constants/constants");
 const applicationService = require("../services/applicationService");
 
 const storage = multer.diskStorage({
@@ -76,37 +73,27 @@ exports.removeApplication = async (req, res) => {
 
 exports.getAllApplications = async (req, res) => {
   try {
-    const applications = await UserCompetition.findAll();
+    const applications = await applicationService.getAllApplications();
     res.status(200).json({ applications });
   } catch (error) {
-    console.error("Error fetching competitions for user:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error fetching competitions for user:", error.message);
+    res.status(500).json({ message: error.message });
   }
 };
 
 exports.updateApplication = async (req, res) => {
   const { userId, competitionId, grade } = req.body;
 
-  if (!userId) {
-    return res.status(404).json({ message: "No Id of the User" });
-  }
-
-  if (!competitionId) {
-    return res.status(404).json({ message: "No competitionId of the Competition" });
-  }
-
   try {
-    const application = await UserCompetition.findOne({
-      where: { userId, competitionId },
-    });
+    const application = await applicationService.findApplication(userId, competitionId);
 
     if (!application) {
       return res.status(404).json({ message: "No application with this userId and competitionId" });
     }
 
-    await application.update({ grade });
+    const updatedApplication = await applicationService.updateApplicationGrade(application, grade);
 
-    res.status(200).json({ message: "Application grade updated successfully", application });
+    res.status(200).json({ message: "Application grade updated successfully", application: updatedApplication });
   } catch (error) {
     console.error("Error updating application grade:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -117,24 +104,9 @@ exports.updateApplicationGrade = async (req, res) => {
   const { applicationId } = req.params;
   const { grade } = req.body;
 
-  if (!applicationId) {
-    return res.status(404).json({ message: "No ApplicationId provided" });
-  }
-
-  if (!grade) {
-    return res.status(404).json({ message: "No grade provided" });
-  }
-
   try {
-    const application = await UserCompetition.findByPk(applicationId);
-
-    if (!application) {
-      return res.status(404).json({ message: "Application not found" });
-    }
-
-    await application.update({ grade });
-
-    res.status(200).json({ message: "Application grade updated successfully", application });
+    await applicationService.updateApplicationGradeById(applicationId, grade);
+    res.status(200).json({ message: "Application grade updated successfully" });
   } catch (error) {
     console.error("Error updating application grade:", error);
     res.status(500).json({ message: "Internal server error" });

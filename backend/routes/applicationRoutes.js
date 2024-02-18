@@ -8,7 +8,7 @@ router.get("/competitions/:competitionId", ApplicationController.getApplications
 router.get("/user/:userId/:isPublished", ApplicationController.getCompetitionsForUser);
 router.delete("/:userId/:competitionId", ApplicationController.removeApplication);
 router.get("/", ApplicationController.getAllApplications);
-router.put("/", ApplicationController.updateApplication);
+router.put("/", adminAuthorizationMiddleware, ApplicationController.updateApplication);
 router.put("/:applicationId", adminAuthorizationMiddleware, ApplicationController.updateApplicationGrade);
 router.get("/:applicationId", ApplicationController.getApplicationById);
 router.get("/download/solutions/:fileName", adminAuthorizationMiddleware, ApplicationController.downloadSolutionFile);

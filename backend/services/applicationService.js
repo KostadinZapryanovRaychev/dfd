@@ -167,4 +167,54 @@ const removeApplication = async (userId, competitionId) => {
   }
 };
 
-module.exports = { applyToCompetition, getApplicationsForCompetition, getCompetitionsForUser, removeApplication };
+const getAllApplications = async () => {
+  try {
+    const applications = await UserCompetition.findAll();
+    return applications;
+  } catch (error) {
+    console.error("Error fetching competitions for user:", error);
+    throw new Error("Internal server error");
+  }
+};
+
+const findApplication = async (userId, competitionId) => {
+  if (!userId) {
+    return res.status(404).json({ message: "No Id of the User" });
+  }
+
+  if (!competitionId) {
+    return res.status(404).json({ message: "No competitionId of the Competition" });
+  }
+  return await UserCompetition.findOne({
+    where: { userId, competitionId },
+  });
+};
+
+const updateApplicationGrade = async (application, grade) => {
+  application.grade = grade;
+  await application.save();
+  return application;
+};
+
+const updateApplicationGradeById = async (applicationId, grade) => {
+  const application = await UserCompetition.findByPk(applicationId);
+
+  if (!application) {
+    return res.status(404).json({ message: "No application found" });
+  }
+
+  application.grade = grade;
+  await application.save();
+  return application;
+};
+
+module.exports = {
+  applyToCompetition,
+  getApplicationsForCompetition,
+  getCompetitionsForUser,
+  removeApplication,
+  getAllApplications,
+  findApplication,
+  updateApplicationGrade,
+  updateApplicationGradeById,
+};
