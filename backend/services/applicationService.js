@@ -89,4 +89,49 @@ const getApplicationsForCompetition = async (competitionId, userId, isAdmin) => 
   }
 };
 
-module.exports = { applyToCompetition, getApplicationsForCompetition };
+const getCompetitionsForUser = async (userId, isPublished) => {
+  try {
+    const applications = await UserCompetition.findAll({
+      where: { userId },
+      include: [
+        {
+          model: Competition,
+          attributes: ["name", "status"],
+          required: true,
+        },
+      ],
+    });
+
+    let formattedApplications;
+    if (isPublished) {
+      formattedApplications = applications
+        .map((application) => ({
+          id: application.id,
+          grade: application.grade,
+          userId: application.userId,
+          competitionId: application.competitionId,
+          competitionName: application.Competition.name,
+          status: application.Competition.status,
+          appliedAt: application.appliedAt,
+        }))
+        .filter((application) => application.status === competitionStatus.published);
+    } else {
+      formattedApplications = applications.map((application) => ({
+        id: application.id,
+        grade: application.grade,
+        userId: application.userId,
+        competitionId: application.competitionId,
+        competitionName: application.Competition.name,
+        status: application.Competition.status,
+        appliedAt: application.appliedAt,
+      }));
+    }
+
+    return formattedApplications;
+  } catch (error) {
+    console.error("Error fetching competitions for user:", error);
+    throw new Error("Internal server error");
+  }
+};
+
+module.exports = { applyToCompetition, getApplicationsForCompetition, getCompetitionsForUser };

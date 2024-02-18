@@ -52,7 +52,6 @@ exports.getApplicationsForCompetition = async (req, res) => {
 
 exports.getCompetitionsForUser = async (req, res) => {
   let { userId, isPublished } = req.params;
-  const requestingUserId = req.user.id;
 
   if (typeof isPublished === "string" && isPublished === "false") {
     isPublished = false;
@@ -62,52 +61,11 @@ exports.getCompetitionsForUser = async (req, res) => {
     isPublished = null;
   }
 
-  if (!userId) {
-    return res.status(200).json({ formattedApplications: [] });
-  }
-
   try {
-    const applications = await UserCompetition.findAll({
-      where: { userId },
-      include: [
-        {
-          model: Competition,
-          attributes: ["name", "status"],
-          required: true,
-        },
-      ],
-    });
-
-    let formattedApplications;
-    if (isPublished) {
-      formattedApplications = applications
-        .map((application) => ({
-          id: application.id,
-          grade: application.grade,
-          userId: application.userId,
-          competitionId: application.competitionId,
-          competitionName: application.Competition.name,
-          status: application.Competition.status,
-          appliedAt: application.appliedAt,
-        }))
-        .filter((application) => application.status === competitionStatus.published);
-    } else {
-      formattedApplications = applications.map((application) => ({
-        id: application.id,
-        grade: application.grade,
-        userId: application.userId,
-        competitionId: application.competitionId,
-        competitionName: application.Competition.name,
-        status: application.Competition.status,
-        appliedAt: application.appliedAt,
-      }));
-    }
-    if (!formattedApplications.length) {
-      return res.status(200).json({ formattedApplications });
-    }
-    return res.status(200).json({ formattedApplications });
+    const formattedApplications = await applicationService.getCompetitionsForUser(userId, isPublished);
+    res.status(200).json({ formattedApplications });
   } catch (error) {
-    console.error("Error fetching competitions for user:", error);
+    console.error("Error fetching competitions for user:", error.message);
     res.status(500).json({ message: "Internal server error" });
   }
 };

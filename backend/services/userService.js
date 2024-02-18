@@ -2,7 +2,6 @@ const bcrypt = require("bcrypt");
 const User = require("../models/UserModel");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const UserCompetition = require("../models/UserCompetitionModel");
