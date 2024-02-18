@@ -83,48 +83,6 @@ exports.getUser = async (req, res) => {
   res.status(200).json({ user });
 };
 
-// exports.updateUserInfo = async (req, res) => {
-//   const userId = req.params.userId;
-
-//   if (!userId) {
-//     return res.status(404).json({ message: "No id for user" });
-//   }
-
-//   try {
-//     const { firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age, profession } = req.body;
-
-//     console.log(firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age, profession);
-
-//     const file = req.file;
-
-//     const result = await userService.updateUserInfo(
-//       userId,
-//       {
-//         firstName,
-//         lastName,
-//         email,
-//         isBlocked,
-//         isAdmin,
-//         address,
-//         phone,
-//         company,
-//         age,
-//         profession,
-//       },
-//       file
-//     );
-
-//     if (result.error) {
-//       return res.status(400).json({ message: result.error });
-//     }
-
-//     res.status(200).json({ message: "User information updated successfully", user: result.user });
-//   } catch (error) {
-//     console.error("Error updating user information:", error);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// };
-
 exports.updateUserInfo = async (req, res) => {
   const userId = req.params.userId;
 
