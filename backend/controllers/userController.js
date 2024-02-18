@@ -7,6 +7,8 @@ const path = require("path");
 const fs = require("fs");
 const UserCompetition = require("../models/UserCompetitionModel");
 
+const userService = require("../services/userService");
+
 const storageForUserImages = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, "../profilepictures"));
@@ -20,64 +22,24 @@ const uploadForUserImages = multer({ storage: storageForUserImages }).single("ph
 
 exports.registerUser = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
-
-  try {
-    const existingUser = await User.findOne({ where: { email } });
-    if (existingUser) {
-      return res.status(400).json({ message: "User with this email already exists" });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await User.create({
-      firstName,
-      lastName,
-      email,
-      password: hashedPassword,
-    });
-
-    const secretKey = process.env.SECRET_KEY;
-    const token = jwt.sign({ id: newUser.id, email: newUser.email }, secretKey, {
-      expiresIn: "1h", // Set the token expiration time as per your requirement
-    });
-
-    res.status(201).json({ message: "User registered successfully", token });
-  } catch (error) {
-    console.error("Error during user registration:", error);
-    res.status(500).json({ message: "Internal server error" });
+  const result = await userService.registerUser(firstName, lastName, email, password);
+  if (result.error) {
+    return res.status(400).json({ message: result.error });
   }
+  res.status(201).json({ message: result.message, token: result.token });
 };
 
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
-
   if (!email || !password) {
     return res.status(400).json({ message: "Please provide valid credentials" });
   }
-
-  try {
-    const existingUser = await User.findOne({ where: { email } });
-    if (!existingUser) {
-      return res.status(400).json({ message: "User with this email does not exist" });
-    }
-    const isPasswordValid = await bcrypt.compare(password, existingUser.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid password" });
-    }
-
-    const secretKey = process.env.SECRET_KEY;
-    const token = jwt.sign(
-      { id: existingUser.id, email: existingUser.email, isAdmin: existingUser.isAdmin },
-      secretKey,
-      {
-        expiresIn: "1h",
-      }
-    );
-
-    res.status(200).json({ message: "Login successful", token });
-  } catch (error) {
-    console.error("Error during user login:", error);
-    res.status(500).json({ message: "Internal server error" });
+  const result = await userService.loginUser(email, password);
+  if (result.error) {
+    return res.status(400).json({ message: result.error });
   }
+
+  res.status(200).json({ message: result.message, token: result.token });
 };
 
 exports.logoutUser = async (req, res) => {
@@ -87,39 +49,11 @@ exports.logoutUser = async (req, res) => {
 exports.updateUserPassword = async (req, res) => {
   const { userId } = req.params;
   const { currentPassword, newPassword } = req.body;
-
-  if (!userId) {
-    return res.status(404).json({ message: "No id for user" });
+  const result = await userService.updateUserPassword(userId, currentPassword, newPassword);
+  if (result.error) {
+    return res.status(400).json({ message: result.error });
   }
-
-  if (!currentPassword || !newPassword) {
-    return res.status(400).json({ message: "Please provide valid new password" });
-  }
-
-  if (currentPassword === newPassword) {
-    return res.status(400).json({ message: "The password is the same as before" });
-  }
-
-  try {
-    const user = await User.findByPk(userId);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid current password" });
-    }
-
-    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-
-    await user.update({ password: hashedNewPassword });
-
-    res.status(200).json({ message: "Password updated successfully" });
-  } catch (error) {
-    console.error("Error during password update:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
+  res.status(200).json({ message: result.message });
 };
 
 exports.getAllUsers = async (req, res) => {
