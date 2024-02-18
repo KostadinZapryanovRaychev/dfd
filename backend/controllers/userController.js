@@ -48,6 +48,9 @@ exports.logoutUser = async (req, res) => {
 
 exports.updateUserPassword = async (req, res) => {
   const { userId } = req.params;
+  if (!userId) {
+    return res.status(404).json({ message: "No id for user" });
+  }
   const { currentPassword, newPassword } = req.body;
   const result = await userService.updateUserPassword(userId, currentPassword, newPassword);
   if (result.error) {
@@ -57,14 +60,11 @@ exports.updateUserPassword = async (req, res) => {
 };
 
 exports.getAllUsers = async (req, res) => {
-  try {
-    const users = await User.findAll();
-
-    res.status(200).json({ users });
-  } catch (error) {
-    console.error("Error while fetching all users:", error);
-    res.status(500).json({ message: "Internal server error" });
+  const result = await userService.getAllUsers();
+  if (result.error) {
+    return res.status(500).json({ message: result.error });
   }
+  res.status(200).json({ users: result.users });
 };
 
 exports.getUser = async (req, res) => {
@@ -74,22 +74,56 @@ exports.getUser = async (req, res) => {
     return res.status(404).json({ message: "No id for user" });
   }
 
-  try {
-    const user = await User.findByPk(userId);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    const baseUrl = process.env.BASE_URL;
-    user.photoUrl = user.photoUrl ? `${baseUrl}/${path.basename(user.photoUrl)}` : null;
-
-    res.status(200).json({ user });
-  } catch (error) {
-    console.error("Error while fetching user:", error);
-    res.status(500).json({ message: "Internal server error" });
+  const result = await userService.getUserById(userId);
+  if (result.error) {
+    return res.status(500).json({ message: result.error });
   }
+
+  const user = result.user;
+  res.status(200).json({ user });
 };
+
+// exports.updateUserInfo = async (req, res) => {
+//   const userId = req.params.userId;
+
+//   if (!userId) {
+//     return res.status(404).json({ message: "No id for user" });
+//   }
+
+//   try {
+//     const { firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age, profession } = req.body;
+
+//     console.log(firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age, profession);
+
+//     const file = req.file;
+
+//     const result = await userService.updateUserInfo(
+//       userId,
+//       {
+//         firstName,
+//         lastName,
+//         email,
+//         isBlocked,
+//         isAdmin,
+//         address,
+//         phone,
+//         company,
+//         age,
+//         profession,
+//       },
+//       file
+//     );
+
+//     if (result.error) {
+//       return res.status(400).json({ message: result.error });
+//     }
+
+//     res.status(200).json({ message: "User information updated successfully", user: result.user });
+//   } catch (error) {
+//     console.error("Error updating user information:", error);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
 
 exports.updateUserInfo = async (req, res) => {
   const userId = req.params.userId;
@@ -99,19 +133,6 @@ exports.updateUserInfo = async (req, res) => {
   }
 
   try {
-    const user = await User.findByPk(userId);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    if (user.photoUrl) {
-      const previousPhotoPath = path.join(__dirname, "../", user.photoUrl);
-      if (user.photoUrl && fs.existsSync(previousPhotoPath)) {
-        fs.unlinkSync(previousPhotoPath);
-      }
-    }
-
     uploadForUserImages(req, res, async function (err) {
       if (err) {
         console.error("Error uploading user photo", err);
@@ -119,24 +140,30 @@ exports.updateUserInfo = async (req, res) => {
       }
 
       const { firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age, profession } = req.body;
+      const file = req.file;
 
-      user.firstName = firstName;
-      user.lastName = lastName;
-      user.email = email;
-      user.isAdmin = isAdmin;
-      user.isBlocked = isBlocked;
-      user.address = address;
-      user.phone = phone;
-      user.company = company;
-      user.age = age;
-      user.profession = profession;
+      const result = await userService.updateUserInformation(
+        userId,
+        {
+          firstName,
+          lastName,
+          email,
+          isBlocked,
+          isAdmin,
+          address,
+          phone,
+          company,
+          age,
+          profession,
+        },
+        file
+      );
 
-      user.photoUrl = req.file ? `/profilepictures/${req.file.filename}` : null;
-      if (user.changed()) {
-        await user.save();
+      if (result.error) {
+        return res.status(404).json({ message: result.error });
       }
 
-      res.status(200).json({ message: "User information updated successfully", user });
+      res.status(200).json({ message: result.message, user: result.user });
     });
   } catch (error) {
     console.error("Error updating user information:", error);
