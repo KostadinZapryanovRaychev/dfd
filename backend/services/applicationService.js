@@ -38,6 +38,10 @@ const applyToCompetition = async (userId, competitionId, grade, file, req, res) 
 };
 
 const getApplicationsForCompetition = async (competitionId, userId, isAdmin) => {
+  if (!competitionId) {
+    return res.status(404).json({ message: "No competitionId for the competition" });
+  }
+
   try {
     const applications = await UserCompetition.findAll({
       where: { competitionId },
@@ -54,11 +58,11 @@ const getApplicationsForCompetition = async (competitionId, userId, isAdmin) => 
     });
 
     if (!applications.length) {
-      return [];
+      return res.status(200).json({ applications: [] });
     }
 
     if (!isAdmin && applications.length >= 1 && applications[0].User.id !== userId) {
-      throw new Error("Unauthorized access");
+      return res.status(403).json({ message: "You do not have permission to access this resource" });
     }
 
     const formattedApplications = applications.map((application) => ({
