@@ -53,14 +53,6 @@ exports.getApplicationsForCompetition = async (req, res) => {
 exports.getCompetitionsForUser = async (req, res) => {
   let { userId, isPublished } = req.params;
 
-  if (typeof isPublished === "string" && isPublished === "false") {
-    isPublished = false;
-  } else if (typeof isPublished === "string" && isPublished === "true") {
-    isPublished = true;
-  } else {
-    isPublished = null;
-  }
-
   try {
     const formattedApplications = await applicationService.getCompetitionsForUser(userId, isPublished);
     res.status(200).json({ formattedApplications });
@@ -73,29 +65,12 @@ exports.getCompetitionsForUser = async (req, res) => {
 exports.removeApplication = async (req, res) => {
   const { userId, competitionId } = req.params;
 
-  if (!userId) {
-    return res.status(404).json({ message: "No Id of the User" });
-  }
-
-  if (!competitionId) {
-    return res.status(404).json({ message: "No competitionId of the Competition" });
-  }
-
   try {
-    const existingApplication = await UserCompetition.findOne({
-      where: { userId, competitionId },
-    });
-
-    if (!existingApplication) {
-      return res.status(200).json({ message: "User has not applied to this competition" });
-    }
-
-    await existingApplication.destroy();
-
+    await applicationService.removeApplication(userId, competitionId);
     res.status(200).json({ message: "Application removed successfully" });
   } catch (error) {
-    console.error("Error removing application:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error removing application:", error.message);
+    res.status(500).json({ message: error.message });
   }
 };
 

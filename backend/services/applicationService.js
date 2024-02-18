@@ -90,6 +90,14 @@ const getApplicationsForCompetition = async (competitionId, userId, isAdmin) => 
 };
 
 const getCompetitionsForUser = async (userId, isPublished) => {
+  if (typeof isPublished === "string" && isPublished === "false") {
+    isPublished = false;
+  } else if (typeof isPublished === "string" && isPublished === "true") {
+    isPublished = true;
+  } else {
+    isPublished = null;
+  }
+
   try {
     const applications = await UserCompetition.findAll({
       where: { userId },
@@ -134,4 +142,29 @@ const getCompetitionsForUser = async (userId, isPublished) => {
   }
 };
 
-module.exports = { applyToCompetition, getApplicationsForCompetition, getCompetitionsForUser };
+const removeApplication = async (userId, competitionId) => {
+  if (!userId) {
+    return res.status(404).json({ message: "No Id of the User" });
+  }
+
+  if (!competitionId) {
+    return res.status(404).json({ message: "No competitionId of the Competition" });
+  }
+
+  try {
+    const existingApplication = await UserCompetition.findOne({
+      where: { userId, competitionId },
+    });
+
+    if (!existingApplication) {
+      return res.status(200).json({ message: "User has not applied to this competition" });
+    }
+
+    await existingApplication.destroy();
+  } catch (error) {
+    console.error("Error removing application:", error);
+    throw new Error("Internal server error");
+  }
+};
+
+module.exports = { applyToCompetition, getApplicationsForCompetition, getCompetitionsForUser, removeApplication };
