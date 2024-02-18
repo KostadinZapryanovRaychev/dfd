@@ -165,4 +165,67 @@ const updateUserInformation = async (userId, userData, file) => {
   }
 };
 
-module.exports = { registerUser, loginUser, updateUserPassword, getAllUsers, getUserById, updateUserInformation };
+const deleteUser = async (userId, requestingUserId, isAdmin) => {
+  try {
+    if (!userId) {
+      return { error: "No id for user" };
+    }
+
+    if (!requestingUserId) {
+      return { error: "No requestingUserId for user" };
+    }
+
+    if (!isAdmin) {
+      return { error: "Unauthorized request" };
+    }
+
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      return { error: "User not found" };
+    }
+
+    const numberedUserId = Number(userId);
+    if (numberedUserId === requestingUserId) {
+      return { error: "Cannot delete your own account" };
+    }
+
+    if (user.photoUrl) {
+      const previousPhotoPath = path.join(__dirname, "../", user.photoUrl);
+      if (user.photoUrl && fs.existsSync(previousPhotoPath)) {
+        fs.unlinkSync(previousPhotoPath);
+      }
+    }
+
+    await user.destroy();
+
+    await deleteUserRecords(userId);
+
+    return { message: "User deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    return { error: "Internal server error" };
+  }
+};
+
+module.exports = {
+  registerUser,
+  loginUser,
+  updateUserPassword,
+  getAllUsers,
+  getUserById,
+  updateUserInformation,
+  deleteUser,
+};
+
+const deleteUserRecords = async (userId) => {
+  try {
+    await UserCompetition.destroy({
+      where: {
+        userId: userId,
+      },
+    });
+  } catch (error) {
+    console.error(`Error deleting UserCompetition records for userId ${userId}:`, error);
+  }
+};

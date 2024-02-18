@@ -134,55 +134,16 @@ exports.deleteUser = async (req, res) => {
   const requestingUserId = req.user.id;
   const isAdmin = req.user.isAdmin;
 
-  if (!userId) {
-    return res.status(404).json({ message: "No id for user" });
-  }
-
-  if (!requestingUserId) {
-    return res.status(404).json({ message: "No requestingUserId for user" });
-  }
-
-  if (!isAdmin) {
-    return res.status(403).json({ message: "Unauthorized request" });
-  }
-
   try {
-    const user = await User.findByPk(userId);
+    const result = await userService.deleteUser(userId, requestingUserId, isAdmin);
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    const numberedUserId = Number(userId);
-    if (numberedUserId === requestingUserId) {
-      return res.status(403).json({ message: "Cannot delete your own account" });
+    if (result.error) {
+      return res.status(404).json({ message: result.error });
     }
 
-    if (user.photoUrl) {
-      const previousPhotoPath = path.join(__dirname, "../", user.photoUrl);
-      if (user.photoUrl && fs.existsSync(previousPhotoPath)) {
-        fs.unlinkSync(previousPhotoPath);
-      }
-    }
-
-    await user.destroy();
-
-    await deleteUserRecords(userId);
-
-    res.status(200).json({ message: "User deleted successfully" });
+    res.status(200).json({ message: result.message });
   } catch (error) {
     console.error("Error deleting user:", error);
     res.status(500).json({ message: "Internal server error" });
-  }
-};
-
-const deleteUserRecords = async (userId) => {
-  try {
-    await UserCompetition.destroy({
-      where: {
-        userId: userId,
-      },
-    });
-  } catch (error) {
-    console.error(`Error deleting UserCompetition records for userId ${userId}:`, error);
   }
 };
