@@ -116,25 +116,6 @@ const getUserById = async (userId) => {
   }
 };
 
-const updateUserPhoto = async (user, file) => {
-  try {
-    if (user.photoUrl) {
-      const previousPhotoPath = path.join(__dirname, "../", user.photoUrl);
-      if (user.photoUrl && fs.existsSync(previousPhotoPath)) {
-        fs.unlinkSync(previousPhotoPath);
-      }
-    }
-
-    user.photoUrl = file ? `/profilepictures/${file.filename}` : null;
-    if (user.changed()) {
-      await user.save();
-    }
-  } catch (error) {
-    console.error("Error updating user photo:", error);
-    throw new Error("Error updating user photo");
-  }
-};
-
 const updateUserInformation = async (userId, userData, file) => {
   try {
     const user = await User.findByPk(userId);
@@ -227,5 +208,24 @@ const deleteUserRecords = async (userId) => {
     });
   } catch (error) {
     console.error(`Error deleting UserCompetition records for userId ${userId}:`, error);
+  }
+};
+
+const updateUserPhoto = async (user, file) => {
+  try {
+    if (user.photoUrl) {
+      const previousPhotoPath = path.join(__dirname, "../", user.photoUrl);
+      if (user.photoUrl && fs.existsSync(previousPhotoPath)) {
+        fs.unlinkSync(previousPhotoPath);
+      }
+    }
+
+    user.photoUrl = file ? `/profilepictures/${file.filename}` : null;
+    if (user.changed()) {
+      await user.save();
+    }
+  } catch (error) {
+    console.error("Error updating user photo:", error);
+    throw new Error("Error updating user photo");
   }
 };
