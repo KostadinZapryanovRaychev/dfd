@@ -1,9 +1,6 @@
-const Competition = require("../models/CompetitionModel");
 const multer = require("multer");
 const path = require("path");
-const UserCompetition = require("../models/UserCompetitionModel");
 require("dotenv").config();
-const fs = require("fs");
 const competitionService = require("../services/competitionService");
 
 const storage = multer.diskStorage({

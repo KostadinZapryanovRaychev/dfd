@@ -1,8 +1,8 @@
-const Role = require("../models/RoleModel");
+const roleService = require("../services/roleService");
 
 exports.createRole = async (req, res) => {
   try {
-    const role = await Role.create(req.body);
+    const role = await roleService.createRole(req.body);
     res.status(201).json({ message: "Role created successfully", role });
   } catch (error) {
     console.error("Error creating role:", error);
@@ -12,10 +12,10 @@ exports.createRole = async (req, res) => {
 
 exports.getAllRoles = async (req, res) => {
   try {
-    const roles = await Role.findAll();
+    const roles = await roleService.getAllRoles();
     res.status(200).json({ roles });
   } catch (error) {
-    console.error("Error while fetching all roles:", error);
+    console.error("Error fetching all roles:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -24,15 +24,10 @@ exports.getRoleById = async (req, res) => {
   const { roleId } = req.params;
 
   try {
-    const role = await Role.findByPk(roleId);
-
-    if (!role) {
-      return res.status(404).json({ message: "Role not found" });
-    }
-
+    const role = await roleService.getRoleById(roleId);
     res.status(200).json({ role });
   } catch (error) {
-    console.error("Error while fetching role:", error);
+    console.error("Error fetching role:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -41,14 +36,7 @@ exports.updateRoleById = async (req, res) => {
   const { roleId } = req.params;
 
   try {
-    const role = await Role.findByPk(roleId);
-
-    if (!role) {
-      return res.status(404).json({ message: "Role not found" });
-    }
-
-    await role.update(req.body);
-
+    const role = await roleService.updateRoleById(roleId, req.body);
     res.status(200).json({ message: "Role updated successfully", role });
   } catch (error) {
     console.error("Error updating role:", error);
@@ -60,14 +48,7 @@ exports.deleteRoleById = async (req, res) => {
   const { roleId } = req.params;
 
   try {
-    const role = await Role.findByPk(roleId);
-
-    if (!role) {
-      return res.status(404).json({ message: "Role not found" });
-    }
-
-    await role.destroy();
-
+    await roleService.deleteRoleById(roleId);
     res.status(200).json({ message: "Role deleted successfully" });
   } catch (error) {
     console.error("Error deleting role:", error);
