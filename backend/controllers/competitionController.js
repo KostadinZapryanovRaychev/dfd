@@ -82,16 +82,10 @@ exports.updateCompetitionById = async (req, res) => {
   }
 
   try {
-    const competition = await Competition.findByPk(competitionId);
+    const competition = await competitionService.getCompetitionById(competitionId);
 
     if (!competition) {
       return res.status(404).json({ message: "Competition not found" });
-    }
-    if (competition.logo) {
-      const previousPhotoPath = path.join(__dirname, "../", competition.logo);
-      if (competition.logo && fs.existsSync(previousPhotoPath)) {
-        fs.unlinkSync(previousPhotoPath);
-      }
     }
 
     upload(req, res, async function (err) {
@@ -100,20 +94,16 @@ exports.updateCompetitionById = async (req, res) => {
         return res.status(500).json({ message: "Error uploading competition logo" });
       }
 
-      Object.keys(req.body).forEach((key) => {
-        competition[key] = req.body[key];
-      });
-
-      competition.logo = req.file ? `/public/${req.file.filename}` : null;
-
-      if (competition.changed()) {
-        await competition.save();
+      try {
+        const updatedCompetition = await competitionService.updateCompetition(competition, req.body, req.file);
+        res.status(200).json({ message: "Competition updated successfully", competition: updatedCompetition });
+      } catch (error) {
+        console.error("Error updating competition:", error);
+        res.status(500).json({ message: "Internal server error" });
       }
-
-      res.status(200).json({ message: "Competition updated successfully", competition });
     });
   } catch (error) {
-    console.error("Error updating competition:", error);
+    console.error("Error fetching competition:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
