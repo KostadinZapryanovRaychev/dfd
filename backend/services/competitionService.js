@@ -14,6 +14,36 @@ const createCompetition = async (competitionData) => {
   }
 };
 
+const getAllCompetitions = async () => {
+  try {
+    const baseUrl = process.env.BASE_URL_LOGO;
+    const initialCompetitions = await Competition.findAll();
+    const competitions = initialCompetitions.map((competition) => ({
+      ...competition.toJSON(),
+      logo: competition.logo ? `${baseUrl}/${path.basename(competition.logo)}` : null,
+    }));
+    return competitions;
+  } catch (error) {
+    throw new Error("Error fetching all competitions");
+  }
+};
+
+const getCompetitionById = async (competitionId) => {
+  if (!competitionId) {
+    throw new Error("No competitionId provided");
+  }
+
+  try {
+    const competition = await Competition.findByPk(competitionId);
+
+    return competition;
+  } catch (error) {
+    throw new Error("Error fetching competition by ID");
+  }
+};
+
 module.exports = {
   createCompetition,
+  getAllCompetitions,
+  getCompetitionById,
 };

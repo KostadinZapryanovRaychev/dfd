@@ -49,14 +49,8 @@ exports.createCompetition = async (req, res) => {
 };
 
 exports.getAllCompetitions = async (req, res) => {
-  const baseUrl = process.env.BASE_URL_LOGO;
   try {
-    const initialCompetitions = await Competition.findAll();
-    const competitions = initialCompetitions.map((competition) => ({
-      ...competition.toJSON(),
-      logo: competition.logo ? `${baseUrl}/${path.basename(competition.logo)}` : null,
-    }));
-
+    const competitions = await competitionService.getAllCompetitions();
     res.status(200).json({ competitions });
   } catch (error) {
     console.error("Internal server error during fetching all competitions", error);
@@ -67,13 +61,8 @@ exports.getAllCompetitions = async (req, res) => {
 exports.getCompetitionById = async (req, res) => {
   const { competitionId } = req.params;
 
-  if (!competitionId) {
-    return res.status(404).json({ message: "No competitionId for the competition" });
-  }
-
   try {
-    const competition = await Competition.findByPk(competitionId);
-
+    const competition = await competitionService.getCompetitionById(competitionId);
     if (!competition) {
       return res.status(404).json({ message: "Competition not found" });
     }
