@@ -7,16 +7,16 @@ const applyToCompetition = async (userId, competitionId, grade, file, req, res) 
   try {
     const user = await User.findByPk(userId);
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      throw new Error("No user found");
     }
 
     if (user.isBlocked) {
-      return res.status(400).json({ message: "User can't apply because it is blocked" });
+      throw new Error("User can't apply because it is blocked");
     }
 
     const existingApplication = await UserCompetition.findOne({ where: { userId, competitionId } });
     if (existingApplication) {
-      return res.status(400).json({ message: "User already applied to this competition" });
+      throw new Error("User already applied to this competition");
     }
 
     const application = await UserCompetition.create({
@@ -27,16 +27,16 @@ const applyToCompetition = async (userId, competitionId, grade, file, req, res) 
       appliedAt: new Date(),
     });
 
-    res.status(201).json({ message: "Application created successfully", application });
+    return application;
   } catch (error) {
     console.error("Error creating application:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error", error });
   }
 };
 
 const getApplicationsForCompetition = async (competitionId, userId, isAdmin) => {
   if (!competitionId) {
-    return res.status(404).json({ message: "No competitionId for the competition" });
+    throw new Error("No competitionId for the competition");
   }
 
   try {
@@ -55,11 +55,11 @@ const getApplicationsForCompetition = async (competitionId, userId, isAdmin) => 
     });
 
     if (!applications.length) {
-      return res.status(200).json({ applications: [] });
+      return { applications: [] };
     }
 
     if (!isAdmin && applications.length >= 1 && applications[0].User.id !== userId) {
-      return res.status(403).json({ message: "You do not have permission to access this resource" });
+      throw new Error("You do not have permission to access this resource");
     }
 
     const formattedApplications = applications.map((application) => ({
@@ -82,7 +82,7 @@ const getApplicationsForCompetition = async (competitionId, userId, isAdmin) => 
     return formattedApplications;
   } catch (error) {
     console.error("Error fetching applications for competition:", error);
-    throw new Error("Internal server error");
+    throw new Error("Internal server error", error);
   }
 };
 
@@ -135,17 +135,17 @@ const getCompetitionsForUser = async (userId, isPublished) => {
     return formattedApplications;
   } catch (error) {
     console.error("Error fetching competitions for user:", error);
-    throw new Error("Internal server error");
+    throw new Error("Internal server error", error);
   }
 };
 
 const removeApplication = async (userId, competitionId) => {
   if (!userId) {
-    return res.status(404).json({ message: "No Id of the User" });
+    throw new Error("No Id of the User");
   }
 
   if (!competitionId) {
-    return res.status(404).json({ message: "No competitionId of the Competition" });
+    throw new Error("No competitionId of the Competition");
   }
 
   try {
@@ -154,13 +154,13 @@ const removeApplication = async (userId, competitionId) => {
     });
 
     if (!existingApplication) {
-      return res.status(200).json({ message: "User has not applied to this competition" });
+      throw new Error("User has not applied to this competition");
     }
 
     await existingApplication.destroy();
   } catch (error) {
     console.error("Error removing application:", error);
-    throw new Error("Internal server error");
+    throw new Error("Internal server error", error);
   }
 };
 
@@ -176,11 +176,11 @@ const getAllApplications = async () => {
 
 const findApplication = async (userId, competitionId) => {
   if (!userId) {
-    return res.status(404).json({ message: "No Id of the User" });
+    throw new Error("No Id of the User");
   }
 
   if (!competitionId) {
-    return res.status(404).json({ message: "No competitionId of the Competition" });
+    throw new Error("No competitionId of the Competition");
   }
   return await UserCompetition.findOne({
     where: { userId, competitionId },
@@ -197,7 +197,7 @@ const updateApplicationGradeById = async (applicationId, grade) => {
   const application = await UserCompetition.findByPk(applicationId);
 
   if (!application) {
-    return res.status(404).json({ message: "No application found" });
+    throw new Error("No application found");
   }
 
   application.grade = grade;
@@ -207,11 +207,11 @@ const updateApplicationGradeById = async (applicationId, grade) => {
 
 const getApplicationById = async (applicationId) => {
   if (!applicationId) {
-    return res.status(404).json({ message: "No ApplicationId provided" });
+    throw new Error("No ApplicationId provided");
   }
   const application = await UserCompetition.findByPk(applicationId);
   if (!application) {
-    return res.status(404).json({ message: "Application not found" });
+    throw new Error("Application not found");
   }
   return application;
 };

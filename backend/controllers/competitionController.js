@@ -4,6 +4,7 @@ const path = require("path");
 const UserCompetition = require("../models/UserCompetitionModel");
 require("dotenv").config();
 const fs = require("fs");
+const competitionService = require("../services/competitionService");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -27,7 +28,7 @@ exports.createCompetition = async (req, res) => {
       const { name, description, startsAt, endsAt, award, rating, requirements, status } = req.body;
       const logo = req.file ? `/public/${req.file.filename}` : null;
 
-      const competition = await Competition.create({
+      const competition = await competitionService.createCompetition({
         name,
         logo,
         description,
