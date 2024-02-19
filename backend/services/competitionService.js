@@ -67,9 +67,51 @@ const updateCompetition = async (competition, updateData, file) => {
   }
 };
 
+const deleteCompetition = async (competitionId) => {
+  if (!competitionId) {
+    throw new Error("No competitionId");
+  }
+  try {
+    const competition = await Competition.findByPk(competitionId);
+
+    if (!competition) {
+      throw new Error("Competition not found");
+    }
+
+    if (competition.logo) {
+      const previousPhotoPath = path.join(__dirname, "../", competition.logo);
+      if (fs.existsSync(previousPhotoPath)) {
+        fs.unlinkSync(previousPhotoPath);
+      }
+    }
+
+    await competition.destroy();
+
+    await deleteCompetitionRecords(competitionId);
+
+    return { message: "Competition deleted successfully" };
+  } catch (error) {
+    throw new Error("Error deleting competition: " + error.message);
+  }
+};
+
 module.exports = {
   createCompetition,
   getAllCompetitions,
   getCompetitionById,
   updateCompetition,
+  deleteCompetition,
+};
+
+const deleteCompetitionRecords = async (competitionId) => {
+  try {
+    await UserCompetition.destroy({
+      where: {
+        competitionId: competitionId,
+      },
+    });
+  } catch (error) {
+    console.error(`Error deleting UserCompetition records for competition ${competitionId}:`, error);
+    throw new Error("Error deleting UserCompetition records for competition");
+  }
 };

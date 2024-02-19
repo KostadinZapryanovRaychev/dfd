@@ -117,37 +117,10 @@ exports.deleteCompetitionById = async (req, res) => {
   }
 
   try {
-    const competition = await Competition.findByPk(competitionId);
-
-    if (!competition) {
-      return res.status(404).json({ message: "Competition not found" });
-    }
-
-    if (competition.logo) {
-      const previousPhotoPath = path.join(__dirname, "../", competition.logo);
-      if (competition.logo && fs.existsSync(previousPhotoPath)) {
-        fs.unlinkSync(previousPhotoPath);
-      }
-    }
-    await competition.destroy();
-
-    await deleteCompetitionRecords(competitionId);
-
-    res.status(200).json({ message: "Competition deleted successfully" });
+    const result = await competitionService.deleteCompetition(competitionId);
+    res.status(200).json(result);
   } catch (error) {
-    console.error("Error deleting competition:", error);
+    console.error("Error deleting competition:", error.message);
     res.status(500).json({ message: "Internal server error" });
-  }
-};
-
-const deleteCompetitionRecords = async (competitionId) => {
-  try {
-    await UserCompetition.destroy({
-      where: {
-        competitionId: competitionId,
-      },
-    });
-  } catch (error) {
-    console.error(`Error deleting UserCompetition records for competition ${competitionId}:`, error);
   }
 };
