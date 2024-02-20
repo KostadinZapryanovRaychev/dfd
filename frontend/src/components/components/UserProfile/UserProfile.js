@@ -45,6 +45,7 @@ function UserProfile() {
       <p>Age: {user.age}</p>
       <p>Company: {user.company}</p>
       <p>Phone: {user.phone}</p>
+      <p>Level: {user.level}</p>
       <p>Photo: {user.photoUrl}</p>
       <p>
         <img src={user.photoUrl} alt="profile picture" width="300" height="300" />

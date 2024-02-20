@@ -24,6 +24,7 @@ const EditUser = () => {
     phone: "",
     isAdmin: false,
     photo: null,
+    level: "",
     approvedAt: null,
   });
 
@@ -70,6 +71,7 @@ const EditUser = () => {
       age: updatedUserData.age,
       isBlocked: updatedUserData.isBlocked,
       profession: updatedUserData.profession,
+      level: updatedUserData.level,
       photo: file,
     };
     try {
@@ -137,6 +139,12 @@ const EditUser = () => {
           <label htmlFor="age">Age</label>
           <input type="number" id="age" name="age" value={userData.age || ""} onChange={handleChange} />
         </div>
+        {isAdmin && (
+          <div>
+            <label htmlFor="level">Level</label>
+            <input type="text" id="level" name="level" value={userData.level || ""} onChange={handleChange} />
+          </div>
+        )}
         <div>
           <label htmlFor="address">Address</label>
           <input type="text" id="address" name="address" value={userData.address || ""} onChange={handleChange} />
