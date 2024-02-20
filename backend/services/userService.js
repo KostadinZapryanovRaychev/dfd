@@ -123,7 +123,8 @@ const updateUserInformation = async (userId, userData, file) => {
       return { error: "User not found" };
     }
 
-    const { firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age, profession } = userData;
+    const { firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age, profession, level } =
+      userData;
 
     user.firstName = firstName;
     user.lastName = lastName;
@@ -135,6 +136,7 @@ const updateUserInformation = async (userId, userData, file) => {
     user.company = company;
     user.age = age;
     user.profession = profession;
+    user.level = level;
 
     await updateUserPhoto(user, file);
 

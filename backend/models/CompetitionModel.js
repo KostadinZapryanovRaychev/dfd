@@ -46,6 +46,10 @@ const Competition = db.define(
       type: Sequelize.STRING,
       allowNull: true,
     },
+    requestedBy: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
   },
   { tableName: "competitions" }
 );

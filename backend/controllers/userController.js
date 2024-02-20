@@ -24,16 +24,20 @@ exports.registerUser = async (req, res) => {
 };
 
 exports.loginUser = async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ message: "Please provide valid credentials" });
-  }
-  const result = await userService.loginUser(email, password);
-  if (result.error) {
-    return res.status(400).json({ message: result.error });
-  }
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ message: "Please provide valid credentials" });
+    }
+    const result = await userService.loginUser(email, password);
+    if (result.error) {
+      return res.status(400).json({ message: result.error });
+    }
 
-  res.status(200).json({ message: result.message, token: result.token });
+    res.status(200).json({ message: result.message, token: result.token });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 exports.logoutUser = async (req, res) => {
@@ -91,7 +95,8 @@ exports.updateUserInfo = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
       }
 
-      const { firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age, profession } = req.body;
+      const { firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age, profession, level } =
+        req.body;
       const file = req.file;
 
       const result = await userService.updateUserInformation(
@@ -107,6 +112,7 @@ exports.updateUserInfo = async (req, res) => {
           company,
           age,
           profession,
+          level,
         },
         file
       );

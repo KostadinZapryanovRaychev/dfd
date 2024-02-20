@@ -34,7 +34,7 @@ const applyToCompetition = async (userId, competitionId, grade, file, req, res) 
   }
 };
 
-const getApplicationsForCompetition = async (competitionId, userId, isAdmin) => {
+const getApplicationsForCompetition = async (competitionId, userId, isAdmin, userLevel) => {
   if (!competitionId) {
     throw new Error("No competitionId for the competition");
   }
@@ -67,16 +67,16 @@ const getApplicationsForCompetition = async (competitionId, userId, isAdmin) => 
       grade: application.grade,
       user: {
         id: application.User.id,
-        firstName: application.User.firstName,
-        lastName: application.User.lastName,
+        firstName: userLevel > 1 || isAdmin ? application.User.firstName : "",
+        lastName: userLevel > 1 || isAdmin ? application.User.lastName : "",
       },
       competition: {
         id: application.Competition.id,
         name: application.Competition.name,
-        status: application.Competition.status || "closed",
+        status: application.Competition.status,
       },
-      solutionUrl: application.solutionUrl,
-      appliedAt: application.appliedAt,
+      solutionUrl: userLevel > 0 ? application.solutionUrl : "",
+      appliedAt: isAdmin ? application.appliedAt : "",
     }));
 
     return formattedApplications;
@@ -140,27 +140,16 @@ const getCompetitionsForUser = async (userId, isPublished) => {
 };
 
 const removeApplication = async (userId, competitionId) => {
-  if (!userId) {
-    throw new Error("No Id of the User");
-  }
-
-  if (!competitionId) {
-    throw new Error("No competitionId of the Competition");
-  }
-
   try {
     const existingApplication = await UserCompetition.findOne({
       where: { userId, competitionId },
     });
 
-    if (!existingApplication) {
-      throw new Error("User has not applied to this competition");
+    if (existingApplication) {
+      await existingApplication.destroy();
     }
-
-    await existingApplication.destroy();
   } catch (error) {
     console.error("Error removing application:", error);
-    throw new Error("Internal server error", error);
   }
 };
 

@@ -15,6 +15,9 @@ const storage = multer.diskStorage({
 const uploadSolution = multer({ storage: storage }).single("solution");
 
 exports.applyToCompetition = async (req, res) => {
+  // TODO upload of picture 2 endpoints POST for formaData upload file , put for update of path to it and other data
+  // and handle them in submit one after the other
+  // catch error handlid of input field for tendpoints for body in router before being provided
   try {
     uploadSolution(req, res, async function (err) {
       if (err) {
@@ -36,9 +39,15 @@ exports.getApplicationsForCompetition = async (req, res) => {
   const { competitionId } = req.params;
   const userId = req.user.id;
   const isAdmin = req.user.isAdmin;
+  const userLevel = req.user.level;
 
   try {
-    const applications = await applicationService.getApplicationsForCompetition(competitionId, userId, isAdmin);
+    const applications = await applicationService.getApplicationsForCompetition(
+      competitionId,
+      userId,
+      isAdmin,
+      userLevel
+    );
     res.status(200).json({ applications });
   } catch (error) {
     console.error("Error fetching applications for competition:", error.message);
@@ -63,10 +72,11 @@ exports.removeApplication = async (req, res) => {
 
   try {
     await applicationService.removeApplication(userId, competitionId);
-    res.status(200).json({ message: "Application removed successfully" });
+    // status 204 when operation is successfull nothing to return on the FE
+    res.status(204).json();
   } catch (error) {
     console.error("Error removing application:", error.message);
-    res.status(500).json({ message: error.message });
+    res.status(400).json({ message: "operation not successfull" });
   }
 };
 

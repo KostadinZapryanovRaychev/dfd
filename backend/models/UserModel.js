@@ -71,6 +71,11 @@ const User = db.define(
       allowNull: true,
       defaultValue: false,
     },
+    level: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+      defaultValue: 0,
+    },
   },
   { tableName: "users" }
 );
