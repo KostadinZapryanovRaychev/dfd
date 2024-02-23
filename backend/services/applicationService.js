@@ -35,10 +35,6 @@ const applyToCompetition = async (userId, competitionId, grade, file, req, res) 
 };
 
 const getApplicationsForCompetition = async (competitionId, userId, isAdmin, userLevel) => {
-  if (!competitionId) {
-    throw new Error("No competitionId for the competition");
-  }
-
   try {
     const applications = await UserCompetition.findAll({
       where: { competitionId },
@@ -58,9 +54,10 @@ const getApplicationsForCompetition = async (competitionId, userId, isAdmin, use
       return { applications: [] };
     }
 
-    if (!isAdmin && applications.length >= 1 && applications[0].User.id !== userId) {
-      throw new Error("You do not have permission to access this resource");
-    }
+    // TODO should be refactored
+    // if (!isAdmin && applications.length >= 1 && applications[0].User.id !== userId && userLevel === 0) {
+    //   throw new Error("You do not have permission to access this resource");
+    // }
 
     const formattedApplications = applications.map((application) => ({
       id: application.id,

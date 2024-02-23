@@ -46,7 +46,7 @@ const loginUser = async (email, password) => {
 
     const secretKey = process.env.SECRET_KEY;
     const token = jwt.sign(
-      { id: existingUser.id, email: existingUser.email, isAdmin: existingUser.isAdmin },
+      { id: existingUser.id, email: existingUser.email, isAdmin: existingUser.isAdmin, level: existingUser.level },
       secretKey,
       {
         expiresIn: "1h",
