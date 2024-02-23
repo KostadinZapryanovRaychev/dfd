@@ -72,7 +72,7 @@ const getApplicationsForCompetition = async (competitionId, userId, isAdmin, use
         name: application.Competition.name,
         status: application.Competition.status,
       },
-      solutionUrl: userLevel > 0 ? application.solutionUrl : "",
+      solutionUrl: userLevel || isAdmin > 0 ? application.solutionUrl : "",
       appliedAt: isAdmin ? application.appliedAt : "",
     }));
 
