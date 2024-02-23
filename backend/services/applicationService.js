@@ -54,10 +54,9 @@ const getApplicationsForCompetition = async (competitionId, userId, isAdmin, use
       return { applications: [] };
     }
 
-    // TODO should be refactored
-    // if (!isAdmin && applications.length >= 1 && applications[0].User.id !== userId && userLevel === 0) {
-    //   throw new Error("You do not have permission to access this resource");
-    // }
+    if (!isAdmin || userLevel < 1) {
+      return { applications: [] };
+    }
 
     const formattedApplications = applications.map((application) => ({
       id: application.id,
