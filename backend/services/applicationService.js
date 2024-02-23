@@ -55,6 +55,7 @@ const getApplicationsForCompetition = async (competitionId, userId, isAdmin, use
     }
 
     if (!isAdmin || userLevel < 1) {
+      console.log("UnAuthorized access");
       return { applications: [] };
     }
 
