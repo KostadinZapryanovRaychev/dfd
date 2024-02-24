@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { getCompetition, updateCompetition } from "../../../services/competitionServices";
+import { getCompetition, updateCompetition, uploadImage } from "../../../services/competitionServices";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
 import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
 import { competitionStatus } from "../../../config/constants";
@@ -56,7 +56,6 @@ const EditCompetition = () => {
     e.preventDefault();
     const data = {
       name: competitionData.name,
-      logo: file,
       description: competitionData.description,
       startsAt: competitionData.startsAt,
       endsAt: competitionData.endsAt,
@@ -64,12 +63,21 @@ const EditCompetition = () => {
       rating: competitionData.rating,
       requirements: competitionData.requirements,
       status: competitionData.status,
+      logo: null,
     };
     try {
       const confirm = window.confirm(`Потвърдете ъпдейта на състезание с id ${competitionId}`);
       if (confirm) {
+        // post request
+        // data.logo = response.url
+        // data
+        const updatedCompetitionUrl = await uploadImage(file);
+        console.log(updatedCompetitionUrl?.logo);
+        if (updatedCompetitionUrl?.logo) {
+          data.logo = updatedCompetitionUrl?.logo;
+        }
         await updateCompetition(competitionId, data);
-        navigate("/competitions");
+        // Fnavigate("/competitions");
       }
     } catch (error) {
       console.error("Error updating competition:", error);

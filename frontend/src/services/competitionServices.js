@@ -37,14 +37,8 @@ export const getCompetition = async (competitionId) => {
 };
 
 export const updateCompetition = async (competitionId, competitionData) => {
-  const formData = new FormData();
-
-  Object.entries(competitionData).forEach(([key, value]) => {
-    formData.append(key, value);
-  });
-
   try {
-    return await postFetch(`/competitions/${competitionId}`, formData);
+    return await putFetch(`/competitions/${competitionId}`, competitionData);
   } catch (error) {
     throw new Error("Error updating competition");
   }
