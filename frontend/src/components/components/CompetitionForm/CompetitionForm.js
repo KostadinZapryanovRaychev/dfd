@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { createCompetition } from "../../../services/competitionServices";
+import React, { useEffect, useState } from "react";
+import { createCompetition, uploadImage } from "../../../services/competitionServices";
 import { useNavigate } from "react-router-dom";
 import { competitionStatus } from "../../../config/constants";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
@@ -11,7 +11,6 @@ const CompetitionForm = () => {
   const { userId, isAdmin } = useAuth();
   const [competitionData, setCompetitionData] = useState({
     name: "",
-    logo: null,
     description: "",
     startsAt: "",
     endsAt: "",
@@ -20,9 +19,11 @@ const CompetitionForm = () => {
     requirements: "",
     status: "",
   });
+  const [fileUpoad, setFileUpload] = useState(null);
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setCompetitionData((prevData) => ({ ...prevData, logo: file }));
+    setFileUpload(file);
   };
 
   const handleChange = (e) => {
@@ -32,12 +33,14 @@ const CompetitionForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const newCompetition = await createCompetition(competitionData);
 
+    try {
+      const competitionUrl = await uploadImage(fileUpoad);
+      if (competitionUrl?.logo) {
+        await createCompetition({ ...competitionData, logo: competitionUrl.logo });
+      }
       setCompetitionData({
         name: "",
-        logo: null,
         description: "",
         startsAt: "",
         endsAt: "",
@@ -46,12 +49,15 @@ const CompetitionForm = () => {
         requirements: "",
         status: "",
       });
-
       navigate("/competitions");
     } catch (error) {
       console.error("Error creating competition:", error);
     }
   };
+
+  useEffect(() => {
+    console.log("Updated competitionData:", competitionData);
+  }, [competitionData]);
 
   if (!userId) {
     return <NonAuthenticated />;
@@ -68,10 +74,6 @@ const CompetitionForm = () => {
         <div>
           <label htmlFor="name">Name</label>
           <input type="text" id="name" name="name" value={competitionData.name} onChange={handleChange} required />
-        </div>
-        <div>
-          <label htmlFor="logo">Logo</label>
-          <input type="file" id="logo" name="logo" onChange={handleFileChange} accept="image/*" />
         </div>
         <div>
           <label htmlFor="description">Description</label>
@@ -123,6 +125,10 @@ const CompetitionForm = () => {
           ></textarea>
         </div>
         <div>
+          <label htmlFor="logo">Logo</label>
+          <input type="file" id="logo" name="logo" onChange={handleFileChange} accept="image/*" />
+        </div>
+        <div>
           <label htmlFor="status">Status</label>
           <select id="status" name="status" value={competitionData.status} onChange={handleChange} required>
             <option value="" disabled>
@@ -136,6 +142,13 @@ const CompetitionForm = () => {
         </div>
         <button type="submit">Create Competition</button>
       </form>
+      {/* <form onSubmit={handleSubmit2}>
+        <div>
+          <label htmlFor="logo">Logo</label>
+          <input type="file" id="logo" name="logo" onChange={handleFileChange} accept="image/*" />
+        </div>
+        <button type="submit">Create Competition</button>
+      </form> */}
     </div>
   );
 };
