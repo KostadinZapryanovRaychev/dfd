@@ -42,25 +42,18 @@ const getCompetitionById = async (competitionId) => {
   }
 };
 
-const updateCompetition = async (competition, updateData, file) => {
+const updateCompetition = async (competitionId, updateData) => {
   try {
-    if (file && competition.logo) {
-      const previousPhotoPath = path.join(__dirname, "../", competition.logo);
-      if (fs.existsSync(previousPhotoPath)) {
-        fs.unlinkSync(previousPhotoPath);
-      }
+    const competition = await Competition.findByPk(competitionId);
+    if (!competition) {
+      throw new Error("Competition not found");
     }
 
     Object.keys(updateData).forEach((key) => {
       competition[key] = updateData[key];
     });
 
-    competition.logo = file ? `/public/${file.filename}` : null;
-
-    if (competition.changed()) {
-      await competition.save();
-    }
-
+    await competition.save();
     return competition;
   } catch (error) {
     throw new Error("Error updating competition");

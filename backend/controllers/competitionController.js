@@ -2,6 +2,7 @@ const multer = require("multer");
 const path = require("path");
 require("dotenv").config();
 const competitionService = require("../services/competitionService");
+const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -83,33 +84,22 @@ exports.getCompetitionById = async (req, res) => {
 exports.updateCompetitionById = async (req, res) => {
   const { competitionId } = req.params;
 
-  if (!competitionId) {
-    return res.status(404).json({ message: "No competitionId for the competition" });
-  }
-
   try {
     const competition = await competitionService.getCompetitionById(competitionId);
 
     if (!competition) {
       return res.status(404).json({ message: "Competition not found" });
     }
-
-    upload(req, res, async function (err) {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Error uploading competition logo" });
+    if (competition.logo) {
+      const previousPhotoPath = path.join(__dirname, "../", competition.logo);
+      if (fs.existsSync(previousPhotoPath)) {
+        fs.unlinkSync(previousPhotoPath);
       }
-
-      try {
-        const updatedCompetition = await competitionService.updateCompetition(competition, req.body, req.file);
-        res.status(200).json({ message: "Competition updated successfully", competition: updatedCompetition });
-      } catch (error) {
-        console.error("Error updating competition:", error);
-        res.status(500).json({ message: "Internal server error" });
-      }
-    });
+    }
+    const updatedCompetition = await competitionService.updateCompetition(competitionId, req.body);
+    res.status(200).json({ message: "Competition updated successfully", competition: updatedCompetition });
   } catch (error) {
-    console.error("Error fetching competition:", error);
+    console.error("Error updating competition:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
