@@ -9,7 +9,6 @@ const authenticateToken = (req, res, next) => {
 
   jwt.verify(token, secretKey, (err, user) => {
     if (err) return res.sendStatus(403);
-    console.log(user, "in decodder");
     req.user = user;
     next();
   });

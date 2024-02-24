@@ -16,31 +16,40 @@ const upload = multer({ storage: storage }).single("logo");
 
 exports.createCompetition = async (req, res) => {
   try {
-    upload(req, res, async function (err) {
+    const { name, description, startsAt, endsAt, award, rating, requirements, status, logo } = req.body;
+
+    const competition = await competitionService.createCompetition({
+      name,
+      description,
+      startsAt,
+      endsAt,
+      award,
+      rating,
+      requirements,
+      status,
+      logo,
+    });
+
+    res.status(201).json({ message: "Competition created successfully", competition });
+  } catch (error) {
+    console.error("Error creating competition:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.uploadImage = async (req, res) => {
+  try {
+    upload(req, res, function (err) {
       if (err) {
         console.error("Error during uploading file", err);
         return res.status(500).send("Internal server error");
       }
 
-      const { name, description, startsAt, endsAt, award, rating, requirements, status } = req.body;
       const logo = req.file ? `/public/${req.file.filename}` : null;
-
-      const competition = await competitionService.createCompetition({
-        name,
-        logo,
-        description,
-        startsAt,
-        endsAt,
-        award,
-        rating,
-        requirements,
-        status,
-      });
-
-      res.status(201).json({ message: "Competition created successfully", competition });
+      res.status(200).json({ logo });
     });
   } catch (error) {
-    console.error("Error creating competition:", error);
+    console.error("Error uploading image:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
