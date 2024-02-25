@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { getUser, updateUser } from "../../../services/userServices";
+import { getUser, updateUser, uploadUserImage } from "../../../services/userServices";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
 import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
 import NonAuthorized from "../NonAuthorized/NonAuthorized";
@@ -72,11 +72,15 @@ const EditUser = () => {
       isBlocked: updatedUserData.isBlocked,
       profession: updatedUserData.profession,
       level: updatedUserData.level,
-      photo: file,
+      photo: null,
     };
     try {
       const confirm = window.confirm(`Потвърдете ъпдейта на потребител с име  ${userData?.firstName}`);
       if (confirm) {
+        const userPhotoUrl = await uploadUserImage(file);
+        if (userPhotoUrl?.photo) {
+          data.photo = userPhotoUrl?.photo;
+        }
         await updateUser(userId, data);
         if (isAdmin) {
           navigate("/admin");

@@ -1,4 +1,4 @@
-import { deleteFetch, getFetch, patchFetch, postFetch } from "../lib/fetch";
+import { deleteFetch, getFetch, patchFetch, postFetch, putFetch } from "../lib/fetch";
 
 const API_BASE_URL = "http://localhost:5000/api";
 
@@ -34,27 +34,19 @@ export const getUser = async (userId) => {
   }
 };
 
-export const updateUser = async (userId, userData) => {
-  const { firstName, lastName, email, address, isAdmin, company, age, isBlocked, profession, photo, phone, level } =
-    userData;
-  const formData = new FormData();
-  formData.append("firstName", firstName);
-  formData.append("lastName", lastName);
-  formData.append("email", email);
-  formData.append("isAdmin", isAdmin);
-  formData.append("address", address);
-  formData.append("company", company);
-  formData.append("phone", phone);
-  formData.append("age", age);
-  formData.append("isBlocked", isBlocked);
-  formData.append("profession", profession);
-  formData.append("level", level);
-
+export const uploadUserImage = async (imageFile) => {
   try {
-    if (photo) {
-      formData.append("photo", photo);
-    }
-    return await postFetch(`/users/${userId}`, formData);
+    const formData = new FormData();
+    formData.append("photo", imageFile);
+    return await postFetch("/users/upload", formData);
+  } catch (error) {
+    throw new Error("Error uploading image");
+  }
+};
+
+export const updateUser = async (userId, userData) => {
+  try {
+    return await putFetch(`/users/${userId}`, userData);
   } catch (error) {
     throw new Error("Error updating user");
   }

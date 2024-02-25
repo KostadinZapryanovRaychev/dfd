@@ -68,11 +68,7 @@ const EditCompetition = () => {
     try {
       const confirm = window.confirm(`Потвърдете ъпдейта на състезание с id ${competitionId}`);
       if (confirm) {
-        // post request
-        // data.logo = response.url
-        // data
         const updatedCompetitionUrl = await uploadImage(file);
-        console.log(updatedCompetitionUrl?.logo);
         if (updatedCompetitionUrl?.logo) {
           data.logo = updatedCompetitionUrl?.logo;
         }
