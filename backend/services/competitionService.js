@@ -24,67 +24,50 @@ const getAllCompetitions = async () => {
     }));
     return competitions;
   } catch (error) {
-    throw new Error("Error fetching all competitions");
+    console.log("Error during getting all competitions", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
 const getCompetitionById = async (competitionId) => {
-  if (!competitionId) {
-    throw new Error("No competitionId provided");
-  }
-
   try {
     const competition = await Competition.findByPk(competitionId);
-
     return competition;
   } catch (error) {
-    throw new Error("Error fetching competition by ID");
+    console.log("Error during getting competition", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
 const updateCompetition = async (competitionId, updateData) => {
   try {
     const competition = await Competition.findByPk(competitionId);
-    if (!competition) {
-      throw new Error("Competition not found");
-    }
-
     Object.keys(updateData).forEach((key) => {
       competition[key] = updateData[key];
     });
-
     await competition.save();
     return competition;
   } catch (error) {
-    throw new Error("Error updating competition");
+    console.log("Error updating competition", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
 const deleteCompetition = async (competitionId) => {
-  if (!competitionId) {
-    throw new Error("No competitionId");
-  }
   try {
     const competition = await Competition.findByPk(competitionId);
-
-    if (!competition) {
-      throw new Error("Competition not found");
-    }
-
     if (competition.logo) {
       const previousPhotoPath = path.join(__dirname, "../", competition.logo);
       if (fs.existsSync(previousPhotoPath)) {
         fs.unlinkSync(previousPhotoPath);
       }
     }
-
     await competition.destroy();
-
     await deleteCompetitionRecords(competitionId);
-
-    return { message: "Competition deleted successfully" };
+    res.status(204).json();
   } catch (error) {
-    throw new Error("Error deleting competition: " + error.message);
+    console.log("Error deleting competition", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 

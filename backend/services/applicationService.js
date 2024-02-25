@@ -2,13 +2,11 @@ const UserCompetition = require("../models/UserCompetitionModel");
 const Competition = require("../models/CompetitionModel");
 const User = require("../models/UserModel");
 const competitionStatus = require("../constants/constants");
+const errorMessages = require("../constants/errors");
 
 const applyToCompetition = async (userId, competitionId, grade, file, req, res) => {
   try {
     const user = await User.findByPk(userId);
-    if (!user) {
-      throw new Error("No user found");
-    }
 
     if (user.isBlocked) {
       throw new Error("User can't apply because it is blocked");
@@ -29,8 +27,8 @@ const applyToCompetition = async (userId, competitionId, grade, file, req, res) 
 
     return application;
   } catch (error) {
-    console.error("Error creating application:", error);
-    res.status(500).json({ message: "Internal server error", error });
+    console.log("Error creating application:", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
@@ -78,8 +76,8 @@ const getApplicationsForCompetition = async (competitionId, userId, isAdmin, use
 
     return formattedApplications;
   } catch (error) {
-    console.error("Error fetching applications for competition:", error);
-    throw new Error("Internal server error", error);
+    console.log("Error fetching applications for competition:", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
@@ -131,8 +129,8 @@ const getCompetitionsForUser = async (userId, isPublished) => {
 
     return formattedApplications;
   } catch (error) {
-    console.error("Error fetching competitions for user:", error);
-    throw new Error("Internal server error", error);
+    console.log("Error fetching competitions for user:", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
@@ -155,51 +153,52 @@ const getAllApplications = async () => {
     const applications = await UserCompetition.findAll();
     return applications;
   } catch (error) {
-    console.error("Error fetching competitions for user:", error);
-    throw new Error("Internal server error");
+    console.log("Error fetching competitions for user:", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
 const findApplication = async (userId, competitionId) => {
-  if (!userId) {
-    throw new Error("No Id of the User");
+  try {
+    return await UserCompetition.findOne({
+      where: { userId, competitionId },
+    });
+  } catch (error) {
+    console.log("Error in service for finding application", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
-
-  if (!competitionId) {
-    throw new Error("No competitionId of the Competition");
-  }
-  return await UserCompetition.findOne({
-    where: { userId, competitionId },
-  });
 };
 
 const updateApplicationGrade = async (application, grade) => {
-  application.grade = grade;
-  await application.save();
-  return application;
+  try {
+    application.grade = grade;
+    await application.save();
+    return application;
+  } catch (error) {
+    console.log("Error during updating application grade", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
+  }
 };
 
 const updateApplicationGradeById = async (applicationId, grade) => {
-  const application = await UserCompetition.findByPk(applicationId);
-
-  if (!application) {
-    throw new Error("No application found");
+  try {
+    const application = await UserCompetition.findByPk(applicationId);
+    application.grade = grade;
+    await application.save();
+    return application;
+  } catch (error) {
+    console.log("Error during updating application grade by id", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
-
-  application.grade = grade;
-  await application.save();
-  return application;
 };
 
 const getApplicationById = async (applicationId) => {
-  if (!applicationId) {
-    throw new Error("No ApplicationId provided");
+  try {
+    const application = await UserCompetition.findByPk(applicationId);
+    return application;
+  } catch (error) {
+    console.log("Error gettin application by ID", error);
   }
-  const application = await UserCompetition.findByPk(applicationId);
-  if (!application) {
-    throw new Error("Application not found");
-  }
-  return application;
 };
 
 module.exports = {

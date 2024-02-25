@@ -3,6 +3,7 @@ const multer = require("multer");
 const path = require("path");
 const userService = require("../services/userService");
 const fs = require("fs");
+const errorMessages = require("../constants/errors");
 
 const storageForUserImages = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -17,18 +18,18 @@ const uploadForUserImages = multer({ storage: storageForUserImages }).single("ph
 
 exports.uploadUserImage = (req, res) => {
   try {
+    uploadForUserImages(req, res, async function (err) {
+      if (err) {
+        console.error("Error uploading user photo", err);
+        return res.status(500).json({ message: "Internal server error" });
+      }
+      const photo = req.file ? `/profilepictures/${req.file.filename}` : null;
+      res.status(200).json({ photo });
+    });
   } catch (e) {
-    console.error("Error uploading image:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.log("Error uploading image:", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
-  uploadForUserImages(req, res, async function (err) {
-    if (err) {
-      console.error("Error uploading user photo", err);
-      return res.status(500).json({ message: "Internal server error" });
-    }
-    const photo = req.file ? `/profilepictures/${req.file.filename}` : null;
-    res.status(200).json({ photo });
-  });
 };
 
 exports.updateUserInformation = async (req, res) => {
@@ -55,8 +56,8 @@ exports.updateUserInformation = async (req, res) => {
 
     res.status(200).json({ message: result.message, user: result.user });
   } catch (error) {
-    console.error("Error updating user information:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.log("Error updating user information:", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
@@ -64,7 +65,7 @@ exports.registerUser = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
   const result = await userService.registerUser(firstName, lastName, email, password);
   if (result.error) {
-    return res.status(400).json({ message: result.error });
+    return res.status(400).json({ message: errorMessages.unsuccessfull });
   }
   res.status(201).json({ message: result.message, token: result.token });
 };
@@ -82,12 +83,18 @@ exports.loginUser = async (req, res) => {
 
     res.status(200).json({ message: result.message, token: result.token });
   } catch (error) {
-    console.log(error);
+    console.log("Error during login user", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
 exports.logoutUser = async (req, res) => {
-  res.status(200).json({ message: "Logout successful" });
+  try {
+    res.status(204);
+  } catch (error) {
+    console.log("Error during logout", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
+  }
 };
 
 exports.updateUserPassword = async (req, res) => {
@@ -95,36 +102,46 @@ exports.updateUserPassword = async (req, res) => {
   if (!userId) {
     return res.status(404).json({ message: "No id for user" });
   }
-  const { currentPassword, newPassword } = req.body;
-  const result = await userService.updateUserPassword(userId, currentPassword, newPassword);
-  if (result.error) {
-    return res.status(400).json({ message: result.error });
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const result = await userService.updateUserPassword(userId, currentPassword, newPassword);
+    if (result.error) {
+      return res.status(400).json({ message: result.error });
+    }
+    res.status(200).json({ message: result.message });
+  } catch (error) {
+    console.log("Error during update password", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
-  res.status(200).json({ message: result.message });
 };
 
 exports.getAllUsers = async (req, res) => {
-  const result = await userService.getAllUsers();
-  if (result.error) {
-    return res.status(500).json({ message: result.error });
+  try {
+    const result = await userService.getAllUsers();
+    if (result.error) {
+      return res.status(400).json({ message: errorMessages.unsuccessfull });
+    }
+    res.status(200).json({ users: result.users });
+  } catch (error) {
+    console.log("Error during fetching all users", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
-  res.status(200).json({ users: result.users });
 };
 
 exports.getUser = async (req, res) => {
   const { userId } = req.params;
 
-  if (!userId) {
-    return res.status(404).json({ message: "No id for user" });
+  try {
+    const result = await userService.getUserById(userId);
+    if (result.error) {
+      res.status(400).json({ message: errorMessages.unsuccessfull });
+    }
+    const user = result.user;
+    res.status(200).json({ user });
+  } catch (error) {
+    console.log("Error during getting the user", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
-
-  const result = await userService.getUserById(userId);
-  if (result.error) {
-    return res.status(500).json({ message: result.error });
-  }
-
-  const user = result.user;
-  res.status(200).json({ user });
 };
 
 exports.deleteUser = async (req, res) => {
@@ -139,9 +156,9 @@ exports.deleteUser = async (req, res) => {
       return res.status(404).json({ message: result.error });
     }
 
-    res.status(200).json({ message: result.message });
+    res.status(204);
   } catch (error) {
-    console.error("Error deleting user:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.log("Error deleting user:", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };

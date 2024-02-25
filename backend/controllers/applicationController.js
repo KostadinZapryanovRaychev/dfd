@@ -2,6 +2,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const applicationService = require("../services/applicationService");
+const errorMessages = require("../constants/errors");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -15,8 +16,6 @@ const storage = multer.diskStorage({
 const uploadSolution = multer({ storage: storage }).single("solution");
 
 exports.applyToCompetition = async (req, res) => {
-  // TODO upload of picture 2 endpoints POST for formaData upload file , put for update of path to it and other data
-  // and handle them in submit one after the other
   // catch error handlid of input field for tendpoints for body in router before being provided
   try {
     uploadSolution(req, res, async function (err) {
@@ -31,7 +30,7 @@ exports.applyToCompetition = async (req, res) => {
     });
   } catch (error) {
     console.error("Error applying to competition:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
@@ -50,8 +49,8 @@ exports.getApplicationsForCompetition = async (req, res) => {
     );
     res.status(200).json({ applications });
   } catch (error) {
-    console.error("Error fetching applications for competition:", error.message);
-    res.status(500).json({ message: "Internal server error" });
+    console.log("Error fetching applications for competition:", error.message);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
@@ -63,7 +62,7 @@ exports.getCompetitionsForUser = async (req, res) => {
     res.status(200).json({ formattedApplications });
   } catch (error) {
     console.error("Error fetching competitions for user:", error.message);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
@@ -72,11 +71,10 @@ exports.removeApplication = async (req, res) => {
 
   try {
     await applicationService.removeApplication(userId, competitionId);
-    // status 204 when operation is successfull nothing to return on the FE
     res.status(204).json();
   } catch (error) {
     console.error("Error removing application:", error.message);
-    res.status(400).json({ message: "operation not successfull" });
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
@@ -85,8 +83,8 @@ exports.getAllApplications = async (req, res) => {
     const applications = await applicationService.getAllApplications();
     res.status(200).json({ applications });
   } catch (error) {
-    console.error("Error fetching competitions for user:", error.message);
-    res.status(500).json({ message: error.message });
+    console.log("Error fetching competitions for user:", error.message);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
@@ -104,8 +102,8 @@ exports.updateApplication = async (req, res) => {
 
     res.status(200).json({ message: "Application grade updated successfully", application: updatedApplication });
   } catch (error) {
-    console.error("Error updating application grade:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.log("Error updating application grade:", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
@@ -118,7 +116,7 @@ exports.updateApplicationGrade = async (req, res) => {
     res.status(200).json({ message: "Application grade updated successfully" });
   } catch (error) {
     console.error("Error updating application grade:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
@@ -129,8 +127,8 @@ exports.getApplicationById = async (req, res) => {
     const application = await applicationService.getApplicationById(applicationId);
     res.status(200).json({ application });
   } catch (error) {
-    console.error("Error fetching application by ID:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.log("Error fetching application by ID:", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
@@ -146,15 +144,15 @@ exports.downloadSolutionFile = async (req, res) => {
       fileStream.pipe(res);
 
       fileStream.on("error", (err) => {
-        console.error("Error streaming file:", err);
-        res.status(500).json({ message: "Internal server error during file streaming" });
+        console.log("Error streaming file:", err);
+        res.status(400).json({ message: errorMessages.unsuccessfull });
       });
     } else {
-      console.error("File not found");
-      res.status(404).json({ message: "File not found" });
+      console.log("File not found");
+      res.status(400).json({ message: errorMessages.unsuccessfull });
     }
   } catch (error) {
-    console.error("Error accessing file:", error);
-    res.status(500).json({ message: "Internal server error during download" });
+    console.log("Error accessing file:", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };

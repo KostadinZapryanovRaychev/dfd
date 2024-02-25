@@ -3,6 +3,7 @@ const path = require("path");
 require("dotenv").config();
 const competitionService = require("../services/competitionService");
 const fs = require("fs");
+const errorMessages = require("../constants/errors");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -33,8 +34,8 @@ exports.createCompetition = async (req, res) => {
 
     res.status(201).json({ message: "Competition created successfully", competition });
   } catch (error) {
-    console.error("Error creating competition:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.log("Error creating competition:", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
@@ -51,7 +52,7 @@ exports.uploadImage = async (req, res) => {
     });
   } catch (error) {
     console.error("Error uploading image:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
@@ -61,7 +62,7 @@ exports.getAllCompetitions = async (req, res) => {
     res.status(200).json({ competitions });
   } catch (error) {
     console.error("Internal server error during fetching all competitions", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
@@ -76,8 +77,8 @@ exports.getCompetitionById = async (req, res) => {
 
     res.status(200).json({ competition });
   } catch (error) {
-    console.error("Error while fetching competition:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.log("Error while fetching competition:", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
@@ -99,8 +100,8 @@ exports.updateCompetitionById = async (req, res) => {
     const updatedCompetition = await competitionService.updateCompetition(competitionId, req.body);
     res.status(200).json({ message: "Competition updated successfully", competition: updatedCompetition });
   } catch (error) {
-    console.error("Error updating competition:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.log("Error updating competition:", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
@@ -109,14 +110,14 @@ exports.deleteCompetitionById = async (req, res) => {
   const isAdmin = req.user.isAdmin;
 
   if (!isAdmin) {
-    return res.status(403).json({ message: "Unauthorized request" });
+    return res.status(403).json({ message: errorMessages.unauthorized });
   }
 
   try {
     const result = await competitionService.deleteCompetition(competitionId);
     res.status(200).json(result);
   } catch (error) {
-    console.error("Error deleting competition:", error.message);
-    res.status(500).json({ message: "Internal server error" });
+    console.log("Error deleting competition:", error.message);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
