@@ -9,7 +9,9 @@ router.post("/login", UserController.loginUser);
 router.post("/logout", authenticateToken, UserController.logoutUser);
 router.post("/update-password/:userId", authenticateToken, UserController.updateUserPassword);
 router.get("/users/:userId", authenticateToken, UserController.getUser);
-router.post("/users/:userId", authenticateToken, UserController.updateUserInfo);
+
+router.post("/users/upload", authenticateToken, UserController.uploadUserImage);
+router.put("/users/:userId", authenticateToken, UserController.updateUserInformation);
 
 router.get("/users", authenticateToken, adminAuthorizationMiddleware, UserController.getAllUsers);
 router.delete("/users/:userId", authenticateToken, adminAuthorizationMiddleware, UserController.deleteUser);

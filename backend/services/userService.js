@@ -115,7 +115,7 @@ const getUserById = async (userId) => {
   }
 };
 
-const updateUserInformation = async (userId, userData, file) => {
+const updateUserInformation = async (userId, userData) => {
   try {
     const user = await User.findByPk(userId);
 
@@ -123,7 +123,7 @@ const updateUserInformation = async (userId, userData, file) => {
       return { error: "User not found" };
     }
 
-    const { firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age, profession, level } =
+    const { firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age, profession, level, photo } =
       userData;
 
     user.firstName = firstName;
@@ -137,9 +137,9 @@ const updateUserInformation = async (userId, userData, file) => {
     user.age = age;
     user.profession = profession;
     user.level = level;
+    user.photoUrl = photo;
 
-    await updateUserPhoto(user, file);
-
+    await user.save();
     return { message: "User information updated successfully", user };
   } catch (error) {
     console.error("Error updating user information:", error);

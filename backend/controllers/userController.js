@@ -14,6 +14,43 @@ const storageForUserImages = multer.diskStorage({
 
 const uploadForUserImages = multer({ storage: storageForUserImages }).single("photo");
 
+exports.uploadUserImage = (req, res) => {
+  try {
+  } catch (e) {
+    console.error("Error uploading image:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+  uploadForUserImages(req, res, async function (err) {
+    if (err) {
+      console.error("Error uploading user photo", err);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+    const photo = req.file ? `/profilepictures/${req.file.filename}` : null;
+    res.status(200).json({ photo });
+  });
+};
+
+exports.updateUserInformation = async (req, res) => {
+  const userId = req.params.userId;
+
+  if (!userId) {
+    return res.status(404).json({ message: "No id for user" });
+  }
+
+  try {
+    const result = await userService.updateUserInformation(userId, req.body);
+
+    if (result.error) {
+      return res.status(404).json({ message: result.error });
+    }
+
+    res.status(200).json({ message: result.message, user: result.user });
+  } catch (error) {
+    console.error("Error updating user information:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 exports.registerUser = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
   const result = await userService.registerUser(firstName, lastName, email, password);
@@ -79,54 +116,6 @@ exports.getUser = async (req, res) => {
 
   const user = result.user;
   res.status(200).json({ user });
-};
-
-exports.updateUserInfo = async (req, res) => {
-  const userId = req.params.userId;
-
-  if (!userId) {
-    return res.status(404).json({ message: "No id for user" });
-  }
-
-  try {
-    uploadForUserImages(req, res, async function (err) {
-      if (err) {
-        console.error("Error uploading user photo", err);
-        return res.status(500).json({ message: "Internal server error" });
-      }
-
-      const { firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age, profession, level } =
-        req.body;
-      const file = req.file;
-
-      const result = await userService.updateUserInformation(
-        userId,
-        {
-          firstName,
-          lastName,
-          email,
-          isBlocked,
-          isAdmin,
-          address,
-          phone,
-          company,
-          age,
-          profession,
-          level,
-        },
-        file
-      );
-
-      if (result.error) {
-        return res.status(404).json({ message: result.error });
-      }
-
-      res.status(200).json({ message: result.message, user: result.user });
-    });
-  } catch (error) {
-    console.error("Error updating user information:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
 };
 
 exports.deleteUser = async (req, res) => {
