@@ -5,6 +5,7 @@ const createRole = async (roleData) => {
     const role = await Role.create(roleData);
     return role;
   } catch (error) {
+    console.log("Role service", error);
     throw new Error("Error creating role");
   }
 };
@@ -14,6 +15,7 @@ const getAllRoles = async () => {
     const roles = await Role.findAll();
     return roles;
   } catch (error) {
+    console.log("Role service", error);
     throw new Error("Error fetching all roles");
   }
 };
@@ -23,6 +25,7 @@ const getRoleById = async (roleId) => {
     const role = await Role.findByPk(roleId);
     return role;
   } catch (error) {
+    console.log("Role service", error);
     throw new Error("Error fetching role");
   }
 };
@@ -30,14 +33,10 @@ const getRoleById = async (roleId) => {
 const updateRoleById = async (roleId, roleData) => {
   try {
     const role = await Role.findByPk(roleId);
-
-    if (!role) {
-      throw new Error("Role not found");
-    }
-
     await role.update(roleData);
     return role;
   } catch (error) {
+    console.log("Role service", error);
     throw new Error("Error updating role");
   }
 };
@@ -45,13 +44,9 @@ const updateRoleById = async (roleId, roleData) => {
 const deleteRoleById = async (roleId) => {
   try {
     const role = await Role.findByPk(roleId);
-
-    if (!role) {
-      throw new Error("Role not found");
-    }
-
     await role.destroy();
   } catch (error) {
+    console.log("Role service", error);
     throw new Error("Error deleting role");
   }
 };

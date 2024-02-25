@@ -1,9 +1,9 @@
 const Competition = require("../models/CompetitionModel");
-const multer = require("multer");
 const path = require("path");
 const UserCompetition = require("../models/UserCompetitionModel");
 require("dotenv").config();
 const fs = require("fs");
+const errorMessages = require("../constants/errors");
 
 const createCompetition = async (competitionData) => {
   try {

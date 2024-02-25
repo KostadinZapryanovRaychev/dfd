@@ -177,7 +177,7 @@ const updateApplicationGrade = async (application, grade) => {
     return application;
   } catch (error) {
     console.log("Error during updating application grade", error);
-    res.status(400).json({ message: errorMessages.unsuccessfull });
+    throw new Error(errorMessages.unsuccessfull);
   }
 };
 
