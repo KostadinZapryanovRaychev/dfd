@@ -10,7 +10,7 @@ const createCompetition = async (competitionData) => {
     const competition = await Competition.create(competitionData);
     return competition;
   } catch (error) {
-    throw new Error("Error creating competition");
+    throw new Error(errorMessages.unsuccessfull);
   }
 };
 
@@ -25,7 +25,7 @@ const getAllCompetitions = async () => {
     return competitions;
   } catch (error) {
     console.log("Error during getting all competitions", error);
-    res.status(400).json({ message: errorMessages.unsuccessfull });
+    throw new Error(errorMessages.unsuccessfull);
   }
 };
 
@@ -35,7 +35,7 @@ const getCompetitionById = async (competitionId) => {
     return competition;
   } catch (error) {
     console.log("Error during getting competition", error);
-    res.status(400).json({ message: errorMessages.unsuccessfull });
+    throw new Error(errorMessages.unsuccessfull);
   }
 };
 
@@ -49,7 +49,7 @@ const updateCompetition = async (competitionId, updateData) => {
     return competition;
   } catch (error) {
     console.log("Error updating competition", error);
-    res.status(400).json({ message: errorMessages.unsuccessfull });
+    throw new Error(errorMessages.unsuccessfull);
   }
 };
 
@@ -67,7 +67,7 @@ const deleteCompetition = async (competitionId) => {
     res.status(204).json();
   } catch (error) {
     console.log("Error deleting competition", error);
-    res.status(400).json({ message: errorMessages.unsuccessfull });
+    throw new Error(errorMessages.unsuccessfull);
   }
 };
 
@@ -87,7 +87,7 @@ const deleteCompetitionRecords = async (competitionId) => {
       },
     });
   } catch (error) {
-    console.error(`Error deleting UserCompetition records for competition ${competitionId}:`, error);
-    throw new Error("Error deleting UserCompetition records for competition");
+    console.log(`Error deleting UserCompetition records for competition ${competitionId}:`, error);
+    throw new Error(errorMessages.unsuccessfull);
   }
 };

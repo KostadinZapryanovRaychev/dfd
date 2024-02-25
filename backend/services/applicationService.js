@@ -28,7 +28,7 @@ const applyToCompetition = async (userId, competitionId, grade, file, req, res) 
     return application;
   } catch (error) {
     console.log("Error creating application:", error);
-    res.status(400).json({ message: errorMessages.unsuccessfull });
+    throw new Error(errorMessages.unsuccessfull);
   }
 };
 
@@ -77,7 +77,7 @@ const getApplicationsForCompetition = async (competitionId, userId, isAdmin, use
     return formattedApplications;
   } catch (error) {
     console.log("Error fetching applications for competition:", error);
-    res.status(400).json({ message: errorMessages.unsuccessfull });
+    throw new Error(errorMessages.unsuccessfull);
   }
 };
 
@@ -130,7 +130,7 @@ const getCompetitionsForUser = async (userId, isPublished) => {
     return formattedApplications;
   } catch (error) {
     console.log("Error fetching competitions for user:", error);
-    res.status(400).json({ message: errorMessages.unsuccessfull });
+    throw new Error(errorMessages.unsuccessfull);
   }
 };
 
@@ -145,6 +145,7 @@ const removeApplication = async (userId, competitionId) => {
     }
   } catch (error) {
     console.error("Error removing application:", error);
+    throw new Error(errorMessages.unsuccessfull);
   }
 };
 
@@ -154,7 +155,7 @@ const getAllApplications = async () => {
     return applications;
   } catch (error) {
     console.log("Error fetching competitions for user:", error);
-    res.status(400).json({ message: errorMessages.unsuccessfull });
+    throw new Error(errorMessages.unsuccessfull);
   }
 };
 
@@ -165,7 +166,7 @@ const findApplication = async (userId, competitionId) => {
     });
   } catch (error) {
     console.log("Error in service for finding application", error);
-    res.status(400).json({ message: errorMessages.unsuccessfull });
+    throw new Error(errorMessages.unsuccessfull);
   }
 };
 
@@ -188,7 +189,7 @@ const updateApplicationGradeById = async (applicationId, grade) => {
     return application;
   } catch (error) {
     console.log("Error during updating application grade by id", error);
-    res.status(400).json({ message: errorMessages.unsuccessfull });
+    throw new Error(errorMessages.unsuccessfull);
   }
 };
 
@@ -198,6 +199,7 @@ const getApplicationById = async (applicationId) => {
     return application;
   } catch (error) {
     console.log("Error gettin application by ID", error);
+    throw new Error(errorMessages.unsuccessfull);
   }
 };
 
