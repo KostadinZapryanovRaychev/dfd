@@ -4,7 +4,6 @@ import { getUser, updateUser, uploadUserImage } from "../../../services/userServ
 import { useAuth } from "../../../context/AuthContext/AuthContext";
 import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
 import NonAuthorized from "../NonAuthorized/NonAuthorized";
-import { path } from "../../../routes/routes";
 
 const EditUser = () => {
   const { userId } = useParams();
