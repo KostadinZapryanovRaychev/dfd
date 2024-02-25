@@ -104,11 +104,10 @@ const getUserById = async (userId) => {
     if (!user) {
       return { error: "User not found" };
     }
-
     const baseUrl = process.env.BASE_URL;
+    const currentUrl = user.photoUrl;
     user.photoUrl = user.photoUrl ? `${baseUrl}/${path.basename(user.photoUrl)}` : null;
-
-    return { user };
+    return { user, currentUrl };
   } catch (error) {
     console.error("Error while fetching user:", error);
     return { error: "Internal server error" };

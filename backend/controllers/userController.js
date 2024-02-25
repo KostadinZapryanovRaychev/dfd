@@ -2,6 +2,7 @@ require("dotenv").config();
 const multer = require("multer");
 const path = require("path");
 const userService = require("../services/userService");
+const fs = require("fs");
 
 const storageForUserImages = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -38,6 +39,14 @@ exports.updateUserInformation = async (req, res) => {
   }
 
   try {
+    const user = await userService.getUserById(userId);
+    if (user.user && user.currentUrl) {
+      const previousPhotoPath = path.join(__dirname, "../", user.currentUrl);
+      if (fs.existsSync(previousPhotoPath)) {
+        fs.unlinkSync(previousPhotoPath);
+      }
+    }
+
     const result = await userService.updateUserInformation(userId, req.body);
 
     if (result.error) {
