@@ -24,7 +24,7 @@ const updateUserInformationPayloadSchema = Joi.object().keys({
   address: Joi.string(),
   phone: Joi.string(),
   company: Joi.string(),
-  age: Joi.string(),
+  age: Joi.number().integer(),
   profession: Joi.string(),
   level: Joi.string(),
   photo: Joi.string(),
