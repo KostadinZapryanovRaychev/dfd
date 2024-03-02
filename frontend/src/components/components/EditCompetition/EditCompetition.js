@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { getCompetition, updateCompetition, uploadImage } from "../../../services/competitionServices";
+import {
+  getCompetition,
+  updateCompetition,
+  uploadImage,
+} from "../../../services/competitionServices";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
 import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
 import { competitionStatus } from "../../../config/constants";
@@ -46,7 +50,9 @@ const EditCompetition = () => {
       if (allowedTypes.includes(selectedFile.type)) {
         setFile(selectedFile);
       } else {
-        console.error("Invalid file type. Please select a JPEG, PNG, or JPG file.");
+        console.error(
+          "Invalid file type. Please select a JPEG, PNG, or JPG file."
+        );
         event.target.value = null;
       }
     }
@@ -66,14 +72,16 @@ const EditCompetition = () => {
       logo: null,
     };
     try {
-      const confirm = window.confirm(`Потвърдете ъпдейта на състезание с id ${competitionId}`);
+      const confirm = window.confirm(
+        `Потвърдете ъпдейта на състезание с id ${competitionId}`
+      );
       if (confirm) {
         const updatedCompetitionUrl = await uploadImage(file);
         if (updatedCompetitionUrl?.logo) {
           data.logo = updatedCompetitionUrl?.logo;
         }
         await updateCompetition(competitionId, data);
-        // Fnavigate("/competitions");
+        navigate("/competitions");
       }
     } catch (error) {
       console.error("Error updating competition:", error);
@@ -93,11 +101,24 @@ const EditCompetition = () => {
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="name">Name</label>
-          <input type="text" id="name" name="name" value={competitionData.name} onChange={handleChange} required />
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={competitionData.name}
+            onChange={handleChange}
+            required
+          />
         </div>
         <div>
           <label htmlFor="logo">Logo</label>
-          <input type="file" id="logo" name="logo" onChange={handleFileChange} accept="image/*" />
+          <input
+            type="file"
+            id="logo"
+            name="logo"
+            onChange={handleFileChange}
+            accept="image/*"
+          />
         </div>
         <div>
           <label htmlFor="description">Description</label>
@@ -133,11 +154,23 @@ const EditCompetition = () => {
         </div>
         <div>
           <label htmlFor="award">Award</label>
-          <input type="text" id="award" name="award" value={competitionData.award} onChange={handleChange} />
+          <input
+            type="text"
+            id="award"
+            name="award"
+            value={competitionData.award}
+            onChange={handleChange}
+          />
         </div>
         <div>
           <label htmlFor="rating">Rating</label>
-          <input type="number" id="rating" name="rating" value={competitionData.rating} onChange={handleChange} />
+          <input
+            type="number"
+            id="rating"
+            name="rating"
+            value={competitionData.rating}
+            onChange={handleChange}
+          />
         </div>
         <div>
           <label htmlFor="requirements">Requirements</label>
@@ -150,7 +183,13 @@ const EditCompetition = () => {
         </div>
         <div>
           <label htmlFor="status">Status</label>
-          <select id="status" name="status" value={competitionData.status} onChange={handleChange} required>
+          <select
+            id="status"
+            name="status"
+            value={competitionData.status}
+            onChange={handleChange}
+            required
+          >
             <option value={competitionData.status} disabled>
               Select competition status
             </option>

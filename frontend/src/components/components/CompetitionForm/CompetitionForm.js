@@ -181,13 +181,6 @@ const CompetitionForm = () => {
         </div>
         <button type="submit">Create Competition</button>
       </form>
-      {/* <form onSubmit={handleSubmit2}>
-        <div>
-          <label htmlFor="logo">Logo</label>
-          <input type="file" id="logo" name="logo" onChange={handleFileChange} accept="image/*" />
-        </div>
-        <button type="submit">Create Competition</button>
-      </form> */}
     </div>
   );
 };
