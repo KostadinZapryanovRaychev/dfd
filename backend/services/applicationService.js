@@ -4,7 +4,7 @@ const User = require("../models/UserModel");
 const competitionStatus = require("../constants/constants");
 const errorMessages = require("../constants/errors");
 
-const applyToCompetition = async (userId, competitionId, grade, file, req, res) => {
+const applyToCompetition = async (userId, competitionId, grade, file) => {
   try {
     const user = await User.findByPk(userId);
 
@@ -12,7 +12,9 @@ const applyToCompetition = async (userId, competitionId, grade, file, req, res) 
       throw new Error("User can't apply because it is blocked");
     }
 
-    const existingApplication = await UserCompetition.findOne({ where: { userId, competitionId } });
+    const existingApplication = await UserCompetition.findOne({
+      where: { userId, competitionId },
+    });
     if (existingApplication) {
       throw new Error("User already applied to this competition");
     }
@@ -32,7 +34,12 @@ const applyToCompetition = async (userId, competitionId, grade, file, req, res) 
   }
 };
 
-const getApplicationsForCompetition = async (competitionId, userId, isAdmin, userLevel) => {
+const getApplicationsForCompetition = async (
+  competitionId,
+  userId,
+  isAdmin,
+  userLevel
+) => {
   try {
     const applications = await UserCompetition.findAll({
       where: { competitionId },
@@ -114,7 +121,9 @@ const getCompetitionsForUser = async (userId, isPublished) => {
           status: application.Competition.status,
           appliedAt: application.appliedAt,
         }))
-        .filter((application) => application.status === competitionStatus.published);
+        .filter(
+          (application) => application.status === competitionStatus.published
+        );
     } else {
       formattedApplications = applications.map((application) => ({
         id: application.id,

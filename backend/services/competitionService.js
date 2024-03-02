@@ -20,7 +20,9 @@ const getAllCompetitions = async () => {
     const initialCompetitions = await Competition.findAll();
     const competitions = initialCompetitions.map((competition) => ({
       ...competition.toJSON(),
-      logo: competition.logo ? `${baseUrl}/${path.basename(competition.logo)}` : null,
+      logo: competition.logo
+        ? `${baseUrl}/${path.basename(competition.logo)}`
+        : null,
     }));
     return competitions;
   } catch (error) {
@@ -64,7 +66,6 @@ const deleteCompetition = async (competitionId) => {
     }
     await competition.destroy();
     await deleteCompetitionRecords(competitionId);
-    res.status(204).json();
   } catch (error) {
     console.log("Error deleting competition", error);
     throw new Error(errorMessages.unsuccessfull);
@@ -87,7 +88,10 @@ const deleteCompetitionRecords = async (competitionId) => {
       },
     });
   } catch (error) {
-    console.log(`Error deleting UserCompetition records for competition ${competitionId}:`, error);
+    console.log(
+      `Error deleting UserCompetition records for competition ${competitionId}:`,
+      error
+    );
     throw new Error(errorMessages.unsuccessfull);
   }
 };
