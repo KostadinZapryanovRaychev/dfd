@@ -23,7 +23,10 @@ router.post(
 router.post("/logout", authenticateToken, UserController.logoutUser);
 router.post(
   "/update-password/:userId",
-  celebrate({ [Segments.BODY]: userValidator.updatePasswordPayloadSchema }),
+  celebrate({
+    [Segments.PARAMS]: userValidator.deleteUserPayloadSchema,
+    [Segments.BODY]: userValidator.updatePasswordPayloadSchema,
+  }),
   authenticateToken,
   UserController.updateUserPassword
 );
@@ -33,6 +36,7 @@ router.post("/users/upload", authenticateToken, UserController.uploadUserImage);
 router.put(
   "/users/:userId",
   celebrate({
+    [Segments.PARAMS]: userValidator.deleteUserPayloadSchema,
     [Segments.BODY]: userValidator.updateUserInformationPayloadSchema,
   }),
   authenticateToken,
