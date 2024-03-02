@@ -13,10 +13,17 @@ router.post(
   celebrate({ [Segments.BODY]: userValidator.registerPayloadSchema }),
   UserController.registerUser
 );
-router.post("/login", UserController.loginUser);
+router.post(
+  "/login",
+  celebrate({ [Segments.BODY]: userValidator.loginPayloadSchema }),
+  UserController.loginUser
+);
+
+// TODO to implement change password for user
 router.post("/logout", authenticateToken, UserController.logoutUser);
 router.post(
   "/update-password/:userId",
+  celebrate({ [Segments.BODY]: userValidator.updatePasswordPayloadSchema }),
   authenticateToken,
   UserController.updateUserPassword
 );
@@ -25,6 +32,9 @@ router.get("/users/:userId", authenticateToken, UserController.getUser);
 router.post("/users/upload", authenticateToken, UserController.uploadUserImage);
 router.put(
   "/users/:userId",
+  celebrate({
+    [Segments.BODY]: userValidator.updateUserInformationPayloadSchema,
+  }),
   authenticateToken,
   UserController.updateUserInformation
 );
@@ -37,6 +47,9 @@ router.get(
 );
 router.delete(
   "/users/:userId",
+  celebrate({
+    [Segments.PARAMS]: userValidator.deleteUserPayloadSchema,
+  }),
   authenticateToken,
   adminAuthorizationMiddleware,
   UserController.deleteUser

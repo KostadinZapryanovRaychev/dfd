@@ -23,9 +23,13 @@ const registerUser = async (firstName, lastName, email, password) => {
     });
 
     const secretKey = process.env.SECRET_KEY;
-    const token = jwt.sign({ id: newUser.id, email: newUser.email }, secretKey, {
-      expiresIn: "1h", // Set the token expiration time as per your requirement
-    });
+    const token = jwt.sign(
+      { id: newUser.id, email: newUser.email },
+      secretKey,
+      {
+        expiresIn: "1h", // Set the token expiration time as per your requirement
+      }
+    );
 
     return { message: "User registered successfully", token };
   } catch (error) {
@@ -40,14 +44,22 @@ const loginUser = async (email, password) => {
     if (!existingUser) {
       return { error: "User with this email does not exist" };
     }
-    const isPasswordValid = await bcrypt.compare(password, existingUser.password);
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
     if (!isPasswordValid) {
       throw new Error("Invalid password");
     }
 
     const secretKey = process.env.SECRET_KEY;
     const token = jwt.sign(
-      { id: existingUser.id, email: existingUser.email, isAdmin: existingUser.isAdmin, level: existingUser.level },
+      {
+        id: existingUser.id,
+        email: existingUser.email,
+        isAdmin: existingUser.isAdmin,
+        level: existingUser.level,
+      },
       secretKey,
       {
         expiresIn: "1h",
@@ -64,7 +76,10 @@ const loginUser = async (email, password) => {
 const updateUserPassword = async (userId, currentPassword, newPassword) => {
   try {
     const user = await User.findByPk(userId);
-    const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
     if (!isPasswordValid) {
       return { error: "Invalid current password" };
     }
@@ -95,7 +110,9 @@ const getUserById = async (userId) => {
     const user = await User.findByPk(userId);
     const baseUrl = process.env.BASE_URL;
     const currentUrl = user.photoUrl;
-    user.photoUrl = user.photoUrl ? `${baseUrl}/${path.basename(user.photoUrl)}` : null;
+    user.photoUrl = user.photoUrl
+      ? `${baseUrl}/${path.basename(user.photoUrl)}`
+      : null;
     return { user, currentUrl };
   } catch (error) {
     console.error("Error while fetching user:", error);
@@ -106,8 +123,20 @@ const getUserById = async (userId) => {
 const updateUserInformation = async (userId, userData) => {
   try {
     const user = await User.findByPk(userId);
-    const { firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age, profession, level, photo } =
-      userData;
+    const {
+      firstName,
+      lastName,
+      email,
+      isBlocked,
+      isAdmin,
+      address,
+      phone,
+      company,
+      age,
+      profession,
+      level,
+      photo,
+    } = userData;
 
     user.firstName = firstName;
     user.lastName = lastName;
@@ -174,7 +203,10 @@ const deleteUserRecords = async (userId) => {
       },
     });
   } catch (error) {
-    console.error(`Error deleting UserCompetition records for userId ${userId}:`, error);
+    console.error(
+      `Error deleting UserCompetition records for userId ${userId}:`,
+      error
+    );
     throw new Error(errorMessages.unsuccessfull);
   }
 };
