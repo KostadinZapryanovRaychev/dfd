@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { createCompetition, uploadImage } from "../../../services/competitionServices";
+import {
+  createCompetition,
+  uploadImage,
+} from "../../../services/competitionServices";
 import { useNavigate } from "react-router-dom";
 import { competitionStatus } from "../../../config/constants";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
@@ -37,7 +40,12 @@ const CompetitionForm = () => {
     try {
       const competitionUrl = await uploadImage(fileUpoad);
       if (competitionUrl?.logo) {
-        await createCompetition({ ...competitionData, logo: competitionUrl.logo });
+        await createCompetition({
+          ...competitionData,
+          logo: competitionUrl.logo,
+        });
+      } else {
+        await createCompetition({ ...competitionData, logo: "" });
       }
       setCompetitionData({
         name: "",
@@ -73,7 +81,14 @@ const CompetitionForm = () => {
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="name">Name</label>
-          <input type="text" id="name" name="name" value={competitionData.name} onChange={handleChange} required />
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={competitionData.name}
+            onChange={handleChange}
+            required
+          />
         </div>
         <div>
           <label htmlFor="description">Description</label>
@@ -109,11 +124,23 @@ const CompetitionForm = () => {
         </div>
         <div>
           <label htmlFor="award">Award</label>
-          <input type="text" id="award" name="award" value={competitionData.award} onChange={handleChange} />
+          <input
+            type="text"
+            id="award"
+            name="award"
+            value={competitionData.award}
+            onChange={handleChange}
+          />
         </div>
         <div>
           <label htmlFor="rating">Rating</label>
-          <input type="number" id="rating" name="rating" value={competitionData.rating} onChange={handleChange} />
+          <input
+            type="number"
+            id="rating"
+            name="rating"
+            value={competitionData.rating}
+            onChange={handleChange}
+          />
         </div>
         <div>
           <label htmlFor="requirements">Requirements</label>
@@ -126,11 +153,23 @@ const CompetitionForm = () => {
         </div>
         <div>
           <label htmlFor="logo">Logo</label>
-          <input type="file" id="logo" name="logo" onChange={handleFileChange} accept="image/*" />
+          <input
+            type="file"
+            id="logo"
+            name="logo"
+            onChange={handleFileChange}
+            accept="image/*"
+          />
         </div>
         <div>
           <label htmlFor="status">Status</label>
-          <select id="status" name="status" value={competitionData.status} onChange={handleChange} required>
+          <select
+            id="status"
+            name="status"
+            value={competitionData.status}
+            onChange={handleChange}
+            required
+          >
             <option value="" disabled>
               Select competition status
             </option>
