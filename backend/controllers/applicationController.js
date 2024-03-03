@@ -32,9 +32,7 @@ exports.applyToCompetition = async (req, res) => {
         userId,
         competitionId,
         grade,
-        req.file,
-        req,
-        res
+        req.file
       );
     });
   } catch (error) {
