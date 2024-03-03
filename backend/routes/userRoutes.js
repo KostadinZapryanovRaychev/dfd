@@ -24,19 +24,26 @@ router.post("/logout", authenticateToken, UserController.logoutUser);
 router.post(
   "/update-password/:userId",
   celebrate({
-    [Segments.PARAMS]: userValidator.deleteUserPayloadSchema,
+    [Segments.PARAMS]: userValidator.getUserBydIdPayloadSchema,
     [Segments.BODY]: userValidator.updatePasswordPayloadSchema,
   }),
   authenticateToken,
   UserController.updateUserPassword
 );
-router.get("/users/:userId", authenticateToken, UserController.getUser);
+router.get(
+  "/users/:userId",
+  celebrate({
+    [Segments.PARAMS]: userValidator.getUserBydIdPayloadSchema,
+  }),
+  authenticateToken,
+  UserController.getUser
+);
 
 router.post("/users/upload", authenticateToken, UserController.uploadUserImage);
 router.put(
   "/users/:userId",
   celebrate({
-    [Segments.PARAMS]: userValidator.deleteUserPayloadSchema,
+    [Segments.PARAMS]: userValidator.getUserBydIdPayloadSchema,
     [Segments.BODY]: userValidator.updateUserInformationPayloadSchema,
   }),
   authenticateToken,
@@ -52,7 +59,7 @@ router.get(
 router.delete(
   "/users/:userId",
   celebrate({
-    [Segments.PARAMS]: userValidator.deleteUserPayloadSchema,
+    [Segments.PARAMS]: userValidator.getUserBydIdPayloadSchema,
   }),
   authenticateToken,
   adminAuthorizationMiddleware,

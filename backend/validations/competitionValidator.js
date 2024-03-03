@@ -13,11 +13,11 @@ const createCompetitionPayloadSchema = Joi.object().keys({
   requestedBy: Joi.string().allow(null),
 });
 
-const updateCompetitionPayloadSchema = Joi.object().keys({
+const getCompetitionByIdPayloadSchema = Joi.object().keys({
   competitionId: Joi.string().required(),
 });
 
 module.exports = {
   createCompetitionPayloadSchema,
-  updateCompetitionPayloadSchema,
+  getCompetitionByIdPayloadSchema,
 };

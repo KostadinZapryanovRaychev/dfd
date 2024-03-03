@@ -30,7 +30,7 @@ const updateUserInformationPayloadSchema = Joi.object().keys({
   photo: Joi.string(),
 });
 
-const deleteUserPayloadSchema = Joi.object().keys({
+const getUserBydIdPayloadSchema = Joi.object().keys({
   userId: Joi.string().required(),
 });
 
@@ -39,5 +39,5 @@ module.exports = {
   loginPayloadSchema,
   updatePasswordPayloadSchema,
   updateUserInformationPayloadSchema,
-  deleteUserPayloadSchema,
+  getUserBydIdPayloadSchema,
 };

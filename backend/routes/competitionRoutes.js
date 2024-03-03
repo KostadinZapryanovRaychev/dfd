@@ -6,11 +6,15 @@ const {
 } = require("../middlewares/adminAuthorization");
 const { celebrate, Segments } = require("celebrate");
 const competitionValidator = require("../validations/competitionValidator");
-const { authenticateToken } = require("../middlewares/authenticate");
-const userValidator = require("../validations/userValidator");
 
 router.get("/", CompetitionController.getAllCompetitions);
-router.get("/:competitionId", CompetitionController.getCompetitionById);
+router.get(
+  "/:competitionId",
+  celebrate({
+    [Segments.PARAMS]: competitionValidator.getCompetitionByIdPayloadSchema,
+  }),
+  CompetitionController.getCompetitionById
+);
 
 router.post(
   "/upload",
@@ -28,7 +32,7 @@ router.post(
 router.put(
   "/:competitionId",
   celebrate({
-    [Segments.PARAMS]: competitionValidator.updateCompetitionPayloadSchema,
+    [Segments.PARAMS]: competitionValidator.getCompetitionByIdPayloadSchema,
     [Segments.BODY]: competitionValidator.createCompetitionPayloadSchema,
   }),
   adminAuthorizationMiddleware,
@@ -38,7 +42,7 @@ router.put(
 router.delete(
   "/:competitionId",
   celebrate({
-    [Segments.PARAMS]: competitionValidator.updateCompetitionPayloadSchema,
+    [Segments.PARAMS]: competitionValidator.getCompetitionByIdPayloadSchema,
   }),
   adminAuthorizationMiddleware,
   CompetitionController.deleteCompetitionById
