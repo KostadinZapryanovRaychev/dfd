@@ -37,6 +37,8 @@ router.delete(
   ApplicationController.removeApplication
 );
 router.get("/", ApplicationController.getAllApplications);
+
+// TODO this to be checked futher how to being refactored may be patch and put
 router.put(
   "/",
   adminAuthorizationMiddleware,
