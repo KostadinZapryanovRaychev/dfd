@@ -109,14 +109,6 @@ export const getAllApplications = async () => {
   }
 };
 
-export const updateApplicationForCompetition = async (competitionData) => {
-  try {
-    return await patchFetch(`/competitions`, competitionData);
-  } catch (error) {
-    throw new Error("Error updating this application");
-  }
-};
-
 export const updateApplicationGrade = async (applicationId, grade) => {
   try {
     const endpoint = `/applications/${applicationId}`;
