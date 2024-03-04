@@ -4,7 +4,7 @@ const User = require("../models/UserModel");
 const competitionStatus = require("../constants/constants");
 const errorMessages = require("../constants/errors");
 
-const applyToCompetition = async (userId, competitionId, grade, file) => {
+const applyToCompetition = async (userId, competitionId, grade, solutionUrl) => {
   try {
     const user = await User.findByPk(userId);
 
@@ -23,7 +23,7 @@ const applyToCompetition = async (userId, competitionId, grade, file) => {
       userId,
       competitionId,
       grade,
-      solutionUrl: file ? `/solutions/${file.filename}` : null,
+      solutionUrl: solutionUrl || null,
       appliedAt: new Date(),
     });
 

@@ -17,19 +17,12 @@ const uploadSolution = multer({ storage: storage }).single("solution");
 
 exports.applyToCompetition = async (req, res) => {
   try {
-    uploadSolution(req, res, async function (err) {
-      if (err) {
-        console.error("Error uploading file:", err);
-        return res.status(500).json({ message: "Error uploading file" });
-      }
-
-      const { userId, competitionId, grade } = req.body;
-
-      applicationService.applyToCompetition(userId, competitionId, grade, req.file);
-    });
+    const { userId, competitionId, grade, solutionUrl } = req.body;
+    await applicationService.applyToCompetition(userId, competitionId, grade, solutionUrl);
+    res.status(201).json({ message: "Application submitted successfully" });
   } catch (error) {
     console.error("Error applying to competition:", error);
-    res.status(400).json({ message: errorMessages.unsuccessfull });
+    res.status(400).json({ message: errorMessages.unsuccessful });
   }
 };
 

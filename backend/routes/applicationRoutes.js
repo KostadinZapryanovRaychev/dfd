@@ -14,6 +14,8 @@ router.post(
   ApplicationController.applyToCompetition
 );
 
+router.post("/upload", ApplicationController.uploadSolution);
+
 router.get(
   "/competitions/:competitionId",
   celebrate({

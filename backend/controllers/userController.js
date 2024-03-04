@@ -35,10 +35,6 @@ exports.uploadUserImage = (req, res) => {
 exports.updateUserInformation = async (req, res) => {
   const userId = req.params.userId;
 
-  if (!userId) {
-    return res.status(404).json({ message: "No id for user" });
-  }
-
   try {
     const user = await userService.getUserById(userId);
     if (user.user && user.currentUrl) {
@@ -99,9 +95,6 @@ exports.logoutUser = async (req, res) => {
 
 exports.updateUserPassword = async (req, res) => {
   const { userId } = req.params;
-  if (!userId) {
-    return res.status(404).json({ message: "No id for user" });
-  }
   try {
     const { currentPassword, newPassword } = req.body;
     const result = await userService.updateUserPassword(userId, currentPassword, newPassword);
