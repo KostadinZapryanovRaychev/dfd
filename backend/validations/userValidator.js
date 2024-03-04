@@ -1,4 +1,4 @@
-const { Joi } = require("celebrate");
+const { Joi, errors } = require("celebrate");
 
 const registerPayloadSchema = Joi.object().keys({
   firstName: Joi.string().required(),
@@ -16,18 +16,32 @@ const updatePasswordPayloadSchema = Joi.object().keys({
 });
 
 const updateUserInformationPayloadSchema = Joi.object().keys({
-  firstName: Joi.string(),
-  lastName: Joi.string(),
-  email: Joi.string().email(),
-  isAdmin: Joi.boolean(),
-  isBlocked: Joi.boolean(),
-  address: Joi.string(),
-  phone: Joi.string(),
-  company: Joi.string(),
-  age: Joi.number().integer(),
-  profession: Joi.string(),
-  level: Joi.string(),
-  photo: Joi.string(),
+  firstName: Joi.string().error((errors) => console.log(errors)),
+  lastName: Joi.string().error((errors) => console.log(errors)),
+  email: Joi.string()
+    .email()
+    .error((errors) => console.log(errors)),
+  isAdmin: Joi.boolean().error((errors) => console.log(errors)),
+  isBlocked: Joi.boolean().error((errors) => console.log(errors)),
+  address: Joi.string()
+    .allow(null)
+    .error((errors) => console.log(errors)),
+  phone: Joi.string()
+    .allow(null)
+    .error((errors) => console.log(errors)),
+  company: Joi.string()
+    .allow(null)
+    .error((errors) => console.log(errors)),
+  age: Joi.number()
+    .integer()
+    .allow(null)
+    .error((errors) => console.log(errors)),
+  profession: Joi.string().error((errors) => console.log(errors)),
+  level: Joi.number()
+    .integer()
+    .allow(null)
+    .error((errors) => console.log(errors)),
+  photo: Joi.string().error((errors) => console.log(errors)),
 });
 
 const getUserBydIdPayloadSchema = Joi.object().keys({

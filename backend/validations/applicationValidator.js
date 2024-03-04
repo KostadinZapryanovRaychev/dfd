@@ -3,7 +3,7 @@ const { Joi } = require("celebrate");
 const applyToCompetitionPayloadSchema = Joi.object().keys({
   userId: Joi.number().integer().required(),
   competitionId: Joi.number().integer().required(),
-  grade: Joi.number().required(),
+  grade: Joi.number().allow(null),
 });
 
 const deleteApplicationPayloadSchema = Joi.object().keys({
@@ -13,7 +13,7 @@ const deleteApplicationPayloadSchema = Joi.object().keys({
 
 const getCompetitionsForUserPayloadSchema = Joi.object().keys({
   userId: Joi.string().required(),
-  isPublished: Joi.boolean().required(),
+  isPublished: Joi.boolean().allow(null),
 });
 
 const getApplicationBydIdPayloadSchema = Joi.object().keys({

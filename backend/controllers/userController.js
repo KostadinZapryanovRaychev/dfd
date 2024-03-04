@@ -21,7 +21,7 @@ exports.uploadUserImage = (req, res) => {
     uploadForUserImages(req, res, async function (err) {
       if (err) {
         console.error("Error uploading user photo", err);
-        return res.status(500).json({ message: "Internal server error" });
+        return res.status(400).json({ message: errorMessages.unsuccessfull });
       }
       const photo = req.file ? `/profilepictures/${req.file.filename}` : null;
       res.status(200).json({ photo });
