@@ -54,17 +54,20 @@ export const deleteCompetition = async (competitionId) => {
 
 export const applyToCompetition = async (applicationData) => {
   try {
-    const formData = new FormData();
-    formData.append("userId", applicationData.userId);
-    formData.append("competitionId", applicationData.competitionId);
-    formData.append("grade", applicationData.grade);
+    const response = await postFetch("/applications", applicationData);
+    return response;
+  } catch (error) {
+    throw new Error("Error applying to competition");
+  }
+};
 
+export const uploadSolutionForApplication = async (applicationData) => {
+  try {
+    const formData = new FormData();
     if (applicationData.solution) {
       formData.append("solution", applicationData.solution);
     }
-
-    const response = await postFetch("/applications", formData);
-
+    const response = await postFetch("/applications/upload", formData);
     return response;
   } catch (error) {
     throw new Error("Error applying to competition");
