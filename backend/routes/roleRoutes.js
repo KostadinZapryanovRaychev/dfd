@@ -2,9 +2,7 @@ const express = require("express");
 const router = express.Router();
 const RoleController = require("../controllers/roleController");
 const roleValidator = require("../validations/roleValidator");
-const {
-  adminAuthorizationMiddleware,
-} = require("../middlewares/adminAuthorization");
+const { adminAuthorizationMiddleware } = require("../middlewares/adminAuthorization");
 const { celebrate, Segments } = require("celebrate");
 
 router.post(

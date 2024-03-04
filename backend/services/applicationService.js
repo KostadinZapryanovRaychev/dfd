@@ -34,12 +34,7 @@ const applyToCompetition = async (userId, competitionId, grade, file) => {
   }
 };
 
-const getApplicationsForCompetition = async (
-  competitionId,
-  userId,
-  isAdmin,
-  userLevel
-) => {
+const getApplicationsForCompetition = async (competitionId, userId, isAdmin, userLevel) => {
   try {
     const applications = await UserCompetition.findAll({
       where: { competitionId },
@@ -121,9 +116,7 @@ const getCompetitionsForUser = async (userId, isPublished) => {
           status: application.Competition.status,
           appliedAt: application.appliedAt,
         }))
-        .filter(
-          (application) => application.status === competitionStatus.published
-        );
+        .filter((application) => application.status === competitionStatus.published);
     } else {
       formattedApplications = applications.map((application) => ({
         id: application.id,

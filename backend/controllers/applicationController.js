@@ -9,10 +9,7 @@ const storage = multer.diskStorage({
     cb(null, path.join(__dirname, "../solutions"));
   },
   filename: function (req, file, cb) {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
+    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
   },
 });
 
@@ -28,15 +25,27 @@ exports.applyToCompetition = async (req, res) => {
 
       const { userId, competitionId, grade } = req.body;
 
-      applicationService.applyToCompetition(
-        userId,
-        competitionId,
-        grade,
-        req.file
-      );
+      applicationService.applyToCompetition(userId, competitionId, grade, req.file);
     });
   } catch (error) {
     console.error("Error applying to competition:", error);
+    res.status(400).json({ message: errorMessages.unsuccessfull });
+  }
+};
+
+// Separately ????
+exports.uploadSolution = async (req, res) => {
+  try {
+    uploadSolution(req, res, function (err) {
+      if (err) {
+        console.error("Error during uploading file", err);
+        return res.status(400).json({ message: errorMessages.unsuccessfull });
+      }
+      const solutionUrl = file ? `/solutions/${file.filename}` : null;
+      res.status(200).json({ solutionUrl });
+    });
+  } catch (error) {
+    console.error("Error uploading image:", error);
     res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
@@ -65,8 +74,7 @@ exports.getCompetitionsForUser = async (req, res) => {
   let { userId, isPublished } = req.params;
 
   try {
-    const formattedApplications =
-      await applicationService.getCompetitionsForUser(userId, isPublished);
+    const formattedApplications = await applicationService.getCompetitionsForUser(userId, isPublished);
     res.status(200).json({ formattedApplications });
   } catch (error) {
     console.error("Error fetching competitions for user:", error.message);
@@ -96,36 +104,6 @@ exports.getAllApplications = async (req, res) => {
   }
 };
 
-exports.updateApplication = async (req, res) => {
-  const { userId, competitionId, grade } = req.body;
-
-  try {
-    const application = await applicationService.findApplication(
-      userId,
-      competitionId
-    );
-
-    if (!application) {
-      return res
-        .status(404)
-        .json({ message: "No application with this userId and competitionId" });
-    }
-
-    const updatedApplication = await applicationService.updateApplicationGrade(
-      application,
-      grade
-    );
-
-    res.status(200).json({
-      message: "Application grade updated successfully",
-      application: updatedApplication,
-    });
-  } catch (error) {
-    console.log("Error updating application grade:", error);
-    res.status(400).json({ message: errorMessages.unsuccessfull });
-  }
-};
-
 exports.updateApplicationGrade = async (req, res) => {
   const { applicationId } = req.params;
   const { grade } = req.body;
@@ -143,9 +121,7 @@ exports.getApplicationById = async (req, res) => {
   const { applicationId } = req.params;
 
   try {
-    const application = await applicationService.getApplicationById(
-      applicationId
-    );
+    const application = await applicationService.getApplicationById(applicationId);
     res.status(200).json({ application });
   } catch (error) {
     console.log("Error fetching application by ID:", error);

@@ -1,9 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const CompetitionController = require("../controllers/competitionController");
-const {
-  adminAuthorizationMiddleware,
-} = require("../middlewares/adminAuthorization");
+const { adminAuthorizationMiddleware } = require("../middlewares/adminAuthorization");
 const { celebrate, Segments } = require("celebrate");
 const competitionValidator = require("../validations/competitionValidator");
 
@@ -16,11 +14,8 @@ router.get(
   CompetitionController.getCompetitionById
 );
 
-router.post(
-  "/upload",
-  adminAuthorizationMiddleware,
-  CompetitionController.uploadImage
-);
+router.post("/upload", adminAuthorizationMiddleware, CompetitionController.uploadImage);
+
 router.post(
   "/",
   celebrate({

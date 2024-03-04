@@ -1,9 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const ApplicationController = require("../controllers/applicationController");
-const {
-  adminAuthorizationMiddleware,
-} = require("../middlewares/adminAuthorization");
+const { adminAuthorizationMiddleware } = require("../middlewares/adminAuthorization");
 const { celebrate, Segments } = require("celebrate");
 const applicationValidator = require("../validations/applicationValidator");
 const competitionValidator = require("../validations/competitionValidator");
@@ -15,6 +13,7 @@ router.post(
   }),
   ApplicationController.applyToCompetition
 );
+
 router.get(
   "/competitions/:competitionId",
   celebrate({
@@ -38,12 +37,6 @@ router.delete(
 );
 router.get("/", ApplicationController.getAllApplications);
 
-// TODO this to be checked futher how to being refactored may be patch and put
-router.put(
-  "/",
-  adminAuthorizationMiddleware,
-  ApplicationController.updateApplication
-);
 router.put(
   "/:applicationId",
   celebrate({
@@ -62,10 +55,6 @@ router.get(
   }),
   ApplicationController.getApplicationById
 );
-router.get(
-  "/download/solutions/:fileName",
-  adminAuthorizationMiddleware,
-  ApplicationController.downloadSolutionFile
-);
+router.get("/download/solutions/:fileName", adminAuthorizationMiddleware, ApplicationController.downloadSolutionFile);
 
 module.exports = router;
