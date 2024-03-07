@@ -6,6 +6,8 @@ const { celebrate, Segments } = require("celebrate");
 const applicationValidator = require("../validations/applicationValidator");
 const competitionValidator = require("../validations/competitionValidator");
 
+//TODO to check again all validation to bring back this one
+
 router.post(
   "/",
   // celebrate({
