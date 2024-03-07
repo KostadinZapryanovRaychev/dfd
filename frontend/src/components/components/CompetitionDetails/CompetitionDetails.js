@@ -65,7 +65,8 @@ function CompetitionDetails() {
       const confirm = window.confirm(`Потвърдете свалянето на файл с име  ${fileName}`);
       if (confirm) {
         const response = await downloadSolutionFile(fileName);
-        const blob = new Blob([response], { type: "application/pdf" });
+
+        const blob = new Blob([response], { type: "application/json" });
         if (!blob) {
           console.log("The file is in unsuported format:");
         }
@@ -81,6 +82,29 @@ function CompetitionDetails() {
       console.log("Error occurred during file download:", error);
     }
   };
+
+  // const handleDownload = async (fileName) => {
+  //   try {
+  //     const confirm = window.confirm(`Потвърдете свалянето на файл с име  ${fileName}`);
+  //     if (confirm) {
+  //       const blob = await downloadSolutionFile(fileName);
+  //       if (!blob) {
+  //         console.log("The file is in unsupported format or empty");
+  //         return;
+  //       }
+
+  //       const link = document.createElement("a");
+  //       link.href = window.URL.createObjectURL(blob);
+  //       link.download = fileName;
+  //       document.body.appendChild(link);
+  //       link.click();
+  //       document.body.removeChild(link);
+  //       window.URL.revokeObjectURL(link.href);
+  //     }
+  //   } catch (error) {
+  //     console.log("Error occurred during file download:", error);
+  //   }
+  // };
 
   return (
     <>
