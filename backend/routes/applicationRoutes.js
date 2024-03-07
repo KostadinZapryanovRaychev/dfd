@@ -8,9 +8,9 @@ const competitionValidator = require("../validations/competitionValidator");
 
 router.post(
   "/",
-  celebrate({
-    [Segments.BODY]: applicationValidator.applyToCompetitionPayloadSchema,
-  }),
+  // celebrate({
+  //   [Segments.BODY]: applicationValidator.applyToCompetitionPayloadSchema,
+  // }),
   ApplicationController.applyToCompetition
 );
 

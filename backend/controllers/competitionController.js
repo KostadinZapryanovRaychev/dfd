@@ -44,7 +44,7 @@ exports.uploadImage = async (req, res) => {
     upload(req, res, function (err) {
       if (err) {
         console.error("Error during uploading file", err);
-        return res.status(500).send("Internal server error");
+        return res.status(400).json({ message: errorMessages.unsuccessfull });
       }
 
       const logo = req.file ? `/public/${req.file.filename}` : null;

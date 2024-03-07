@@ -1,9 +1,14 @@
 const { Joi } = require("celebrate");
 
 const applyToCompetitionPayloadSchema = Joi.object().keys({
-  userId: Joi.number().integer().required(),
-  competitionId: Joi.number().integer().required(),
-  grade: Joi.number().allow(null),
+  userId: Joi.number()
+    .integer()
+    .required()
+    .error((errors) => console.log(errors)),
+  competitionId: Joi.number()
+    .integer()
+    .required()
+    .error((errors) => console.log(errors)),
 });
 
 const deleteApplicationPayloadSchema = Joi.object().keys({

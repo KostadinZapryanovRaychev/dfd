@@ -22,7 +22,7 @@ exports.applyToCompetition = async (req, res) => {
     res.status(201).json({ message: "Application submitted successfully" });
   } catch (error) {
     console.error("Error applying to competition:", error);
-    res.status(400).json({ message: errorMessages.unsuccessful });
+    res.status(400).json({ message: errorMessages.unsuccessfull });
   }
 };
 
@@ -33,6 +33,7 @@ exports.uploadSolution = async (req, res) => {
         console.error("Error during uploading file", err);
         return res.status(400).json({ message: errorMessages.unsuccessfull });
       }
+      const file = req.file;
       const solutionUrl = file ? `/solutions/${file.filename}` : null;
       res.status(200).json({ solutionUrl });
     });
@@ -127,7 +128,7 @@ exports.downloadSolutionFile = async (req, res) => {
 
   try {
     if (fs.existsSync(filePath)) {
-      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Type", "application/octet-stream");
       res.setHeader("Content-Disposition", `attachment; filename=${fileName}`);
       const fileStream = fs.createReadStream(filePath);
       fileStream.pipe(res);
