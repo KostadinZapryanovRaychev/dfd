@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import "./ConcourseCard.css";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
-import { applyToCompetition, deleteCompetitionPerUser } from "../../../services/competitionServices";
+import {
+  applyToCompetition,
+  deleteCompetitionPerUser,
+  uploadSolutionForApplication,
+} from "../../../services/competitionServices";
 import { useApp } from "../../../context/DataContext/DataContext";
 
 function ConcourseCard(props) {
@@ -21,15 +25,20 @@ function ConcourseCard(props) {
     event.preventDefault();
 
     const grade = null;
+    let applicationData = {
+      userId: userId,
+      competitionId: id,
+      grade: grade,
+      solutionUrl: null,
+    };
 
     try {
-      const applicationData = {
-        userId: userId,
-        competitionId: id,
-        grade: grade,
-        solution: file,
-      };
-      const response = await applyToCompetition(applicationData);
+      const solution = file || null;
+      const res = await uploadSolutionForApplication(solution);
+      if (res.solutionUrl) {
+        applicationData.solutionUrl = res.solutionUrl;
+      }
+      await applyToCompetition(applicationData);
     } catch (error) {
       console.error("Error applying to competition:", error);
     }

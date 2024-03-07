@@ -64,8 +64,8 @@ export const applyToCompetition = async (applicationData) => {
 export const uploadSolutionForApplication = async (applicationData) => {
   try {
     const formData = new FormData();
-    if (applicationData.solution) {
-      formData.append("solution", applicationData.solution);
+    if (applicationData) {
+      formData.append("solution", applicationData);
     }
     const response = await postFetch("/applications/upload", formData);
     return response;
