@@ -14,7 +14,9 @@ const storageForUserImages = multer.diskStorage({
   },
 });
 
-const uploadForUserImages = multer({ storage: storageForUserImages }).single("photo");
+const uploadForUserImages = multer({ storage: storageForUserImages, limits: { fileSize: 50 * 1024 * 1024 } }).single(
+  "photo"
+);
 
 exports.uploadUserImage = (req, res) => {
   try {

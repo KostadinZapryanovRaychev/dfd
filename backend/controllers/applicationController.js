@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
   },
 });
 
-const uploadSolution = multer({ storage: storage }).single("solution");
+const uploadSolution = multer({ storage: storage, limits: { fileSize: 50 * 1024 * 1024 } }).single("solution");
 
 exports.applyToCompetition = async (req, res) => {
   try {
@@ -26,7 +26,6 @@ exports.applyToCompetition = async (req, res) => {
   }
 };
 
-// Separately ????
 exports.uploadSolution = async (req, res) => {
   try {
     uploadSolution(req, res, function (err) {
