@@ -128,7 +128,7 @@ exports.downloadSolutionFile = async (req, res) => {
 
   try {
     if (fs.existsSync(filePath)) {
-      res.setHeader("Content-Type", "application/octet-stream");
+      res.setHeader("Content-Type", "application/pdf");
       res.setHeader("Content-Disposition", `attachment: filename=${fileName}`);
       const fileStream = fs.createReadStream(filePath);
       fileStream.pipe(res);
