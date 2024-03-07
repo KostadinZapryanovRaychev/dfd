@@ -66,7 +66,8 @@ function CompetitionDetails() {
       if (confirm) {
         const response = await downloadSolutionFile(fileName);
 
-        const blob = new Blob([response], { type: "application/json" });
+        const blob = new Blob([response], { type: "application/pdf" });
+        console.log(blob);
         if (!blob) {
           console.log("The file is in unsuported format:");
         }
