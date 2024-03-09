@@ -1,0 +1,19 @@
+version: '3.3'
+
+services:
+    wait:
+        build:
+            context: .
+            dockerfile: ./compose/wait.Dockerfile
+        command: sh -c '/wait && exit'
+        environment:
+            WAIT_HOSTS: dfd_database:5432
+
+    dfd_database:
+        image: postgres:15.6
+        ports:
+            - 5432:5432
+        environment:
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: 123456
+            POSTGRES_DB: dfd

@@ -1,0 +1,7 @@
+{
+  "watch": [
+    "./"
+  ],
+  "ext": "js",
+  "exec": "NODE_OPTIONS=\"--no-experimental-fetch\" node server.js"
+}

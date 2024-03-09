@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "start": "nodemon"
+  },
   "dependencies": {
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
@@ -17,6 +20,8 @@
     "passport-local": "^1.0.0",
     "sequelize": "^6.32.1",
     "stripe": "^12.18.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "nodemon": "^2.0.15",
+    "pg": "^8.7.3"
   }
 }

@@ -3,25 +3,15 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 // Database connection and configuration
-const sequelize = new Sequelize(
-  process.env.DB_DATABASE,
-  process.env.DB_USER,
-  process.env.DB_PASS,
-  {
+const sequelize = new Sequelize({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
-    dialect: "mysql",
-    pool: {
-      max: 5,
-      min: 0,
-      idle: 10000,
-    },
-    define: {
-      timestamps: false,
-      underscored: true,
-    },
-    logging: false,
-  }
-);
+    database: process.env.DB_DATABASE,
+    dialect:  'postgres',
+    username: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    logging: true,
+    logQueryParameters: {},
+});
 
 module.exports = sequelize;
