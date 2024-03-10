@@ -59,7 +59,7 @@ const deleteCompetition = async (competitionId) => {
   try {
     const competition = await Competition.findByPk(competitionId);
     if (competition.logo) {
-      const previousPhotoPath = path.join(__dirname, "../", competition.logo);
+      const previousPhotoPath = path.join(__dirname, "../../../../", competition.logo);
       if (fs.existsSync(previousPhotoPath)) {
         fs.unlinkSync(previousPhotoPath);
       }

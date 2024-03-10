@@ -147,7 +147,7 @@ const deleteUser = async (userId, requestingUserId, isAdmin) => {
     }
 
     if (user.photoUrl) {
-      const previousPhotoPath = path.join(__dirname, "../", user.photoUrl);
+      const previousPhotoPath = path.join(__dirname, "../../../../", user.photoUrl);
       if (user.photoUrl && fs.existsSync(previousPhotoPath)) {
         fs.unlinkSync(previousPhotoPath);
       }
