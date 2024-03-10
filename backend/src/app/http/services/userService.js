@@ -171,6 +171,7 @@ module.exports = {
   deleteUser,
 };
 
+// TODO delete routes to be fixed , and get routes eventyally
 const deleteUserRecords = async (userId) => {
   try {
     await UserCompetition.destroy({
