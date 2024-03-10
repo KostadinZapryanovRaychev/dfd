@@ -3,7 +3,7 @@ const multer = require("multer");
 const path = require("path");
 const userService = require("../services/userService");
 const fs = require("fs");
-const errorMessages = require("../constants/errors");
+const errorMessages = require("../../../../constants/errors");
 
 const storageForUserImages = multer.diskStorage({
   destination: function (req, file, cb) {

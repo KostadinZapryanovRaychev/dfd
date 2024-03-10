@@ -3,7 +3,7 @@ const path = require("path");
 require("dotenv").config();
 const competitionService = require("../services/competitionService");
 const fs = require("fs");
-const errorMessages = require("../constants/errors");
+const errorMessages = require("../../../../constants/errors");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {

@@ -1,8 +1,8 @@
-const UserCompetition = require("../models/UserCompetitionModel");
-const Competition = require("../models/CompetitionModel");
-const User = require("../models/UserModel");
-const competitionStatus = require("../constants/constants");
-const errorMessages = require("../constants/errors");
+const UserCompetition = require("../../database/models/UserCompetitionModel");
+const Competition = require("../../database/models/CompetitionModel");
+const User = require("../../database/models/UserModel");
+const competitionStatus = require("../../../../constants/constants");
+const errorMessages = require("../../../../constants/errors");
 
 const applyToCompetition = async (userId, competitionId, grade, solutionUrl) => {
   try {

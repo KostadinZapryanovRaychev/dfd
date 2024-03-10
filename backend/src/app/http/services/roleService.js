@@ -1,4 +1,4 @@
-const Role = require("../models/RoleModel");
+const Role = require("../../database/models/RoleModel");
 
 const createRole = async (roleData) => {
   try {

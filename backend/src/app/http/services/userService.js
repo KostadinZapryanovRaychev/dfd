@@ -1,11 +1,11 @@
 const bcrypt = require("bcrypt");
-const User = require("../models/UserModel");
+const User = require("../../database/models/UserModel");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const path = require("path");
 const fs = require("fs");
-const UserCompetition = require("../models/UserCompetitionModel");
-const errorMessages = require("../constants/errors");
+const UserCompetition = require("../../database/models/UserCompetitionModel");
+const errorMessages = require("../../../../constants/errors");
 
 const registerUser = async (firstName, lastName, email, password) => {
   try {

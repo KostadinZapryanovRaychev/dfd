@@ -3,17 +3,18 @@ const dotenv = require("dotenv");
 dotenv.config();
 const cors = require("cors");
 const db = require("./config/db");
-const { authenticateToken } = require("./middlewares/authenticate");
-const userRoutes = require("./routes/userRoutes");
-const competitionRoutes = require("./routes/competitionRoutes");
-const roleRoutes = require("./routes/roleRoutes");
-const applicationRoutes = require("./routes/applicationRoutes");
+const { authenticateToken } = require("./src/app/http/middlewares/authenticate");
+const userRoutes = require("./src/app/http/routes/userRoutes");
+const competitionRoutes = require("./src/app/http/routes/competitionRoutes");
+const roleRoutes = require("./src/app/http/routes/roleRoutes");
+const applicationRoutes = require("./src/app/http/routes/applicationRoutes");
 
 const port = process.env.SERVER_PORT;
 
 const app = express();
 app.use("/public", express.static("public"));
 app.use("/profilepictures", express.static("profilepictures"));
+app.use("/solutions", express.static("solutions"));
 app.use(express.json());
 app.use(cors());
 

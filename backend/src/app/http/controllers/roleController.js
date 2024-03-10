@@ -1,5 +1,5 @@
 const roleService = require("../services/roleService");
-const errorMessages = require("../constants/errors");
+const errorMessages = require("../../../../constants/errors");
 
 exports.createRole = async (req, res) => {
   try {

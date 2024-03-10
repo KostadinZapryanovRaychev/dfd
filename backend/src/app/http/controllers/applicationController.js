@@ -2,7 +2,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const applicationService = require("../services/applicationService");
-const errorMessages = require("../constants/errors");
+const errorMessages = require("../../../../constants/errors");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
