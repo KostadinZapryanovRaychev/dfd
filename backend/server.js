@@ -8,6 +8,7 @@ const userRoutes = require("./src/app/http/routes/userRoutes");
 const competitionRoutes = require("./src/app/http/routes/competitionRoutes");
 const roleRoutes = require("./src/app/http/routes/roleRoutes");
 const applicationRoutes = require("./src/app/http/routes/applicationRoutes");
+const paymentRoutes = require("./src/app/http/routes/paymentRoutes");
 
 const port = process.env.SERVER_PORT;
 
@@ -34,6 +35,8 @@ db.sync()
   });
 
 app.use("/api", userRoutes);
+
+app.use("/api/payments", paymentRoutes);
 
 app.use(authenticateToken);
 
