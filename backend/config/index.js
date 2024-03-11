@@ -1,15 +1,17 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
-const db = require("./config/db");
-const Role = require("./models/RoleModel");
-const User = require("./models/UserModel");
-const Competition = require("./models/CompetitionModel");
-const UserRole = require("./models/UserRoleModel");
-const UserCompetition = require("./models/UserCompetitionModel");
+const db = require("./db");
+const Role = require("../src/app/database/models/RoleModel");
+const User = require("../src/app/database/models/UserModel");
+const Competition = require("../src/app/database/models/CompetitionModel");
+const UserRole = require("../src/app/database/models/UserRoleModel");
+const UserCompetition = require("../src/app/database/models/UserCompetitionModel");
+const Transaction = require("../src/app/database/models/TransactionModel");
 
 User.belongsTo(Role, { foreignKey: "roleId" });
 
+Transaction.belongsTo(User);
 UserCompetition.belongsTo(User);
 UserCompetition.belongsTo(Competition);
 
