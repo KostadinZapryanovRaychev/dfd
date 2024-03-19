@@ -8,12 +8,28 @@ const stripe = require("stripe")(
 
 exports.createPaymentTransaction = async (req, res) => {
   try {
-    const payment = await paymentService.createPaymentTransactionForAnUser(req.body);
+    let event = req.body;
 
-    // TODO call Stripe endpoint when my transaction is created
-    // when stripe reply update my transaction and its status
-    // get all this to the FE
-    res.status(201).json({ message: "Transaction created successfully", payment });
+    if (endpointSecret) {
+      const signature = req.headers["stripe-signature"];
+      try {
+        event = stripe.webhooks.constructEvent(req.body, signature, endpointSecret);
+      } catch (err) {
+        return response.sendStatus(400);
+      }
+    }
+    switch (event.type) {
+      case "payment_intent.created":
+        const paymentIntent = event.data.object;
+        console.log(`PaymentIntent for ${paymentIntent.amount} was successful!`);
+        const payment = await paymentService.createPaymentTransactionForAnUser(req.body);
+        break;
+      case "payment_method.attached":
+        const paymentMethod = event.data.object;
+        break;
+      default:
+        console.log(`Unhandled event type ${event.type}.`);
+    }
   } catch (error) {
     console.log("Error creating transaction:", error);
     res.status(400).json({ message: errorMessages.unsuccessfull });
@@ -22,22 +38,18 @@ exports.createPaymentTransaction = async (req, res) => {
 
 exports.stripeResponse = async (req, res) => {
   try {
-    const payment = await paymentService.createPaymentTransactionForAnUser(req.body);
     let event = req.body;
-
     if (endpointSecret) {
       const signature = req.headers["stripe-signature"];
       try {
         event = stripe.webhooks.constructEvent(req.body, signature, endpointSecret);
       } catch (err) {
-        console.log(`⚠️  Webhook signature verification failed.`, err.message);
         return response.sendStatus(400);
       }
     }
     switch (event.type) {
       case "payment_intent.succeeded":
         const paymentIntent = event.data.object;
-        console.log(`PaymentIntent for ${paymentIntent.amount} was successful!`);
         const payment = await paymentService.updateTransactionForAnUser(req.body);
         break;
       case "payment_method.attached":
