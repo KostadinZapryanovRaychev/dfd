@@ -63,6 +63,9 @@ function HomePage() {
                 <Link to="/profile">Profile</Link>
               </li>
               <li>
+                <Link to="/profile">Стани наш бизнс клиент</Link>
+              </li>
+              <li>
                 <Link to="/" onClick={handleLogout}>
                   Logout
                 </Link>
