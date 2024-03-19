@@ -46,7 +46,7 @@ exports.stripeResponse = async (req, res) => {
       default:
         console.log(`Unhandled event type ${event.type}.`);
     }
-    res.send();
+    res.status(201).json({ message: "Stripe response was", payment });
   } catch (error) {
     console.log("Error from stripe:", error);
     res.status(400).json({ message: errorMessages.unsuccessfull });
