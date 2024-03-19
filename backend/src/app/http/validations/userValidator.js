@@ -36,7 +36,9 @@ const updateUserInformationPayloadSchema = Joi.object().keys({
     .integer()
     .allow(null)
     .error((errors) => console.log(errors)),
-  profession: Joi.string().error((errors) => console.log(errors)),
+  profession: Joi.string()
+    .allow(null)
+    .error((errors) => console.log(errors)),
   level: Joi.number()
     .integer()
     .allow(null)
