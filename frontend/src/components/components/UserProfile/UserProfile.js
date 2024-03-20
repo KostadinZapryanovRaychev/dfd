@@ -3,10 +3,40 @@ import { useAuth } from "../../../context/AuthContext/AuthContext";
 import { getUser } from "../../../services/userServices";
 import { Link } from "react-router-dom";
 import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
+import { loadStripe } from "@stripe/stripe-js";
+import { createPayment, updatePaymentAfterStripeRes } from "../../../services/paymentService";
 
 function UserProfile() {
   const { userId } = useAuth();
   const [user, setUser] = useState({});
+
+  async function makePayment() {
+    //TODO to add try catch here
+    const stripe = await loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
+    const payload = {
+      name: "Gold subscription",
+      amount: 200,
+      status: "PENDING",
+      apliedAt: new Date(),
+      userId: userId,
+    };
+    const response = await createPayment(payload);
+
+    const result = stripe.redirectToCheckout({
+      sessionId: response.id,
+    });
+
+    console.log(result);
+    // if (result) {
+    //   const updatedPayload = {
+    //     amount: 200,
+    //     name: "Gold subscription",
+    //     userId: userId,
+    //     status: "COMPLETED",
+    //   };
+    //   const response = await updatePaymentAfterStripeRes(updatedPayload);
+    // }
+  }
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -52,6 +82,7 @@ function UserProfile() {
       </p>
       <Link to={`/users/${user.id}`}>Edit</Link>
       <Link to={`/`}>Back To Home</Link>
+      <button onClick={makePayment}>Pay</button>
     </div>
   );
 }
