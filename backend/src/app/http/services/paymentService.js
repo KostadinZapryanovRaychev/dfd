@@ -1,8 +1,8 @@
 const Transaction = require("../../database/models/TransactionModel");
 
-const createPaymentTransactionForAnUser = async (roleData) => {
+const createPaymentTransactionForAnUser = async (paymentObj) => {
   try {
-    const payment = await Transaction.create(roleData);
+    const payment = await Transaction.create(paymentObj);
     return payment;
   } catch (error) {
     console.log("Error creating payment transaction", error);
