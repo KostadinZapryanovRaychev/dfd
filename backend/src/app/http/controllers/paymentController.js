@@ -1,6 +1,5 @@
 const paymentService = require("../services/paymentService");
 const errorMessages = require("../../../../constants/errors");
-const transactionService = require("../services/transactionService");
 const endpointSecret = "whsec_...";
 const stripe = require("stripe")(
   "sk_test_51Nf42AG90N0Ggzzzsi4c6P83E5nh6xyr3TFAa8KsQ0XlP2HeaUqU0ehVGTFFgGZE2H0POJwY7KPqX8ESSaU4UC1x004sVMTrA2"
