@@ -16,7 +16,13 @@ const app = express();
 app.use("/public", express.static("public"));
 app.use("/profilepictures", express.static("profilepictures"));
 app.use("/solutions", express.static("solutions"));
-app.use(express.json());
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      req.rawBody = buf;
+    },
+  })
+);
 app.use(cors());
 
 db.authenticate()

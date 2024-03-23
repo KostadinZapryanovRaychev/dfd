@@ -24,7 +24,22 @@ const updateTransactionForAnUser = async (transactionId, transactionData) => {
   }
 };
 
+const updateStatusOfTransactionToCompleted = async (transactionId, status) => {
+  try {
+    const transaction = await Transaction.findByPk(transactionId);
+    if (!transaction) {
+      throw new Error("Transaction not found");
+    }
+    await transaction.update({ status: status });
+    return transaction;
+  } catch (error) {
+    console.log("Error updating payment transaction", error);
+    throw new Error("Error updating payment transaction");
+  }
+};
+
 module.exports = {
   createPaymentTransactionForAnUser,
+  updateStatusOfTransactionToCompleted,
   updateTransactionForAnUser,
 };
