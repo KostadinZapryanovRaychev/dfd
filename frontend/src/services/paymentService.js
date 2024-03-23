@@ -10,14 +10,6 @@ export const createPayment = async (payment) => {
   }
 };
 
-export const updatePaymentAfterStripeRes = async (payment) => {
-  try {
-    return await patchFetch(`/payments/stripe/webhook`, payment);
-  } catch (error) {
-    throw new Error("Error updating payment");
-  }
-};
-
 export const getAllPayments = async () => {
   try {
     return await getFetch("/payments");

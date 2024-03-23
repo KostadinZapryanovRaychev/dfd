@@ -27,15 +27,6 @@ function UserProfile() {
     });
 
     console.log(result);
-    // if (result) {
-    //   const updatedPayload = {
-    //     amount: 200,
-    //     name: "Gold subscription",
-    //     userId: userId,
-    //     status: "COMPLETED",
-    //   };
-    //   const response = await updatePaymentAfterStripeRes(updatedPayload);
-    // }
   }
 
   useEffect(() => {
