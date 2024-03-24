@@ -50,6 +50,8 @@ function AdminPanel() {
             <th>Email</th>
             <th>Status</th>
             <th>Actions</th>
+            <th>Level</th>
+            <th>Subscitpion experation</th>
           </tr>
         </thead>
         <tbody>
@@ -59,6 +61,8 @@ function AdminPanel() {
               <td>{user?.email}</td>
               <td>{user?.isBlocked ? "Blocked" : "Active"}</td>
               <td>{user?.isAdmin ? "Admin" : "User"}</td>
+              <td>{user?.level}</td>
+              <td>{user?.subscriptionExpDate}</td>
               <td>
                 <Link to={`/users/${user.id}`}>Edit</Link>
                 <button onClick={() => handleDeleteUser(user.id)}>Delete</button>

@@ -5,28 +5,29 @@ import { Link } from "react-router-dom";
 import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
 import { loadStripe } from "@stripe/stripe-js";
 import { createPayment, updatePaymentAfterStripeRes } from "../../../services/paymentService";
+import { subscriptionLevel, transactionStatus } from "../../../config/constants";
 
 function UserProfile() {
   const { userId } = useAuth();
   const [user, setUser] = useState({});
 
   async function makePayment() {
-    //TODO to add try catch here
-    const stripe = await loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
-    const payload = {
-      name: "Gold subscription",
-      amount: 200,
-      status: "PENDING",
-      apliedAt: new Date(),
-      userId: userId,
-    };
-    const response = await createPayment(payload);
-
-    const result = stripe.redirectToCheckout({
-      sessionId: response.id,
-    });
-
-    console.log(result);
+    try {
+      const stripe = await loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
+      const payload = {
+        name: subscriptionLevel.gold,
+        amount: 2000,
+        status: transactionStatus.pending,
+        appliedAt: new Date(),
+        userId: userId,
+      };
+      const response = await createPayment(payload);
+      const result = stripe.redirectToCheckout({
+        sessionId: response.id,
+      });
+    } catch (err) {
+      console.log(err, "Some error occured");
+    }
   }
 
   useEffect(() => {
