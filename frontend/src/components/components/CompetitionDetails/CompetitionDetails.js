@@ -20,7 +20,11 @@ function CompetitionDetails() {
 
   useEffect(() => {
     if (competitionId) {
-      getApplicationForAcompetition(competitionId, setApplicationForCompetition);
+      try {
+        getApplicationForAcompetition(competitionId, setApplicationForCompetition);
+      } catch (err) {
+        console.log("Errro", err);
+      }
     }
   }, [competitionId]);
 
