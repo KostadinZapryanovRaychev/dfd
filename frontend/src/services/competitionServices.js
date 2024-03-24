@@ -130,17 +130,15 @@ export const updateApplicationGrade = async (applicationId, grade) => {
 };
 
 export const downloadSolutionFile = async (fileName) => {
-  const url = `/applications/download${fileName}`;
-
-  const fullUrl = "http://localhost:5000/api" + url;
+  const url = `/applications/download/${fileName}`; // Corrected URL path
   try {
-    const response = await getFetch(url);
-    if (response) {
-      window.open(fullUrl, "_blank");
-      console.log(response);
-      //return response;
+    const response = await fetch(url); // Changed from getFetch to fetch
+
+    //console.log(response, "response");
+    if (response.ok) {
+      return response.blob();
     } else {
-      return null;
+      throw new Error("File download failed");
     }
   } catch (error) {
     throw new Error("Error downloading solution file");

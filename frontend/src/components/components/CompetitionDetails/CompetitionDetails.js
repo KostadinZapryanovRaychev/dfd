@@ -66,9 +66,27 @@ function CompetitionDetails() {
 
   const handleDownload = async (fileName) => {
     try {
-      const confirm = window.confirm(`Потвърдете свалянето на файл с име  ${fileName}`);
-      if (confirm) {
-        const response = await downloadSolutionFile(fileName);
+      const confirmDownload = window.confirm(`Confirm download of file: ${fileName}`);
+      if (confirmDownload) {
+        const blob = await downloadSolutionFile(fileName);
+
+        console.log(blob, "blob in FE");
+        if (!blob) {
+          console.log("Failed to download the file");
+          return;
+        }
+
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.style.display = "none";
+        document.body.appendChild(a);
+
+        const link = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        window.URL.revokeObjectURL(url);
       }
     } catch (error) {
       console.log("Error occurred during file download:", error);
