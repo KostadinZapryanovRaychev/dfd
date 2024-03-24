@@ -124,7 +124,7 @@ exports.getApplicationById = async (req, res) => {
 
 exports.downloadSolutionFile = async (req, res) => {
   const { fileName } = req.params;
-  const filePath = path.join(__dirname, "../solutions", fileName);
+  const filePath = path.join(__dirname, "../../../../storage/solutions", fileName);
 
   try {
     if (fs.existsSync(filePath)) {
