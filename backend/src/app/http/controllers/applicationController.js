@@ -128,15 +128,7 @@ exports.downloadSolutionFile = async (req, res) => {
 
   try {
     if (fs.existsSync(filePath)) {
-      res.setHeader("Content-Type", "application/pdf");
-      res.setHeader("Content-Disposition", `attachment: filename=${fileName}`);
-      const fileStream = fs.createReadStream(filePath);
-      fileStream.pipe(res);
-
-      fileStream.on("error", (err) => {
-        console.log("Error streaming file:", err);
-        res.status(400).json({ message: errorMessages.unsuccessfull });
-      });
+      res.download(filePath);
     } else {
       console.log("File not found");
       res.status(400).json({ message: errorMessages.unsuccessfull });

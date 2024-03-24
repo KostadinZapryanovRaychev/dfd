@@ -59,6 +59,6 @@ router.get(
   }),
   ApplicationController.getApplicationById
 );
-router.get("/download/solutions/:fileName", adminAuthorizationMiddleware, ApplicationController.downloadSolutionFile);
+router.get("/download/solutions/:fileName", ApplicationController.downloadSolutionFile);
 
 module.exports = router;
