@@ -59,6 +59,12 @@ const loginUser = async (email, password) => {
         expiresIn: "1h",
       }
     );
+    const now = new Date();
+    const userExpDate = existingUser?.subscriptionExpDate;
+
+    if (userExpDate && userExpDate < now) {
+      await existingUser.update({ level: 0 });
+    }
 
     return { message: "Login successful", token };
   } catch (error) {
@@ -110,7 +116,9 @@ const updateUserSubscriptionExpDateAndLevel = async (userId, subscriptionExpDate
 
 const getAllUsers = async () => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      order: [["subscriptionExpDate", "ASC"]],
+    });
     return { users };
   } catch (error) {
     console.log("Error while fetching all users:", error);
