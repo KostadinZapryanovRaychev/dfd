@@ -6,6 +6,7 @@ const path = require("path");
 const fs = require("fs");
 const UserCompetition = require("../../database/models/UserCompetitionModel");
 const errorMessages = require("../../../../constants/errors");
+const constants = require("../../../../constants/constants");
 
 const registerUser = async (firstName, lastName, email, password) => {
   try {
@@ -79,6 +80,28 @@ const updateUserPassword = async (userId, currentPassword, newPassword) => {
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
     await user.update({ password: hashedNewPassword });
     return { message: "Password updated successfully" };
+  } catch (error) {
+    console.log("Error updating user password:", error);
+    throw new Error(errorMessages.unsuccessfull);
+  }
+};
+
+const updateUserSubscriptionExpDateAndLevel = async (userId, subscriptionExpDate, subscriptionLevel) => {
+  let newUserLevel = 0;
+
+  if (subscriptionLevel === constants.subscriptionLevel.gold) {
+    newUserLevel = 2;
+  } else if (subscriptionLevel === constants.subscriptionLevel.silver) {
+    newUserLevel = 1;
+  }
+
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return { error: "User with this id does not exist" };
+    }
+    await user.update({ subscriptionExpDate: subscriptionExpDate, level: newUserLevel });
+    return { message: "Experation date updated successeffully" };
   } catch (error) {
     console.log("Error updating user password:", error);
     throw new Error(errorMessages.unsuccessfull);
@@ -168,6 +191,7 @@ module.exports = {
   getAllUsers,
   getUserById,
   updateUserInformation,
+  updateUserSubscriptionExpDateAndLevel,
   deleteUser,
 };
 

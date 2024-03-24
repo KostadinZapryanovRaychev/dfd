@@ -27,6 +27,10 @@ const Transaction = db.define(
       type: Sequelize.DATE,
       allowNull: true,
     },
+    completedAt: {
+      type: Sequelize.DATE,
+      allowNull: true,
+    },
     userId: {
       type: Sequelize.INTEGER,
       allowNull: true,

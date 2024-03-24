@@ -5,4 +5,21 @@ const competitionStatus = {
   published: "published",
 };
 
-module.exports = competitionStatus;
+const transactionStatus = {
+  pending: "PENDING",
+  canceled: "CANCELED",
+  completed: "COMPLETED",
+  failed: "FAILED",
+};
+
+const subscriptionLevel = {
+  gold: "Gold",
+  silver: "Silver",
+  bronze: "Bronze",
+};
+
+module.exports = {
+  transactionStatus,
+  competitionStatus,
+  subscriptionLevel,
+};

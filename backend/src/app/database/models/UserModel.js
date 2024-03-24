@@ -76,6 +76,11 @@ const User = db.define(
       allowNull: true,
       defaultValue: 0,
     },
+    subscriptionExpDate: {
+      type: Sequelize.DATE,
+      allowNull: true,
+      defaultValue: null,
+    },
   },
   { tableName: "users" }
 );

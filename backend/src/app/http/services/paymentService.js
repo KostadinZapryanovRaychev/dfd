@@ -25,12 +25,13 @@ const updateTransactionForAnUser = async (transactionId, transactionData) => {
 };
 
 const updateStatusOfTransactionToCompleted = async (transactionId, status) => {
+  const now = new Date();
   try {
     const transaction = await Transaction.findByPk(transactionId);
     if (!transaction) {
       throw new Error("Transaction not found");
     }
-    await transaction.update({ status: status });
+    await transaction.update({ status: status, completedAt: now });
     return transaction;
   } catch (error) {
     console.log("Error updating payment transaction", error);

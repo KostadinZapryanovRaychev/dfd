@@ -1,4 +1,5 @@
 const paymentService = require("../services/paymentService");
+const userService = require("../services/userService");
 const errorMessages = require("../../../../constants/errors");
 require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
@@ -9,7 +10,8 @@ exports.createPaymentTransaction = async (req, res) => {
     const newPayment = await paymentService.createPaymentTransactionForAnUser(req.body);
 
     const transactionId = newPayment.id.toString();
-
+    const amount = Number(newPayment.amount);
+    const description = newPayment.description;
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
@@ -18,9 +20,9 @@ exports.createPaymentTransaction = async (req, res) => {
             currency: "usd",
             product_data: {
               name: transactionId,
-              description: "Unlimited access",
+              description: description,
             },
-            unit_amount: 2000,
+            unit_amount: amount,
           },
           quantity: 1,
         },
@@ -29,6 +31,7 @@ exports.createPaymentTransaction = async (req, res) => {
       success_url: "http://localhost:3000/profile",
       cancel_url: "http://localhost:3000/profile",
     });
+    // TODO query param for succes payment
     res.status(201).json({ message: "Stripe response is", id: session.id });
   } catch (error) {
     console.log("Error creating transaction:", error);
@@ -54,9 +57,16 @@ exports.stripeResponse = async (req, res) => {
       });
       const lineItems = sessionWithLineItems.line_items;
       const transactionId = Number(lineItems?.data[0]?.description);
-      console.log(transactionId, "transactionId");
 
       updatedTransaction = await paymentService.updateStatusOfTransactionToCompleted(transactionId, "COMPLETED");
+
+      const userId = updatedTransaction.userId;
+      const newExpDate = new Date(updatedTransaction.completedAt);
+      newExpDate.setFullYear(newExpDate.getFullYear() + 1);
+      const subscriptionLevel = updatedTransaction.name;
+
+      await userService.updateUserSubscriptionExpDateAndLevel(userId, newExpDate, subscriptionLevel);
+
       res.json({ received: true });
     }
   } catch (err) {
