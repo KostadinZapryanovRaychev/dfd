@@ -4,7 +4,7 @@ import { getUser } from "../../../services/userServices";
 import { Link } from "react-router-dom";
 import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
 import { loadStripe } from "@stripe/stripe-js";
-import { createPayment, updatePaymentAfterStripeRes } from "../../../services/paymentService";
+import { createPayment } from "../../../services/paymentService";
 import { subscriptionLevel, transactionStatus } from "../../../config/constants";
 
 function UserProfile() {

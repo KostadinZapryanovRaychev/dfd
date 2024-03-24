@@ -54,7 +54,10 @@ function makeRequest(url, method, dataOrParams, customHeaders = {}) {
 }
 
 export async function getFetch(url, params = {}, customHeaders = {}) {
-  return await makeRequest(url, "GET", params, customHeaders);
+  return await makeRequest(url, "GET", params, {
+    ...customHeaders,
+    responseType: "blob",
+  });
 }
 
 export async function postFetch(url, data, customHeaders = {}) {

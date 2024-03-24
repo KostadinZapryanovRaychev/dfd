@@ -87,7 +87,9 @@ export const getApplicationForAcompetition = async (competitionId, setCompetitio
   try {
     const response = await getFetch(`/applications/competitions/${competitionId}`);
 
-    if (response.applications.lenght > 0) {
+    console.log(response?.applications, "response");
+
+    if (response?.applications?.length > 0) {
       const sortedApplications = response.applications.sort((a, b) => b.grade - a.grade);
       setCompetitions(sortedApplications);
     } else {
@@ -129,10 +131,14 @@ export const updateApplicationGrade = async (applicationId, grade) => {
 
 export const downloadSolutionFile = async (fileName) => {
   const url = `/applications/download${fileName}`;
+
+  const fullUrl = "http://localhost:5000/api" + url;
   try {
     const response = await getFetch(url);
     if (response) {
-      return response;
+      window.open(fullUrl, "_blank");
+      console.log(response);
+      //return response;
     } else {
       return null;
     }
