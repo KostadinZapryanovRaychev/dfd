@@ -71,6 +71,7 @@ const EditUser = () => {
       isBlocked: updatedUserData.isBlocked,
       profession: updatedUserData.profession,
       level: updatedUserData.level,
+      subscriptionExpDate: updatedUserData.subscriptionExpDate,
       photo: null,
     };
     try {
@@ -96,7 +97,7 @@ const EditUser = () => {
     return <NonAuthenticated />;
   }
 
-  if (currentUserId !== userId) {
+  if (currentUserId !== userId && !isAdmin) {
     return <NonAuthorized />;
   }
   return (
@@ -146,6 +147,18 @@ const EditUser = () => {
           <div>
             <label htmlFor="level">Level</label>
             <input type="text" id="level" name="level" value={userData.level || ""} onChange={handleChange} />
+          </div>
+        )}
+        {isAdmin && (
+          <div>
+            <label htmlFor="subscriptionExpDate">Exp date</label>
+            <input
+              type="date"
+              id="subscriptionExpDate"
+              name="subscriptionExpDate"
+              value={userData.subscriptionExpDate || ""}
+              onChange={handleChange}
+            />
           </div>
         )}
         <div>
