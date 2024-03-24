@@ -95,6 +95,14 @@ const updateUserPassword = async (userId, currentPassword, newPassword) => {
 const updateUserSubscriptionExpDateAndLevel = async (userId, subscriptionExpDate, subscriptionLevel) => {
   let newUserLevel = 0;
 
+  if (!subscriptionLevel) {
+    return { error: "No subscription level" };
+  }
+
+  if (!subscriptionExpDate) {
+    return { error: "No old subscription exp date" };
+  }
+
   if (subscriptionLevel === constants.subscriptionLevel.gold) {
     newUserLevel = 2;
   } else if (subscriptionLevel === constants.subscriptionLevel.silver) {
@@ -142,8 +150,21 @@ const getUserById = async (userId) => {
 const updateUserInformation = async (userId, userData) => {
   try {
     const user = await User.findByPk(userId);
-    const { firstName, lastName, email, isBlocked, isAdmin, address, phone, company, age, profession, level, photo } =
-      userData;
+    const {
+      firstName,
+      lastName,
+      email,
+      isBlocked,
+      isAdmin,
+      address,
+      phone,
+      company,
+      age,
+      profession,
+      level,
+      photo,
+      subscriptionExpDate,
+    } = userData;
 
     user.firstName = firstName;
     user.lastName = lastName;
@@ -157,6 +178,7 @@ const updateUserInformation = async (userId, userData) => {
     user.profession = profession;
     user.level = level;
     user.photoUrl = photo;
+    user.subscriptionExpDate = subscriptionExpDate;
 
     await user.save();
     return { message: "User information updated successfully", user };
