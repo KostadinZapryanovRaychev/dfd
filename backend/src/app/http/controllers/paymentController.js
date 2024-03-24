@@ -1,6 +1,7 @@
 const paymentService = require("../services/paymentService");
 const userService = require("../services/userService");
 const errorMessages = require("../../../../constants/errors");
+const constants = require("../../../../constants/constants");
 require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const endpointSecret = process.env.WEBHOOK_SIGNING_SECRET;
@@ -58,14 +59,23 @@ exports.stripeResponse = async (req, res) => {
       const lineItems = sessionWithLineItems.line_items;
       const transactionId = Number(lineItems?.data[0]?.description);
 
-      updatedTransaction = await paymentService.updateStatusOfTransactionToCompleted(transactionId, "COMPLETED");
+      if (event.data.object.payment_status === "paid") {
+        updatedTransaction = await paymentService.updateStatusOfTransactionToCompleted(
+          transactionId,
+          constants.transactionStatus.completed
+        );
+        const userId = updatedTransaction.userId;
+        const newExpDate = new Date(updatedTransaction.completedAt);
+        newExpDate.setFullYear(newExpDate.getFullYear() + 1);
+        const subscriptionLevel = updatedTransaction.name;
 
-      const userId = updatedTransaction.userId;
-      const newExpDate = new Date(updatedTransaction.completedAt);
-      newExpDate.setFullYear(newExpDate.getFullYear() + 1);
-      const subscriptionLevel = updatedTransaction.name;
-
-      await userService.updateUserSubscriptionExpDateAndLevel(userId, newExpDate, subscriptionLevel);
+        await userService.updateUserSubscriptionExpDateAndLevel(userId, newExpDate, subscriptionLevel);
+      } else {
+        updatedTransaction = await paymentService.updateStatusOfTransactionToCompleted(
+          transactionId,
+          constants.transactionStatus.failed
+        );
+      }
 
       res.json({ received: true });
     }
