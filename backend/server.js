@@ -9,6 +9,7 @@ const competitionRoutes = require("./src/app/http/routes/competitionRoutes");
 const roleRoutes = require("./src/app/http/routes/roleRoutes");
 const applicationRoutes = require("./src/app/http/routes/applicationRoutes");
 const paymentRoutes = require("./src/app/http/routes/paymentRoutes");
+const subscriptionRoutes = require("./src/app/http/routes/subscriptionRoutes");
 
 const port = process.env.SERVER_PORT;
 
@@ -47,7 +48,7 @@ app.use("/api/payments", paymentRoutes);
 app.use(authenticateToken);
 
 app.use("/api/applications", applicationRoutes);
-
+app.use("/api/subscriptions", subscriptionRoutes);
 app.use("/api/competitions", competitionRoutes);
 app.use("/api/roles", roleRoutes);
 
