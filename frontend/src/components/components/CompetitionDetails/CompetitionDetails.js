@@ -8,6 +8,8 @@ import {
 import NonAuthenticated from "../NonAuthenticated/NonAuthenticated";
 import { useAuth } from "../../../context/AuthContext/AuthContext";
 import NonAuthorized from "../NonAuthorized/NonAuthorized";
+import FileDownload from "js-file-download";
+import axios from "axios";
 
 function CompetitionDetails() {
   const [applicationsForCompetition, setApplicationForCompetition] = useState([]);
@@ -64,6 +66,10 @@ function CompetitionDetails() {
     return <NonAuthorized />;
   }
 
+  function getAuthToken() {
+    return sessionStorage.getItem("authToken");
+  }
+
   const handleDownload = async (fileName) => {
     try {
       const confirmDownload = window.confirm(`Confirm download of file: ${fileName}`);
@@ -93,6 +99,26 @@ function CompetitionDetails() {
     }
   };
 
+  async function handleDownload1(e) {
+    e.preventDefault();
+
+    try {
+      const authToken = getAuthToken();
+      const response = await axios({
+        url: "http://localhost:5000/api/applications/download/solutions/solution-1711283575691.pdf",
+        method: "GET",
+        responseType: "blob",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+
+      FileDownload(response.data);
+    } catch (error) {
+      console.error("Error occurred during download:", error);
+    }
+  }
+
   return (
     <>
       {applicationsForCompetition.length ? (
@@ -116,7 +142,7 @@ function CompetitionDetails() {
                   <td>{application?.user?.firstName + " " + application?.user?.lastName}</td>
                   {isAdmin && (
                     <td>
-                      <button onClick={() => handleDownload(application?.solutionUrl)}>Download Solution</button>
+                      <button onClick={(e) => handleDownload1(e)}>Download Solution</button>
                     </td>
                   )}
                   {isAdmin && <td>{application?.appliedAt}</td>}
