@@ -126,19 +126,21 @@ exports.downloadSolutionFile = async (req, res) => {
   const { fileName } = req.params;
   const filePath = path.join(__dirname, "../../../../storage/solutions", fileName);
 
+  console.log(filePath);
   try {
     if (fs.existsSync(filePath)) {
-      const fileStream = fs.createReadStream(filePath);
-      var stat = fs.statSync(filePath);
-      res.setHeader("Content-Length", stat.size);
-      res.setHeader("Content-Type", "application/pdf");
-      res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+      res.download(filePath);
+      // const fileStream = fs.createReadStream(filePath);
+      // var stat = fs.statSync(filePath);
+      // res.setHeader("Content-Length", stat.size);
+      // res.setHeader("Content-Type", "application/pdf");
+      // res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
 
-      fileStream.on("error", (err) => {
-        console.log("Error streaming file:", err);
-        res.status(400).json({ message: errorMessages.unsuccessful });
-      });
-      fileStream.pipe(res);
+      // fileStream.on("error", (err) => {
+      //   console.log("Error streaming file:", err);
+      //   res.status(400).json({ message: errorMessages.unsuccessful });
+      // });
+      // fileStream.pipe(res);
     } else {
       console.log("File not found");
       res.status(400).json({ message: errorMessages.unsuccessfull });
