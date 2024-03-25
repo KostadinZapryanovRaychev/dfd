@@ -70,50 +70,24 @@ function CompetitionDetails() {
     return sessionStorage.getItem("authToken");
   }
 
-  const handleDownload = async (fileName) => {
-    try {
-      const confirmDownload = window.confirm(`Confirm download of file: ${fileName}`);
-      if (confirmDownload) {
-        const blob = await downloadSolutionFile(fileName);
-
-        console.log(blob, "blob in FE");
-        if (!blob) {
-          console.log("Failed to download the file");
-          return;
-        }
-
-        const url = window.URL.createObjectURL(blob);
-
-        const a = document.createElement("a");
-        a.style.display = "none";
-        document.body.appendChild(a);
-
-        const link = document.createElement("a");
-        a.href = url;
-        a.download = fileName;
-        a.click();
-        window.URL.revokeObjectURL(url);
-      }
-    } catch (error) {
-      console.log("Error occurred during file download:", error);
-    }
-  };
-
-  async function handleDownload1(e) {
+  async function handleDownload(e, fileName, applicant) {
     e.preventDefault();
+    // TODO to fix urls to use env
+    const url = `http://localhost:5000/api/applications/download${fileName}`;
 
+    console.log(url);
     try {
       const authToken = getAuthToken();
       const response = await axios({
-        url: "http://localhost:5000/api/applications/download/solutions/solution-1711283575691.pdf",
+        url: url,
         method: "GET",
         responseType: "blob",
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
       });
-
-      FileDownload(response.data);
+      const nameOfFile = applicant + fileName;
+      FileDownload(response.data, nameOfFile);
     } catch (error) {
       console.error("Error occurred during download:", error);
     }
@@ -142,7 +116,17 @@ function CompetitionDetails() {
                   <td>{application?.user?.firstName + " " + application?.user?.lastName}</td>
                   {isAdmin && (
                     <td>
-                      <button onClick={(e) => handleDownload1(e)}>Download Solution</button>
+                      <button
+                        onClick={(e) =>
+                          handleDownload(
+                            e,
+                            application?.solutionUrl,
+                            application?.user?.firstName + " " + application?.user?.lastName
+                          )
+                        }
+                      >
+                        Download Solution
+                      </button>
                     </td>
                   )}
                   {isAdmin && <td>{application?.appliedAt}</td>}
